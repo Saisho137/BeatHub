@@ -21,7 +21,7 @@ const getStats = async (req, res) => {
 
         const genresList = {}
 
-        const { data: { items } } = await axios.get(`https://api.spotify.com/v1/me/top/artists?time_range=${time}&limit=10&offset=0`, headers)
+        const { data: { items } } = await axios.get(`https://api.spotify.com/v1/me/top/artists?time_range=${time}&limit=50&offset=0`, headers)
 
         items.map(({ genres }) => {
             for (const genre of genres) {
@@ -40,18 +40,71 @@ const getStats = async (req, res) => {
         }
     }
 
+    const getTracksFeatures = async (ids, popularity) => {
+
+        let totalPopularity = 0
+        let totalHappiness = 0
+        let totalDanceability = 0
+        let totalEnergy = 0
+        let totalAcousticness = 0
+        let totalInstrumentalness = 0
+        let totalLiveness = 0
+        let totalSpeechiness = 0
+        let count = 0
+
+        const { data: { audio_features } } = await axios.get(`https://api.spotify.com/v1/audio-features?ids=${ids.toString()}`, headers)
+
+        audio_features.forEach(features => {
+            const { valence, danceability, energy, acousticness, instrumentalness, liveness, speechiness } = features
+
+            totalPopularity += popularity[count]
+            totalHappiness += valence
+            totalDanceability += danceability
+            totalEnergy += energy
+            totalAcousticness += acousticness
+            totalInstrumentalness += instrumentalness
+            totalLiveness += liveness
+            totalSpeechiness += speechiness
+            count++
+        })
+
+        return {
+            popularity: totalPopularity / count,
+            happiness: totalHappiness / count,
+            danceability: totalDanceability / count,
+            energy: totalEnergy / count,
+            acousticness: totalAcousticness / count,
+            instrumentalness: totalInstrumentalness / count,
+            liveness: totalLiveness / count,
+            speechiness: totalSpeechiness / count
+        }
+    }
+
     const getTopTracks = async () => {
-        const { data: { items } } = await axios.get(`https://api.spotify.com/v1/me/top/tracks?time_range=${time}&limit=10&offset=0`, headers)
-        return items.map(({ id, name, album, artists }) => ({ id, name, artists: artists.map(({ name }) => ( name )), images: album.images[0] }))
+
+        const songsId = []
+        const popularityList = []
+
+        const { data: { items } } = await axios.get(`https://api.spotify.com/v1/me/top/tracks?time_range=${time}&limit=50&offset=0`, headers)
+
+        items.map(({ id, popularity }) => {
+            songsId.push(id)
+            popularityList.push(popularity)
+        })
+
+        const features = await getTracksFeatures(songsId, popularityList)
+
+        return {
+            tracks: items.map(({ id, name, album, artists }) => ({ id, name, artists: artists.map(({ name }) => (name)), images: album.images[0] })),
+            features
+        }
     }
 
     const user = await getUserProfile()
     const topArtistsAndGenres = await getTopArtistsAndGenres()
-    const topTracks = await getTopTracks()
+    const topTracksAndFeatures = await getTopTracks()
 
-    console.log(topTracks);
-
-    res.status(200).send({ user, ...topArtistsAndGenres, topTracks })
+    res.status(200).send({ user, ...topArtistsAndGenres, ...topTracksAndFeatures })
 }
 
 module.exports = { getStats }
