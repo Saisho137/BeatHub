@@ -20,7 +20,7 @@ export default function Home() {
   const REDIRECT_URI = "http://localhost:3000"
   const AUTH_ENDPOINT = 'https://accounts.spotify.com/authorize'
   const RESPONSE_TYPE = 'token'
-  const SCOPE = 'user-read-private playlist-read-private user-read-currently-playing user-follow-read'
+  const SCOPE = 'user-read-private playlist-read-private user-read-currently-playing user-follow-read user-top-read'
 
   return (
     <Layout>
