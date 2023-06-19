@@ -5,14 +5,14 @@ export default function Home() {
 
   useEffect(() => {
     const hash = window.location.hash
-    let token = window.localStorage.getItem('token')
+    let token = window.sessionStorage.getItem('token')
 
-    if (!token && hash) {
+    if (hash) {
       const urlParams = new URLSearchParams(window.location.hash.replace('#','?'))
       let token = urlParams.get('access_token')
 
       window.location.hash = ''
-      window.localStorage.setItem('token',token)
+      window.sessionStorage.setItem('token',token)
     }
   }, [])
 
