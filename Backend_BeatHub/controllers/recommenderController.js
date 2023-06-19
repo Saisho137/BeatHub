@@ -51,10 +51,11 @@ const getSpecificTrack = async (req, res) => {
 
 const getSimilarTrack = async (req, res) => {
     const headers = req.headers.authorization
-    const artistsId = req.params.id
+    const artistsId = req.params.idArtist
+    const trackId =req.params.idTrack
 
     try {
-        const { data } = await axios.get(`https://api.spotify.com/v1/recommendations?seed_artists=3MZsBdqDrRTJihTHQrO6Dq&seed_tracks=0rKtyWc8bvkriBthvHKY8d`, {
+        const { data } = await axios.get(`https://api.spotify.com/v1/recommendations?seed_artists=${artistsId}&seed_tracks=${trackId}`, {
             method: 'GET',
             headers: {
                 Authorization: `${headers}`,

@@ -16,7 +16,7 @@ app.get('/getArtistTopTracks/:id', recommenderController.getArtistTopTracks)
 //Track
 app.get('/getTrack/:track', recommenderController.getTrack)
 app.get('/getSpecificTrack/:id', recommenderController.getSpecificTrack)
-app.get('/getSimilarTracks', recommenderController.getSimilarTrack)
+app.get('/getSimilarTracks/:idArtist/:idTrack', recommenderController.getSimilarTrack)
 //Genre
 app.get('/getGenre', recommenderController.getGenre)
 app.get('/getTopTracksGenre/:genre', recommenderController.getTopTracksGenre)
