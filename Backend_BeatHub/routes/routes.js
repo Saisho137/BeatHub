@@ -1,9 +1,12 @@
 'use strict'
 
 const recommenderController = require('../controllers/recommenderController')
+const statisticsController = require('../controllers/statisticsController')
+const gameController = require('../controllers/gameController')
 
 const express = require('express') 
 const app = express.Router()
+
 
 //Artis
 app.get('/getArtist/:artist', recommenderController.getArtist)
@@ -18,6 +21,9 @@ app.get('/getSimilarTracks', recommenderController.getSimilarTrack)
 app.get('/getGenre', recommenderController.getGenre)
 app.get('/getTopTracksGenre/:genre', recommenderController.getTopTracksGenre)
 app.get('/getTopArtistGenre/:genre', recommenderController.getTopArtistGenre)
+
+app.post('/getRandomTrack', gameController.getRandomSong)
+app.get("/stats/:time?", statisticsController.getStats)
 
 
 module.exports = app
