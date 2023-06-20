@@ -100,11 +100,19 @@ const getStats = async (req, res) => {
         }
     }
 
-    const user = await getUserProfile()
-    const topArtistsAndGenres = await getTopArtistsAndGenres()
-    const topTracksAndFeatures = await getTopTracks()
+    try {
+        const user = await getUserProfile()
+        const topArtistsAndGenres = await getTopArtistsAndGenres()
+        const topTracksAndFeatures = await getTopTracks()
 
-    res.status(200).send({ user, ...topArtistsAndGenres, ...topTracksAndFeatures })
+        res.status(200).send({ user, ...topArtistsAndGenres, ...topTracksAndFeatures })
+    }
+    catch (error) {
+        res.status(401).send({ message: 'Token expired' })
+    }
+
+
+
 }
 
 module.exports = { getStats }
