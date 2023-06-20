@@ -36,7 +36,7 @@ const getStats = async (req, res) => {
 
         return {
             artists: items.map(({ id, name, images }) => ({ id, name, images: images[0] })),
-            genres: genresList
+            genres: Object.entries(genresList)
         }
     }
 
