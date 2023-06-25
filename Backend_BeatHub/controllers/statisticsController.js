@@ -69,7 +69,7 @@ const getStats = async (req, res) => {
         })
 
         return {
-            popularity: totalPopularity / count,
+            popularity: totalPopularity / (count * 100),
             happiness: totalHappiness / count,
             danceability: totalDanceability / count,
             energy: totalEnergy / count,
