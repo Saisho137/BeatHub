@@ -94,8 +94,24 @@ export default function Statistics() {
             </div>
 
             <div className='row text-center'>
-                <h1 className='title'>Top songs analysis</h1>
-                {Object.entries(stats.features).map(([name, value]) => <FeatureBar name={name} value={value}/>)}
+                <h1>Top songs analysis</h1>
+                {Object.entries(stats.features).map(([name, value]) => <FeatureBar key={name} name={name} value={value} />)}
+            </div>
+
+            <div className='row'>
+                <h1 className='text-center'>Top songs</h1>
+                {stats.tracks.map(track =>
+                    <div className='card offset-md-1 align-middle'>
+                        <div className='row'>
+                            <div className='col-md-1'>
+                                <img src={track.images.url} className='card-img' />
+                            </div>
+                            <div className='col-md-10'>
+                                <div className='card-header'>{track.name}</div>
+                                <p>{track.artists.toString()}</p>
+                            </div>
+                        </div>
+                    </div>)}
             </div>
 
         </>
