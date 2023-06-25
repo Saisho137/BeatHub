@@ -93,11 +93,13 @@ export default function Statistics() {
                 </div>
             </div>
 
+            {/* Top songs features average */}
             <div className='row text-center'>
                 <h1>Top songs analysis</h1>
                 {Object.entries(stats.features).map(([name, value]) => <FeatureBar key={name} name={name} value={value} />)}
             </div>
 
+            {/* Top songs list */}
             <div className='row'>
                 <h1 className='text-center'>Top songs</h1>
                 {stats.tracks.map(track =>
@@ -112,6 +114,14 @@ export default function Statistics() {
                             </div>
                         </div>
                     </div>)}
+            </div>
+                
+            {/* Top genres list */}
+            <div className='row'>
+                    <h1 className='text-center'>Top Genres</h1>
+                    <ul>
+                        {stats.genres.map(([name, value]) => <li key={name}>{name}: {value}</li>)}
+                    </ul>
             </div>
 
         </>
