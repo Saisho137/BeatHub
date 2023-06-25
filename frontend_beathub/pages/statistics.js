@@ -101,7 +101,7 @@ export default function Statistics() {
 
             {/* Top songs list */}
             <div className='row'>
-                <h1 className='text-center'>Top songs</h1>
+                <h1 className='text-center'>Top Songs</h1>
                 {stats.tracks.map(track =>
                     <div className='card offset-md-1 align-middle'>
                         <div className='row'>
@@ -115,15 +115,29 @@ export default function Statistics() {
                         </div>
                     </div>)}
             </div>
-                
+
             {/* Top genres list */}
-            <div className='row'>
-                    <h1 className='text-center'>Top Genres</h1>
-                    <ul>
-                        {stats.genres.map(([name, value]) => <li key={name}>{name}: {value}</li>)}
-                    </ul>
+            <div className='row text-center'>
+                <h1>Top Genres</h1>
+                <ul>
+                    {stats.genres.map(([name, value]) => <li key={name}>{name}: {value}</li>)}
+                </ul>
             </div>
 
+            <div className='row'>
+                <h1 className='text-center'>Top Artists</h1>
+                {stats.artists.map(artist => 
+                <div className='card offset-md-1 align-middle'>
+                    <div className='row'>
+                        <div className='col-md-1'>
+                            <img src={artist.images ? artist.images.url : 'images/person-circle.svg'} className='card-img' />
+                        </div>
+                        <div className='col-md-10'>
+                            <p>{artist.name}</p>
+                        </div>
+                    </div>
+                </div> )}
+            </div>
         </>
     )
 }
