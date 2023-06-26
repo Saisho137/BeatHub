@@ -41,7 +41,7 @@ export default function Statistics() {
     console.log(stats)
 
     return (
-        <>
+        <Layout>
 
             <div className='row justify-content-center'>
                 <button className='col-md-2' onClick={() => setTime('short_term')}>4 Weeks</button>
@@ -51,17 +51,17 @@ export default function Statistics() {
 
             <div className='row'>
                 {/* User's Profile */}
-                <div className='card mb-3 col-md-4 offset-md-1 align-middle'>
+                <div className='card col-md-4 offset-md-1 align-middle text-bg-light mb-5 border-dark mt-5'>
                     <div className='row align-items-center h-100'>
-                        <div className='col-md-4'>
+                        <div className='col-md-4 h-50'>
                             <img src={stats.user?.images[0] ? stats.user.images[0].url : 'images/person-circle.svg'}
-                                className='img-fluid rounded-circle'
+                                className='img-fluid rounded-circle h-100 border border-dark'
                                 alt='User Profile Picture'
                             />
                         </div>
                         <div className='col-md-8'>
                             <div className="card-body">
-                                <h5 className='card-title'>{stats.user.display_name}</h5>
+                                <h1 className='card-title'>{stats.user.display_name}</h1>
                                 <p className='card-text'>followers: {stats.user.followers.total}</p>
                             </div>
                         </div>
@@ -69,24 +69,30 @@ export default function Statistics() {
                 </div>
 
                 {/* User's Top Items */}
-                <div className='col-md-7 row'>
-                    <div className='col-md-3 offset-md-1 card text-center border-0'>
-                        <h5>Top Track</h5>
-                        <img src={stats.tracks[0]?.images.url} alt='Artist Picture' />
-                        <div className="card-body">
+                <div className='col-md-6 card-group mt-5 mb-5'>
+                    <div className='col-md-3 offset-md-1 card text-center text-bg-light border-dark'>
+                        <h4 className='card-header'>Top Track</h4>
+                        <img src={stats.tracks[0]?.images.url}
+                            alt='Artist Picture'
+                            className='rounded-circle p-1 mx-auto d-block'
+                            style={{ width: '75%' }} />
+                        <div className="card-footer">
                             <h5 className="card-title">{stats.tracks[0].name}</h5>
                         </div>
                     </div>
-                    <div className='col-md-3 card text-center border-0'>
-                        <h5>Top Genre(s)</h5>
+                    <div className='col-md-3 card text-bg-light border-dark d-block'>
+                        <h4 className='card-header text-center'>Top Genre(s)</h4>
                         {stats.genres
                             .filter(genre => genre[1] === Math.max(...stats.genres.map(genre => genre[1])))
-                            .map(genre => <h6 key={genre[0]}>{genre[0]}</h6>)}
+                            .map(genre => <p key={genre[0]} className='bg-light border border-dark d-inline-block p-2 m-1 rounded' >{genre[0]}</p>)}
                     </div>
-                    <div className='col-md-3 card text-center border-0'>
-                        <h5>Top Artist</h5>
-                        <img src={stats.artists[0]?.images.url} alt='Artist Picture' />
-                        <div className="card-body">
+                    <div className='col-md-3 card text-center text-bg-light border-dark'>
+                        <h4 className='card-header'>Top Artist</h4>
+                        <img src={stats.artists[0]?.images.url}
+                            alt='Artist Picture'
+                            className='rounded-circle p-1 mx-auto d-block'
+                            style={{ width: '75%' }} />
+                        <div className="card-footer">
                             <h5 className="card-title">{stats.artists[0].name}</h5>
                         </div>
                     </div>
@@ -126,18 +132,18 @@ export default function Statistics() {
 
             <div className='row'>
                 <h1 className='text-center'>Top Artists</h1>
-                {stats.artists.map(artist => 
-                <div className='card offset-md-1 align-middle'>
-                    <div className='row'>
-                        <div className='col-md-1'>
-                            <img src={artist.images ? artist.images.url : 'images/person-circle.svg'} className='card-img' />
+                {stats.artists.map(artist =>
+                    <div className='card offset-md-1 align-middle'>
+                        <div className='row'>
+                            <div className='col-md-1'>
+                                <img src={artist.images ? artist.images.url : 'images/person-circle.svg'} className='card-img' />
+                            </div>
+                            <div className='col-md-10'>
+                                <p>{artist.name}</p>
+                            </div>
                         </div>
-                        <div className='col-md-10'>
-                            <p>{artist.name}</p>
-                        </div>
-                    </div>
-                </div> )}
+                    </div>)}
             </div>
-        </>
+        </Layout>
     )
 }
