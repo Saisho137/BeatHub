@@ -23,11 +23,14 @@ export default function Home() {
   const SCOPE = 'user-read-private playlist-read-private user-read-currently-playing user-follow-read user-top-read'
 
   return (
-    <Layout>
-      <a 
-            href={`${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=${RESPONSE_TYPE}&scope=${SCOPE}`}>
-            Login with Spotify
-          </a>
+    <Layout
+      authEndpoint={AUTH_ENDPOINT}
+      clientId={CLIENT_ID}
+      redirectUri={REDIRECT_URI}
+      responseType={RESPONSE_TYPE}
+      scope={SCOPE}
+    >
+      <a>Login with Spotify</a>
     </Layout>
   );
 }
