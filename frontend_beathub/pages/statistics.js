@@ -43,7 +43,7 @@ export default function Statistics() {
     return (
         <Layout>
 
-            <h1 className='text-center'>Statistics</h1>
+            <h1 className='text-center mt-5'>Statistics</h1>
 
             <div className='row justify-content-center offset-1 col-10 mt-5'>
                 <button
@@ -108,9 +108,11 @@ export default function Statistics() {
             </div>
 
             {/* Top songs features average */}
-            <div className='row text-center'>
+            <div className='row text-center border pt-5'>
                 <h1>Top songs analysis</h1>
-                {Object.entries(stats.features).map(([name, value]) => <FeatureBar key={name} name={name} value={value} />)}
+                <div className='offset-1 col-10 row mt-5'>
+                    {Object.entries(stats.features).map(([name, value]) => <FeatureBar key={name} name={name} value={value} />)}
+                </div>
             </div>
 
             {/* Top songs list */}
