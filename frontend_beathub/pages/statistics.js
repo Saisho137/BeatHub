@@ -43,10 +43,18 @@ export default function Statistics() {
     return (
         <Layout>
 
-            <div className='row justify-content-center'>
-                <button className='col-md-2' onClick={() => setTime('short_term')}>4 Weeks</button>
-                <button className='col-md-2' onClick={() => setTime('medium_term')}>6 Months</button>
-                <button className='col-md-2' onClick={() => setTime('long_term')}>All Time</button>
+            <h1 className='text-center'>Statistics</h1>
+
+            <div className='row justify-content-center offset-1 col-10 mt-5'>
+                <button
+                    className={`col-md-4 rounded rounded-pill border-dark text-bg-${time == 'short_term' ? 'dark' : 'light'}`}
+                    onClick={() => setTime('short_term')}>4 Weeks</button>
+                <button
+                    className={`col-md-4 rounded rounded-pill border-dark text-bg-${time == 'medium_term' ? 'dark' : 'light'}`}
+                    onClick={() => setTime('medium_term')}>6 Months</button>
+                <button
+                    className={`col-md-4 rounded rounded-pill border-dark text-bg-${time == 'long_term' ? 'dark' : 'light'}`}
+                    onClick={() => setTime('long_term')}>All Time</button>
             </div>
 
             <div className='row'>
