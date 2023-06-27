@@ -3,6 +3,7 @@
 const recommenderController = require('../controllers/recommenderController')
 const statisticsController = require('../controllers/statisticsController')
 const gameController = require('../controllers/gameController')
+const userController = require('../controllers/userController')
 
 const express = require('express') 
 const app = express.Router()
@@ -24,6 +25,8 @@ app.get('/getTopArtistGenre/:genre', recommenderController.getTopArtistGenre)
 
 app.post('/getRandomTrack', gameController.getRandomSong)
 app.get("/stats/:time?", statisticsController.getStats)
+
+app.get('/getUserData', userController.getUserData)
 
 
 module.exports = app
