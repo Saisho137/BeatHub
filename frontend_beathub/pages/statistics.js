@@ -140,19 +140,18 @@ export default function Statistics() {
                 </div>
             </div>
 
-            <div className='row'>
-                <h1 className='text-center'>Top Artists</h1>
-                {stats.artists.map(artist =>
-                    <div className='card offset-md-1 align-middle'>
-                        <div className='row'>
-                            <div className='col-md-1'>
-                                <img src={artist.images ? artist.images.url : 'images/person-circle.svg'} className='card-img' />
+            {/* Top Artists list */}
+            <div className='row border text-center pb-5'>
+                <h1 className='mt-5 mb-5'>Top Artists</h1>
+                <div className='offset-1 col-10 row justify-content-center'>
+                    {stats.artists.map(artist =>
+                        <div className='card col-md-2 m-2 p-0'>
+                            <img src={artist.images ? artist.images.url : 'images/person-circle.svg'} className='card-img-top h-100' alt='Artist image' />
+                            <div className='card-body d-flex align-items-end'>
+                                <h6 className='card-title'>{artist.name}</h6>
                             </div>
-                            <div className='col-md-10'>
-                                <p>{artist.name}</p>
-                            </div>
-                        </div>
-                    </div>)}
+                        </div>)}
+                </div>
             </div>
         </Layout>
     )
