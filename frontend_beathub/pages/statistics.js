@@ -133,11 +133,11 @@ export default function Statistics() {
             </div>
 
             {/* Top genres list */}
-            <div className='row text-center'>
-                <h1>Top Genres</h1>
-                <ul>
-                    {stats.genres.map(([name, value]) => <li key={name}>{name}: {value}</li>)}
-                </ul>
+            <div className='row border text-center pb-5'>
+                <h1 className='mt-5 mb-5'>Top Genres</h1>
+                <div className='offset-2 col-8'>
+                    {stats.genres.map(([name]) => <p key={name} className='bg-light border border-dark d-inline-block p-2 m-1 rounded' >{name}</p>)}
+                </div>
             </div>
 
             <div className='row'>
