@@ -7,7 +7,7 @@ export default function FeatureBar({ name, value }) {
                 <h5 className='heading text-capitalize'>{name}</h5>
                 <div className='progress'>
                     <div
-                        className={`progress-bar bg-${value >= 60 ? 'success' : value >= 25 ? 'warning' : 'danger'}`}
+                        className={`progress-bar bg-${value >= 50 ? 'success' : value >= 25 ? 'warning' : 'danger'}`}
                         style={{ width: `${value}%` }}
                         role='progressbar'></div>
                 </div>
