@@ -116,20 +116,20 @@ export default function Statistics() {
             </div>
 
             {/* Top songs list */}
-            <div className='row'>
-                <h1 className='text-center'>Top Songs</h1>
-                {stats.tracks.map(track =>
-                    <div className='card offset-md-1 align-middle'>
-                        <div className='row'>
-                            <div className='col-md-1'>
-                                <img src={track.images.url} className='card-img' />
+            <div className='row text-center border pt-5'>
+                <h1 className='pb-5'>Top Songs</h1>
+                <div className='offset-1 col-10 row justify-content-center'>
+                    {stats.tracks.map(track =>
+                        <div className='card col-md-2 m-2 p-0'>
+                            <img src={track.images.url} className='card-img-top' alt='Album image' />
+                            <div className='card-body'>
+                                <h6 className='card-title'>{track.name}</h6>
                             </div>
-                            <div className='col-md-10'>
-                                <div className='card-header'>{track.name}</div>
-                                <p>{track.artists.toString()}</p>
+                            <div className='card-footer'>
+                                <p className='text-muted'>{track.artists.toString()}</p>
                             </div>
-                        </div>
-                    </div>)}
+                        </div>)}
+                </div>
             </div>
 
             {/* Top genres list */}
