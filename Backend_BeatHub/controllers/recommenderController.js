@@ -196,11 +196,13 @@ const getTopTracksGenre = async (req, res) => {
                 Authorization: `${headers}`,
             },
         })
+
         const artist = data.tracks.items.map(artists => ({
             name: artists.name,
             id: artists.id,
             images: artists.album.images[0].url,
-            preview: artists.preview_url
+            preview: artists.preview_url,
+            artist: artists.artists[0].name
         }))
         res.status(200).send({ getTopTracksGenre: artist});
     } catch (error) {
