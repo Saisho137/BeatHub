@@ -57,7 +57,6 @@ export default function GenrePage({ id }) {
 
     }, [id])
 
-    console.log(typeof tracks);
     if (!tracks[0] && !artists[0] && genres[0] && typeof tracks == 'object' && typeof artists == 'object') {
         return (
             <div className='row justify-content-center text-center mt-5 p-5'>
@@ -79,10 +78,6 @@ export default function GenrePage({ id }) {
             </div>
         )
     }
-
-
-
-    console.log(id);
 
     return (
         <div className='row text-center offset-1 col-10 mt-5 border'>
