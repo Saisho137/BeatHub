@@ -28,12 +28,10 @@
     position: relative;
     overflow-y: scroll;
     height: 100vh;
-    /* Opcional: establece una altura para el contenedor */
   }
   
   .left::-webkit-scrollbar {
     display: none;
-    /* Suprime el espacio reservado para la barra de desplazamiento */
   }
 }
 
