@@ -69,19 +69,21 @@ const Artist = () => {
         <Layout>
             <div className='row text-center offset-1 col-10 mt-5 pt-5 border'>
                 <h1 className={`${styles.artisttitle}`}>Artist</h1>
-                <div className={`row`}>
+                <div className={`row mb-5`}>
                     <div className={`col-12 col-md-10 col-xl-5 ${styles.singleartist}`}>
                         <div className={`card ${styles.artistmargin}`}>
                             <h3 className="card-title card-header" style={{ marginBottom: "2%" }}>{artist.name}</h3>
                             <div className="card-img">
                                 <Image className="rounded" loader={() => artist.images} src={artist.images} height={300} width={300} alt="Picture of the author" />
                             </div>
-                            <h4 className='card-footer'>Artist genres</h4>
-                            {artist.genres.map((genres) => <p>{genres}</p>)}
+                            <h4 className='card-footer mt-3'>Artist genres</h4>
+                            <div>
+                                {artist.genres.map((genres) => <p>{genres}</p>)}    
+                            </div>                       
                         </div>
                     </div>
 
-                    <div className={`col-12 col-md-10 col-xl-7 border-start ${styles.cardplacement} ${styles.bordersection}`}>
+                    <div className={`col-12 col-md-10 col-xl-7 border-start mt-4 ${styles.cardplacement} ${styles.bordersection} ${styles.left}`}>
                         <div className="row" style={{ paddingLeft: "4%" }}>
                             {similar.map((name) => (
                                 <div className="card m-3 p-0" style={{ width: '13rem' }}>
