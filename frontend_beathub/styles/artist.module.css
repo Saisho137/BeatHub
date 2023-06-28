@@ -1,34 +1,39 @@
-.cardplacement{
- width: 49%;
- margin-left: 9%;
+.cardplacement {
+  width: 49%;
+  margin-left: 9%;
 }
 
-.bordersection{
+.bordersection {
   border-top: 0;
   border-right: 0;
   border-bottom: 10ch;
 }
 
-.singleartist{
+.singleartist {
   text-align: center;
   margin-top: 3%;
 }
 
-.artisttitle{
+.artisttitle {
   margin-bottom: 2%;
 }
 
-.artistmargin{
+.artistmargin {
   margin-right: -13%;
   margin-left: 16%;
 }
 
-.left {
-  position: relative;
-  overflow-y: scroll; 
-  height: 100vh; /* Opcional: establece una altura para el contenedor */
+@media (min-width: 1200px){
+  .left {
+    position: relative;
+    overflow-y: scroll;
+    height: 100vh;
+    /* Opcional: establece una altura para el contenedor */
+  }
+  
+  .left::-webkit-scrollbar {
+    display: none;
+    /* Suprime el espacio reservado para la barra de desplazamiento */
+  }
 }
 
-.left::-webkit-scrollbar {
-  display: none; /* Suprime el espacio reservado para la barra de desplazamiento */
-}

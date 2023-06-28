@@ -109,8 +109,8 @@ const getSpecificArtist = async (req, res) => {
         })
         const artist = {
             name: data.name,
-            genres: data.genres,
-            images: data.images[0].url
+            genres: data.genres ? data.genres : "Na",
+            images: data.images[0] ? data.images[0].url : null
         }
         res.status(200).send({ getSpecificArtist: artist});
     } catch (error) {
@@ -132,8 +132,7 @@ const getSimilarArtist = async (req, res) => {
         const artist = data.artists.map(artists => ({
             name: artists.name,
             id: artists.id,
-            images: artists.images[0].url
-
+            images: artists.images[0] ? artists.images[0].url : null
         }))
         res.status(200).send({ getSimilarArtist: artist});
     } catch (error) {
