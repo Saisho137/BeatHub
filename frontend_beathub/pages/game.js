@@ -4,20 +4,39 @@ import axios from "axios"
 import Image from "next/image"
 
 const Game = () => {
-    const [response, setResponse] = useState({})
-    const [trys, setTrys] = useState('3')
     const [selectedOption, setSelectedOption] = useState('genre')
-
-    
+    const [response, setResponse] = useState({})
+    const [trys, setTrys] = useState(3)
+    const [winner, setWinner] = useState(false)
 
     const handleSubmit = (event) => {
         event.preventDefault()
 
+        if (selectedOption == "artist" && response.artistName) {
+            event.target.artistName.value = response.artistName
+        }
+
         const songName = event.target.songName.value
         const artist = event.target.artistName.value
-        if (songName.toLowerCase() == response.name.toLowerCase() && artist.toLowerCase() == response.artistName.toLowerCase()) {
+        if (winner) {
+            alert("you already Win!")
+            return
+        }
+        if (songName.toLowerCase().trim().includes(response.name.toLowerCase().trim()) && artist.toLowerCase().trim().includes(response.artistName.toLowerCase().trim())) {
+            if (trys == 0) {
+                alert("YOU LOSE :( - try another song!")
+                return
+            }
+            setWinner(true)
+            setTrys(3)
             alert("YOU WIN!!!")
         } else {
+            setWinner(false)
+            if (trys == 0) {
+                alert("YOU LOSE :( - try another song!")
+                return
+            }
+            setTrys(trys - 1)
             alert("KEEP TRYING!")
         }
     }
@@ -31,6 +50,9 @@ const Game = () => {
                 'Authorization': `Bearer ${token}`
             }
         }
+        setWinner(false)
+        setTrys(3)
+
 
         switch (selectedOption) {
             case "genre":
@@ -57,46 +79,83 @@ const Game = () => {
     return (
         <Layout>
             <div className="row">
-                <div className="row col-5 d-flex justify-content-center border mt-4">
-                    <label className="col-3" htmlFor="typeOfSearch"><b>Select Type of Search:</b></label>
-                    <select className="col-7" id="typeOfSearch" value={selectedOption} onChange={handleSelectionChange}>
+                <div className="row col-xl-6 d-flex justify-content-center mt-4">
+                    <label className="col-xl-3" htmlFor="typeOfSearch"><b>Select Type of Search:</b></label>
+                    <select className="col-xl-7" id="typeOfSearch" value={selectedOption} onChange={handleSelectionChange}>
                         <option value="genre">Genre</option>
                         <option value="playlist">Playlist</option>
                         <option value="artist">Artist</option>
                     </select>
                     <form className="row col-12 d-flex justify-content-center" onSubmit={handleSubmitTrack}>
                         {selectedOption == "genre" && <>
-                            <label className="col-3" htmlFor="genre"><b>Genre:</b></label>
-                            <input className="col-7" type="text" id="genre" name="genre" required />
+                            <label className="col-xl-3" htmlFor="genre"><b>Genre:</b></label>
+                            <input className="col-xl-7" type="text" id="genre" name="genre" required />
                         </>}
                         {selectedOption == "playlist" && <>
-                            <label className="col-3" htmlFor="playlist"><b>Playlist:</b></label>
-                            <input className="col-7" type="text" id="playlist" name="playlist" required />
+                            <label className="col-xl-3" htmlFor="playlist"><b>Playlist:</b></label>
+                            <input className="col-xl-7" type="text" id="playlist" name="playlist" required />
                         </>}
                         {selectedOption == "artist" && <>
-                            <label className="col-3" htmlFor="artist"><b>Artist:</b></label>
-                            <input className="col-7" type="text" id="artist" name="artist" required />
+                            <label className="col-xl-3" htmlFor="artist"><b>Artist:</b></label>
+                            <input className="col-xl-7" type="text" id="artist" name="artist" required />
                         </>}
-                        <button className="col-4" type="submit">Find</button>
+                        <button className="col-4 mt-2" type="submit">Find</button>
                     </form>
                 </div>
-                <div className="row offset-1 col-6  mt-4 border">
-                    <form className="row col-12 border" onSubmit={handleSubmit}>
-                        <label className="col-2" htmlFor="songName"><b>Song Name:</b></label>
-                        <input className="col-4" type="text" id="songName" name="songName" required />
-                        <h4 className="col-4 offset-1 d-flex justify-content-center">Trys: {trys}</h4>
-                        <label className="col-2"><b>Artist Name:</b></label>
-                        <input className="col-4" type="text" id="artistName" name="artistName" required />
-                        <button className="col-4 offset-1" type="submit">Try!</button>
+                <div className="row col-xl-6  mt-4 border-start">
+                    <form className="row col-12" onSubmit={handleSubmit}>
+                        <div className="row col-xl-6">
+                            <label className="col-xl-4 mt-3" htmlFor="songName"><b>Song Name:</b></label>
+                            <input className="col-xl-6 mt-3" disabled={!response.name} type="text" id="songName" name="songName" required />
+                            <label className="col-xl-4 my-3"><b>Artist Name:</b></label>
+                            <input className="col-xl-6 my-3" disabled={!response.name} type="text" id="artistName" name="artistName" required />
+                        </div>
+                        <div className="row col-xl-6">
+                            {response.name && <h4 className="col-12 d-flex justify-content-center mt-3">Tries: {trys}</h4>}
+                            {!response.name && <h4 className="col-12 d-flex justify-content-center mt-3">Find a song to Start!</h4>}
+                            <button className="col-6 offset-3 my-2" disabled={!response.name} type="submit">Guess!</button>
+                        </div>
                     </form>
-                    {response.name ?
+                    {response.name && winner && <>
+                        <div className="row d-flex justify-content-center mt-3">
+                            <div className="card col-xl-10">
+                                <div className="card-body">
+                                    <div className="row col-12">
+                                        <img className="col-xl-4" src={response.image} alt="Picture of album from artist"></img>
+                                        <div className="row col-xl-8">
+                                            <h5 className="card-title col-12">{response.name}</h5>
+                                            <p className="card-text col-12">{response.artistName}</p>
+                                            <audio className="col-12" controls src={response.preview}></audio>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </>}
+                    {response.name && !winner && trys == 0 && <>
+                        <div className="row d-flex justify-content-center mt-3">
+                            <h2>It actually was:</h2>
+                            <div className="card col-xl-10">
+                                <div className="card-body">
+                                    <div className="row col-12">
+                                        <img className="col-xl-4" src={response.image} alt="Picture of album from artist"></img>
+                                        <div className="row col-xl-8">
+                                            <h5 className="card-title col-12">{response.name}</h5>
+                                            <p className="card-text col-12">{response.artistName}</p>
+                                            <audio className="col-12" controls src={response.preview}></audio>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </>}
+                    {response.name && !winner && trys > 0 && <>
                         <div className="col-6 offset-3 mt-3 border">
                             <audio className="col-12" controls src={response.preview}></audio>
                         </div>
-                        :
-                        <h1 className="col-6 offset-3 mt-3 d-flex justify-content-center border"> PROVICIONAL </h1>}
-                    {console.log(response)}
+                    </>}
                 </div>
+                {console.log(response, winner)}
             </div>
         </Layout>
     )
