@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
+import Link from 'next/link'
 import PreviewSong from '../../components/previewSong'
 import playButton from '../../public/images/play-fill.svg'
 
@@ -54,16 +55,14 @@ export default function GenrePage({ id }) {
         getGenresTopTracks(headers)
         getGenresTopArtists(headers)
 
-    }, [])
+    }, [id])
 
 
     if (!genres[0] || !tracks[0] || !artists[0]) {
         return <p>Loading...</p>
     }
 
-    console.log(genres);
-    console.log(tracks);
-    console.log(artists);
+    console.log(id);
 
     return (
         <div className='row text-center offset-1 col-10 mt-5 pt-5 border'>
@@ -97,6 +96,16 @@ export default function GenrePage({ id }) {
                                 <h6 className='card-title'>{artist.name}</h6>
                             </div>
                         </div>
+                    )}
+                </div>
+            </div>
+            <h3 className='mb-5'>More Genres</h3>
+            <div className='row text-center pb-5'>
+                <div className='offset-2 col-8'>
+                    {genres.map((genre) =>
+                        <Link key={genre} href={`/genre/${genre}`} className='text-decoration-none text-dark' replace>
+                            <p className='bg-light border border-dark d-inline-block p-2 m-1 rounded' >{genre}</p>
+                        </Link>
                     )}
                 </div>
             </div>
