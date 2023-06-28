@@ -19,8 +19,8 @@ export default function GenrePage({ id }) {
 
     const router = useRouter()
     const [genres, setGenres] = useState([])
-    const [tracks, setTracks] = useState([])
-    const [artists, setArtists] = useState([])
+    const [tracks, setTracks] = useState('')
+    const [artists, setArtists] = useState('')
 
     async function getGenres(headers) {
         const { data: { getGenre: { genres } } } = await axios.get('http://localhost:8080/getGenre', headers)
@@ -57,17 +57,37 @@ export default function GenrePage({ id }) {
 
     }, [id])
 
-
-    if (!genres[0] || !tracks[0] || !artists[0]) {
-        return <p>Loading...</p>
+    console.log(typeof tracks);
+    if (!tracks[0] && !artists[0] && genres[0] && typeof tracks == 'object' && typeof artists == 'object') {
+        return (
+            <div className='row justify-content-center text-center mt-5 p-5'>
+                <h1>:(</h1>
+                <h1>Sorry! Could not find the genre</h1>
+                <Link href='/recommender' className='m-3 col-2 p-1 btn btn-success'>
+                    <img src='/images/arrow-up-circle-fill-white.svg' className='float-start ms-2 mt-1' style={{ transform: 'rotate(270deg)' }} />
+                    Search More
+                </Link>
+            </div>
+        )
     }
+
+    if (!tracks[0] || !artists[0]) {
+        return (
+            <div className='d-flex justify-content-center align-items-center' style={{ height: '30em' }}>
+                <div className="spinner-border text-dark d-flex justify-content-center" role="status" style={{ width: '5em', height: '5em' }}>
+                </div>
+            </div>
+        )
+    }
+
+
 
     console.log(id);
 
     return (
         <div className='row text-center offset-1 col-10 mt-5 border'>
             <Link href='/recommender' className='m-3 col-2 p-1 btn btn-success'>
-                <img src='/images/arrow-up-circle-fill-white.svg' className='float-start ms-2 mt-1' style={{ transform: 'rotate(270deg)' }}/>
+                <img src='/images/arrow-up-circle-fill-white.svg' className='float-start ms-2 mt-1' style={{ transform: 'rotate(270deg)' }} />
                 Search More
             </Link>
             <h1 className='text-capitalize'>{id}</h1>
