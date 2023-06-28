@@ -1,0 +1,24 @@
+.cardplacement{
+ width: 49%;
+ margin-left: 9%;
+}
+
+.bordersection{
+  border-top: 0;
+  border-right: 0;
+  border-bottom: 10ch;
+}
+
+.singleartist{
+  text-align: center;
+  margin-top: 3%;
+}
+
+.artisttitle{
+  margin-bottom: 2%;
+}
+
+.artistmargin{
+  margin-right: -13%;
+  margin-left: 16%;
+}

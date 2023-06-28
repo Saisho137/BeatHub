@@ -153,6 +153,7 @@ const getArtistTopTracks = async (req, res) => {
             },
         })
         const track = data.tracks.map(track => ({
+            artist: track.album.artists[0].name,
             name: track.name,
             id: track.id,
             preview: track.preview_url,
