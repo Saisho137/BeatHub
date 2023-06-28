@@ -12,33 +12,58 @@ const Game = () => {
     const handleSubmit = (event) => {
         event.preventDefault()
 
-        if (selectedOption == "artist" && response.artistName) {
-            event.target.artistName.value = response.artistName
-        }
-
         const songName = event.target.songName.value
-        const artist = event.target.artistName.value
+        
         if (winner) {
             alert("you already Win!")
             return
         }
-        if (songName.toLowerCase().trim().includes(response.name.toLowerCase().trim()) && artist.toLowerCase().trim().includes(response.artistName.toLowerCase().trim())) {
-            if (trys == 0) {
-                alert("YOU LOSE :( - try another song!")
-                return
-            }
-            setWinner(true)
-            setTrys(3)
-            alert("YOU WIN!!!")
-        } else {
-            setWinner(false)
-            if (trys == 0) {
-                alert("YOU LOSE :( - try another song!")
-                return
-            }
-            setTrys(trys - 1)
-            alert("KEEP TRYING!")
+        switch (selectedOption) {
+            case "artist":
+                if (songName.toLowerCase().trim().includes(response.name.toLowerCase().trim())) {
+                    if (trys == 0) {
+                        alert("YOU LOSE :( - try another song!")
+                        return
+                    }
+                    setWinner(true)
+                    setTrys(3)
+                    alert("YOU WIN!!!")
+                    break
+                } else {
+                    setWinner(false)
+                    if (trys == 0) {
+                        alert("YOU LOSE :( - try another song!")
+                        return
+                    }
+                    setTrys(trys - 1)
+                    alert("KEEP TRYING!")
+                    break
+                }
+                break
+            default:
+                const artist = event.target.artistName.value
+                if (songName.toLowerCase().trim().includes(response.name.toLowerCase().trim())
+                    && artist.toLowerCase().trim().includes(response.artistName.toLowerCase().trim())) {
+                    if (trys == 0) {
+                        alert("YOU LOSE :( - try another song!")
+                        return
+                    }
+                    setWinner(true)
+                    setTrys(3)
+                    alert("YOU WIN!!!")
+                    break
+                } else {
+                    setWinner(false)
+                    if (trys == 0) {
+                        alert("YOU LOSE :( - try another song!")
+                        return
+                    }
+                    setTrys(trys - 1)
+                    alert("KEEP TRYING!")
+                    break
+                }
         }
+
     }
 
     const handleSubmitTrack = async (event) => {
@@ -107,8 +132,10 @@ const Game = () => {
                         <div className="row col-xl-6">
                             <label className="col-xl-4 mt-3" htmlFor="songName"><b>Song Name:</b></label>
                             <input className="col-xl-6 mt-3" disabled={!response.name} type="text" id="songName" name="songName" required />
-                            <label className="col-xl-4 my-3"><b>Artist Name:</b></label>
-                            <input className="col-xl-6 my-3" disabled={!response.name} type="text" id="artistName" name="artistName" required />
+                            {selectedOption != "artist" && <>
+                                <label className="col-xl-4 my-3"><b>Artist Name:</b></label>
+                                <input className="col-xl-6 my-3" disabled={!response.name} type="text" id="artistName" name="artistName" required />
+                            </>}
                         </div>
                         <div className="row col-xl-6">
                             {response.name && <h4 className="col-12 d-flex justify-content-center mt-3">Tries: {trys}</h4>}
@@ -150,7 +177,7 @@ const Game = () => {
                         </div>
                     </>}
                     {response.name && !winner && trys > 0 && <>
-                        <div className="col-6 offset-3 mt-3 border">
+                        <div className="col-6 offset-3 mt-3">
                             <audio className="col-12" controls src={response.preview}></audio>
                         </div>
                     </>}
