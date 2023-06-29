@@ -1,0 +1,71 @@
+.homeButton1 {
+    background: #198754;
+    color: #fff;
+    border: none;
+    position: relative;
+    height: 300px;
+    width: 550px;
+    font-size: 1.6em;
+    padding: 0 2em;
+    cursor: pointer;
+    transition: 800ms ease all;
+    outline: none;
+    text-decoration: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .homeButton1:hover {
+    background: #fff;
+    color: #198754;
+  }
+  
+  .homeButton1:before,
+  .homeButton1:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 2px;
+    width: 0;
+    background: #198754;
+    transition: 400ms ease all;
+  }
+  
+  .homeButton1:after {
+    right: inherit;
+    top: inherit;
+    left: 0;
+    bottom: 0;
+  }
+  
+  .homeButton1:hover:before,
+  .homeButton1:hover:after {
+    width: 100%;
+    transition: 800ms ease all;
+  }
+
+  .buttonRow {
+    flex-wrap: wrap;
+  }
+  
+  .buttonContainer {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1rem;
+  }
+  
+  .bottomButton {
+    order: 2;
+  }
+  
+  @media (max-width: 767.98px) {
+    .buttonRow {
+      flex-direction: column;
+    }
+  
+    .bottomButton {
+      order: 1;
+    }
+  }
