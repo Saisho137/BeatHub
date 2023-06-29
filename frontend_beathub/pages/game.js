@@ -2,7 +2,7 @@ import Layout from "../components/layout"
 import { useRef, useState } from "react"
 import axios from "axios"
 
-const Game = () => {
+export default function Game () {
     const [response, setResponse] = useState({})
     const [selectedOption, setSelectedOption] = useState('genre')
     const [winner, setWinner] = useState(false)
@@ -30,8 +30,8 @@ const Game = () => {
     }
 
     const stopPlayback = () => {
-        clearTimeout(timeoutRef.current);
-        timeoutRef.current = null;
+        clearTimeout(timeoutRef.current)
+        timeoutRef.current = null
         setIsPlaying(false)
         audioRef.current.pause()
         audioRef.current.currentTime = 0
@@ -39,6 +39,8 @@ const Game = () => {
 
     const handleSubmit = (event) => {
         event.preventDefault()
+        clearTimeout(timeoutRef.current)
+
         const songName = event.target.songName.value
 
         if (winner) {
@@ -218,5 +220,3 @@ const Game = () => {
         </Layout>
     )
 }
-
-export default Game
