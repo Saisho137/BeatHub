@@ -1,22 +1,44 @@
 import Layout from "../components/layout"
-import { useEffect, useState } from "react"
+import { useRef, useState } from "react"
 import axios from "axios"
-import Image from "next/image"
 
 const Game = () => {
-    const [selectedOption, setSelectedOption] = useState('genre')
     const [response, setResponse] = useState({})
-    const [trys, setTrys] = useState(3)
+    const [selectedOption, setSelectedOption] = useState('genre')
     const [winner, setWinner] = useState(false)
+    const [isPlaying, setIsPlaying] = useState(false)
+    const [trys, setTrys] = useState(3)
+
+    const timeoutRef = useRef(null);
+    const audioRef = useRef(null)
 
     const listOfArtist = () => {
-        const listOfArtist = response.artistName.map( name => (name.toString())).join(', ')
+        const listOfArtist = response.artistName.map(name => (name.toString())).join(', ')
         return listOfArtist
+    }
+
+    const startPlayback = (duration) => {
+        setIsPlaying(true)
+        audioRef.current.volume = 0.33
+        audioRef.current.play()
+
+        timeoutRef.current = setTimeout(() => {
+            setIsPlaying(false)
+            audioRef.current.pause()
+            audioRef.current.currentTime = 0
+        }, 5000)
+    }
+
+    const stopPlayback = () => {
+        clearTimeout(timeoutRef.current);
+        timeoutRef.current = null;
+        setIsPlaying(false)
+        audioRef.current.pause()
+        audioRef.current.currentTime = 0
     }
 
     const handleSubmit = (event) => {
         event.preventDefault()
-
         const songName = event.target.songName.value
 
         if (winner) {
@@ -44,11 +66,10 @@ const Game = () => {
                     alert("KEEP TRYING!")
                     break
                 }
-                break
             default:
                 const artist = event.target.artistName.value
                 if (songName.toLowerCase().trim().includes(response.name.toLowerCase().trim())
-                    && response.artistName.map(name => (name.toLowerCase())).includes( artist.toLowerCase() )) {
+                    && response.artistName.map(name => (name.toLowerCase())).includes(artist.toLowerCase())) {
                     if (trys == 0) {
                         alert("YOU LOSE :( - try another song!")
                         return
@@ -186,11 +207,11 @@ const Game = () => {
                             </div>
                         </div>
                     </>}
-                    {response.name && !winner && trys > 0 && <>
-                        <div className="col-6 offset-3 mt-3">
-                            <audio className="col-12" controls src={response.preview}></audio>
-                        </div>
-                    </>}
+                    {response.name && !winner && trys > 0 && <div className="row d-flex justify-content-center mt-3">
+                        <audio ref={audioRef} src={response.preview}></audio>
+                        {!isPlaying && <button className="col-4" onClick={startPlayback}>Play</button>}
+                        {isPlaying && <button className="col-4" onClick={stopPlayback}>Stop</button>}
+                    </div>}
                 </div>
                 {console.log(response)}
             </div>
