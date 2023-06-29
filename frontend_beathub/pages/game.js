@@ -9,11 +9,16 @@ const Game = () => {
     const [trys, setTrys] = useState(3)
     const [winner, setWinner] = useState(false)
 
+    const listOfArtist = () => {
+        const listOfArtist = response.artistName.map( name => (name.toString())).join(', ')
+        return listOfArtist
+    }
+
     const handleSubmit = (event) => {
         event.preventDefault()
 
         const songName = event.target.songName.value
-        
+
         if (winner) {
             alert("you already Win!")
             return
@@ -43,7 +48,7 @@ const Game = () => {
             default:
                 const artist = event.target.artistName.value
                 if (songName.toLowerCase().trim().includes(response.name.toLowerCase().trim())
-                    && artist.toLowerCase().trim().includes(response.artistName.toLowerCase().trim())) {
+                    && response.artistName.map(name => (name.toLowerCase())).includes( artist.toLowerCase() )) {
                     if (trys == 0) {
                         alert("YOU LOSE :( - try another song!")
                         return
@@ -143,6 +148,11 @@ const Game = () => {
                             <button className="col-6 offset-3 my-2" disabled={!response.name} type="submit">Guess!</button>
                         </div>
                     </form>
+                </div>
+                <div className="row col-xl-6 mt-4">
+
+                </div>
+                <div className="row col-xl-6 mt-4 border-start">
                     {response.name && winner && <>
                         <div className="row d-flex justify-content-center mt-3">
                             <div className="card col-xl-10">
@@ -151,7 +161,7 @@ const Game = () => {
                                         <img className="col-xl-4" src={response.image} alt="Picture of album from artist"></img>
                                         <div className="row col-xl-8">
                                             <h5 className="card-title col-12">{response.name}</h5>
-                                            <p className="card-text col-12">{response.artistName}</p>
+                                            <p className="card-text col-12">{listOfArtist()}</p>
                                             <audio className="col-12" controls src={response.preview}></audio>
                                         </div>
                                     </div>
@@ -168,7 +178,7 @@ const Game = () => {
                                         <img className="col-xl-4" src={response.image} alt="Picture of album from artist"></img>
                                         <div className="row col-xl-8">
                                             <h5 className="card-title col-12">{response.name}</h5>
-                                            <p className="card-text col-12">{response.artistName}</p>
+                                            <p className="card-text col-12">{listOfArtist()}</p>
                                             <audio className="col-12" controls src={response.preview}></audio>
                                         </div>
                                     </div>
@@ -182,7 +192,7 @@ const Game = () => {
                         </div>
                     </>}
                 </div>
-                {console.log(response, winner)}
+                {console.log(response)}
             </div>
         </Layout>
     )

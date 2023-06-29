@@ -51,7 +51,7 @@ const getRandomSong = async (req, res) => {
         const { data } = await axios.get(`https://api.spotify.com/v1/tracks/${track}`, headers)
         const infoTrack = {
             name: data.name,
-            artistName: data.album.artists[0].name,
+            artistName: data.album.artists.map(artist => (artist.name)),
             image: data.album.images[0].url,
             preview: data.preview_url
         }
