@@ -1,6 +1,7 @@
 import Layout from "../components/layout";
 import { useState } from "react";
 import axios from 'axios';
+import Link from "next/link";
 import recoStyles from "../styles/recommender.module.css";
 
 const recommender = () => {
@@ -8,7 +9,7 @@ const recommender = () => {
   const [value, setValue] = useState('');
   const [data, setData] = useState([]);
 
-  const fetchData = async () => {
+  const fetchData = async (searchValue) => {
     try {
       const token = sessionStorage.getItem('token');
       const headers = {
@@ -19,27 +20,29 @@ const recommender = () => {
   
       switch (category) {
         case "Song":
-          response = await axios.get(`http://localhost:8080/getTrack/${value}`, { headers });
-          response = response.data.getTrack;
+          if (searchValue !== "") {
+            response = await axios.get(`http://localhost:8080/getTrack/${searchValue}`, { headers });
+            response = response.data.getTrack;
+          }
           break;
         case "Artist":
-          response = await axios.get(`http://localhost:8080/getArtist/${value}`, { headers });
-          response = response.data.getArtist;
+          if (searchValue !== "") {
+            response = await axios.get(`http://localhost:8080/getArtist/${searchValue}`, { headers });
+            response = response.data.getArtist;
+          }
           break;
         case "Genre":
           response = await axios.get(`http://localhost:8080/getGenre`, { headers });
           response = response.data.getGenre.genres;
           break;
         default:
-          console.log("default");
           break;
       }
   
-      if (category === "Genre") {
-        response = response.filter((genre) => genre.toLowerCase().includes(value.toLowerCase()));
+      if (category === "Genre" && searchValue !== "") {
+        response = response.filter((genre) => genre.toLowerCase().includes(searchValue.toLowerCase()));
       }
   
-      console.log(response);
       setData(response);
     } catch (error) {
       console.log(error);
@@ -51,7 +54,7 @@ const recommender = () => {
       setCategory(param);
       setValue('');
       setData([]);
-      fetchData();
+      fetchData('');
     } catch (error) {
       console.log(error);
     }
@@ -64,7 +67,7 @@ const recommender = () => {
     if (newValue === "") {
       setData([]);
     } else {
-      fetchData();
+      fetchData(newValue);
     }
   };
 
@@ -75,20 +78,22 @@ const recommender = () => {
     } else {
       return (
         <ul className="list-group">
-          {data.map((item) => (
-            <li className="row list-group-item align-items-center">
-              <div className="col-auto d-flex align-items-center">
-                <div className={`m-0 ${recoStyles.searchPicContainer}`}>
-                <img
-                  className={`img-thumbnail ${recoStyles.searchPic} ${category === "Artist" ? "rounded-circle" : ""}`}
-                  src={item.images ? item.images : "/images/person-circle.svg"}
-                  />
+          {Array.isArray(data) && data.map((item) => (
+            <Link href={category === "Song" ? `/song/${item.id}` : `/artist/${item.id}`} key={item.id} style={{ textDecoration: "none" }}>
+              <li className="row list-group-item align-items-center" key={item.id}>
+                <div className="col-auto d-flex align-items-center">
+                  <div className={`m-0 ${recoStyles.searchPicContainer}`}>
+                    <img
+                      className={`img-thumbnail ${recoStyles.searchPic} ${category === "Artist" ? "rounded-circle" : ""}`}
+                      src={item.images ? item.images : "/images/person-circle.svg"}
+                    />
+                  </div>
+                  <div className="ms-3">
+                    <span className="fs-5 fw-semibold">{item.name}</span>
+                  </div>
                 </div>
-                <div className="ms-3">
-                  <span>{item.name}</span>
-                </div>
-              </div>
-            </li>
+              </li>
+            </Link>
           ))}
         </ul>
       );
@@ -100,12 +105,15 @@ const recommender = () => {
     if (value === "") {
       return <div></div>;
     } else {
-      return <ul className="list-group">
-                  {data.map((item) => (
-                      <li className="list-group-item">♫ {item}</li>
-                  ))}
-              </ul>
-
+      return (
+        <ul className="list-group">
+          {Array.isArray(data) && data.map((item) => (
+            <Link href={`/genre/${item}`} key={item} style={{ textDecoration: "none" }}>
+              <li className="list-group-item fs-5 fw-semibold">♫ {item}</li>
+            </Link>
+          ))}
+        </ul>
+      );
     }
   };
 
