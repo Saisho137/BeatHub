@@ -68,18 +68,22 @@ const Navbar = () => {
             <span className='navbar-toggler-icon'></span>
           </button>
           <div id='navMenu' className='collapse navbar-collapse'>
-            <ul className='navbar-nav ms-3'>
-              <li className='nav-item'><Link className='nav-link' href="/recommender">Recommender</Link></li>
-              <li className='nav-item'><Link className='nav-link' href="/game">Game</Link></li>
-              <li className='nav-item'><Link className='nav-link' href="/statistics">Statistics</Link></li>
-              <li className='nav-item'>
-                {userData?.image && isLoggedIn && userData?.username && (<img src={userData.image} alt="User Image" className="rounded-circle user-avatar mt-3 d-md-none ms-2" style={{ width: '60px', height: '60px' }} />)}
-                {userData?.image && isLoggedIn && userData?.username && (<span className="pt-3 p-2 px-0 nav-item nav-link text-light fs-5 fw-bold d-md-none">{userData.username}</span>)}
-                {isLoggedIn && (
-                  <button className='nav-link text-success fw-semibold d-md-none' onClick={handleLogout}>Logout</button>
-                )}
-              </li>
-            </ul>
+          <ul className='navbar-nav ms-3'>
+            {isLoggedIn && (
+              <>
+                <li className='nav-item'><Link className='nav-link' href="/recommender">Recommender</Link></li>
+                <li className='nav-item'><Link className='nav-link' href="/game">Game</Link></li>
+                <li className='nav-item'><Link className='nav-link' href="/statistics">Statistics</Link></li>
+              </>
+            )}
+            <li className='nav-item'>
+              {userData?.image && isLoggedIn && userData?.username && (<img src={userData.image} alt="User Image" className="rounded-circle user-avatar mt-3 d-md-none ms-2" style={{ width: '60px', height: '60px' }} />)}
+              {userData?.image && isLoggedIn && userData?.username && (<span className="pt-3 p-2 px-0 nav-item nav-link text-light fs-5 fw-bold d-md-none">{userData.username}</span>)}
+              {isLoggedIn && (
+                <button className='nav-link text-success fw-semibold d-md-none' onClick={handleLogout}>Logout</button>
+              )}
+            </li>
+          </ul>
             {isLoggedIn ? (
               <div className='p-3 d-flex ms-auto container justify-content-end'>
                 <div className='row justify-content-endt' style={{ marginTop: '-2rem', marginBottom: '-0.2rem' }}>
