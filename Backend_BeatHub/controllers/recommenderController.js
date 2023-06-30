@@ -40,8 +40,9 @@ const getSpecificTrack = async (req, res) => {
         const track = {
             name: data.name,
             artistId: data.album.artists[0].id,
+            artistName: data.album.artists[0].name,
             songId: id,
-            images: data.album.images[0].url 
+            images: data.album.images[0].url
         }
         res.status(200).send({ getTrack: track});
     } catch (error) {
@@ -63,6 +64,7 @@ const getSimilarTrack = async (req, res) => {
         })
         const tracks = data.tracks.map(track => ({
             name: track.name,
+            id: track.id,
             images: track.album.images[0].url,
             artist: track.artists.map(artist => artist.name)
           }));
@@ -87,7 +89,7 @@ const getArtist = async (req, res) => {
         })
         const artist = data.artists.items.map(artists => ({
             name: artists.name,
-            id: artists.id
+            id: artists.id,
         }))
         res.status(200).send({ getArtist: artist});
     } catch (error) {
