@@ -1,0 +1,9 @@
+.searchPicContainer {
+    width: 100%;
+    max-width: 200px;
+}
+  
+.searchPic {
+    width: 100%;
+    max-height: 200px;
+}
