@@ -78,7 +78,7 @@ const recommender = () => {
               <div className={`m-0 ${recoStyles.searchPicContainer}`}>
               <img
                 className={`img-thumbnail ${recoStyles.searchPic} ${category === "Artist" ? "rounded-circle" : ""}`}
-                src={item.image ? item.image : "/images/person-circle.svg"}
+                src={item.images ? item.images : "/images/person-circle.svg"}
                 />
               </div>
               <div className="ms-3">

@@ -87,7 +87,8 @@ const getArtist = async (req, res) => {
         })
         const artist = data.artists.items.map(artists => ({
             name: artists.name,
-            id: artists.id
+            id: artists.id,
+            images: artists.images[0].url? artists.images[0].url: null
         }))
         res.status(200).send({ getArtist: artist});
     } catch (error) {
