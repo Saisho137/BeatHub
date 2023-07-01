@@ -8,7 +8,7 @@ const Navbar = () => {
   const [userData, setUserData] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  useEffect(() => {
+  const handleAuthentication = () => {
     const hash = window.location.hash;
     if (hash) {
       const urlParams = new URLSearchParams(hash.replace('#', '?'));
@@ -16,26 +16,35 @@ const Navbar = () => {
 
       window.location.hash = '';
       sessionStorage.setItem('token', token);
+      fetchData(token);
     }
+  };
 
-    const fetchData = async (token) => {
-      try {
-        const headers = {
-          'Authorization': `Bearer ${token}`
-        };
-        const response = await axios.get('http://localhost:8080/getUserData', { headers });
-        let { username, image } = response.data;
-        if(image == null){
-          image = "/images/person-circle.svg"
-        }
-        const user = { username, image };
-        setUserData(user);
-        setIsLoggedIn(true);
-      } catch (error) {
-        console.log(error);
-        setIsLoggedIn(false);
+  const fetchData = async (token) => {
+    try {
+      const headers = {
+        'Authorization': `Bearer ${token}`
+      };
+      const response = await axios.get('http://localhost:8080/getUserData', { headers });
+      let { username, image } = response.data;
+      if (image == null) {
+        image = "/images/person-circle.svg"
       }
-    };
+      const user = { username, image };
+      setUserData(user);
+      setIsLoggedIn(true);
+
+      const tokenTimestamp = Date.now();
+      sessionStorage.setItem('token', token);
+      sessionStorage.setItem('tokenTimestamp', tokenTimestamp);
+    } catch (error) {
+      console.log(error);
+      setIsLoggedIn(false);
+    }
+  };
+
+  useEffect(() => {
+    handleAuthentication();
 
     const token = sessionStorage.getItem('token');
     if (token) {
@@ -56,6 +65,7 @@ const Navbar = () => {
 
   const handleLogout = () => {
     sessionStorage.removeItem('token');
+    sessionStorage.removeItem('tokenTimestamp');
     setIsLoggedIn(false);
   };
 
