@@ -57,7 +57,7 @@ const Artist = () => {
             getSimilarArtist(token)
             getArtistTopTracks(token)
             if (!token) {
-                console.log("lol")
+                router.push('/')
             }
         }
     }, [param]);
@@ -82,7 +82,7 @@ const Artist = () => {
                             </div>
                             <h4 className='card-footer mt-3'>Artist genres</h4>
                             <div>
-                                {artist.genres.map((genres) => <p>{genres}</p>)}
+                                {artist.genres.map((genres) => <p key={genres}>{genres}</p>)}
                             </div>
                         </div>
                     </div>
@@ -90,7 +90,7 @@ const Artist = () => {
                     <div className={`col-10 col-md-4 col-xl-5 border-start mt-4 ${styles.cardplacement} ${styles.bordersection} ${styles.left}`}>
                         <div className="row" style={{ paddingLeft: "4%" }}>
                             {similar.map((name) => (
-                                <div className="card m-3 p-0" style={{ width: '13rem' }}>
+                                <div key={name.id} className="card m-3 p-0" style={{ width: '13rem' }}>
                                     <Link href={`/artist/${name.id}`}>
                                         <Image className="card-img-top" loader={() => name.images ? name.images : '/images/person-circle.svg'} src={name.images ? name.images : '/images/play-fill.svg'} height={150} width={150} alt="Picture of the author" />
                                     </Link>
@@ -108,11 +108,11 @@ const Artist = () => {
                     <h1 className={`mt-5 mb-5 ${styles.artisttitle}`}>Top Tracks</h1>
                     <div className="col-10 col-md-10 col-xl-7">
                         <ul>{topTracks.map((name) =>
-                            <div className='card col-11 mb-3 ms-1'>
+                            <div key={name.id} className='card col-11 mb-3 ms-1'>
                                 <div className='row g-0 d-flex align-items-center'>
                                     <Image className='img-fluid rounded-start col-2' loader={() => name.images} src={name.images} height={150} width={150} alt="Picture of the author" />
                                     <div className='col-8 card-body'>
-                                        <Link style={{ textDecoration: 'none' }} href={`/songs/${name.id}`}>
+                                        <Link style={{ textDecoration: 'none' }} href={`/song/${name.id}`}>
                                             <h6 className='text-start card-title'>{name.name}</h6>
                                             <p className='text-start card-text text-muted'>{name.artist}</p>
                                         </Link>

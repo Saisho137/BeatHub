@@ -1,7 +1,8 @@
 import Layout from "../components/layout"
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import axios from "axios"
 import styles from '../styles/game.module.css'
+import { useRouter } from 'next/router'
 
 export default function Game() {
     const [selectedOption, setSelectedOption] = useState({
@@ -19,7 +20,14 @@ export default function Game() {
     const [winner, setWinner] = useState(false)
     const timeoutRef = useRef(null)
     const audioRef = useRef(null)
-    const formRef = useRef(null)
+    const router = useRouter()
+
+    useEffect(() => {
+        const token = sessionStorage.getItem('token')
+        if (!token) {
+            router.push('/')
+        }
+    }, [])
 
     const listOfArtist = () => {
         const listOfArtist = response.artistName.map(name => (name.toString())).join(', ')
@@ -303,7 +311,6 @@ export default function Game() {
                     </div>
                 </div>
             </div>
-            {console.log(response)}
         </Layout>
     )
 }

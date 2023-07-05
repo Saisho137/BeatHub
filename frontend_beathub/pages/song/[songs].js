@@ -35,7 +35,6 @@ const Songs = () => {
         }
         const { data } = await axios.get(`http://localhost:8080/getSimilarTracks/${song.artistId}/${song.songId}`, headers)
         setSimilar(data.getSimilarTrack)
-        console.log(data);
     }
 
     useEffect(() => {
@@ -43,15 +42,12 @@ const Songs = () => {
             const token = sessionStorage.getItem('token')
             getSpecificTrack(token)
             if (!token) {
-                console.log("No token provied")
+                router.push('/')
             }
         }
     }, [param]);
 
-    console.log(similar.length);
-
     if (!song) {
-        console.log(similar);
         return <h1>Loading...</h1>
     }
 
@@ -80,11 +76,11 @@ const Songs = () => {
                     <div className={`col-10 col-md-4 col-xl-5 border-start mt-4 ${styles.cardplacement} ${styles.bordersection} ${styles.left}`}>
                         <h5 className={`mt-5 mb-5 ${styles.artisttitle}`}>Similar Songs</h5>
                         <ul>{similar.map((name) =>
-                            <div className='card col-11 mb-3 ms-1'>
+                            <div key={name.id} className='card col-11 mb-3 ms-1'>
                                 <div className='row g-0 d-flex align-items-center'>
                                     <Image className='img-fluid rounded-start col-2' loader={() => name.images} src={name.images} height={150} width={150} alt="Picture of the author" />
                                     <div className='col-8 card-body'>
-                                        <Link style={{ textDecoration: 'none' }} href={`/songs/${name.id}`}>
+                                        <Link style={{ textDecoration: 'none' }} href={`/song/${name.id}`}>
                                             <h6 className='text-start card-title'>{name.name}</h6>
                                             <p className='text-start card-text text-muted'>{name.artist}</p>
                                         </Link>

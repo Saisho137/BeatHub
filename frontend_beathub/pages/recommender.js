@@ -1,13 +1,22 @@
 import Layout from "../components/layout";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from 'axios';
 import Link from "next/link";
 import recoStyles from "../styles/recommender.module.css";
+import { useRouter } from 'next/router'
 
 const recommender = () => {
   const [category, setCategory] = useState("Song");
   const [value, setValue] = useState('');
   const [data, setData] = useState([]);
+  const router = useRouter()
+
+  useEffect(() => {
+    const token = sessionStorage.getItem('token')
+    if (!token) {
+      router.push('/')
+    }
+  }, [])
 
   const fetchData = async (searchValue) => {
     try {
@@ -15,9 +24,9 @@ const recommender = () => {
       const headers = {
         'Authorization': `Bearer ${token}`
       };
-  
+
       let response = "";
-  
+
       switch (category) {
         case "Song":
           if (searchValue !== "") {
@@ -38,11 +47,11 @@ const recommender = () => {
         default:
           break;
       }
-  
+
       if (category === "Genre" && searchValue !== "") {
         response = response.filter((genre) => genre.toLowerCase().includes(searchValue.toLowerCase()));
       }
-  
+
       setData(response);
     } catch (error) {
       console.log(error);
@@ -63,7 +72,7 @@ const recommender = () => {
   const onChange = (event) => {
     const newValue = event.target.value;
     setValue(newValue);
-  
+
     if (newValue === "") {
       setData([]);
     } else {
