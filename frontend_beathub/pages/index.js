@@ -1,33 +1,58 @@
+import React, { useEffect } from 'react';
 import Layout from "../components/layout";
-import { useEffect } from 'react'
+import indexStyles from "../styles/index.module.css";
 
 export default function Home() {
-
   useEffect(() => {
-    const hash = window.location.hash
-    let token = window.sessionStorage.getItem('token')
+    const checkTokenExpiration = () => {
+      if (typeof sessionStorage !== 'undefined') {
+        const tokenTimestamp = sessionStorage.getItem('tokenTimestamp');
+        if (tokenTimestamp) {
+          const currentTimestamp = Date.now();
+          const elapsedMilliseconds = currentTimestamp - tokenTimestamp;
+          const elapsedHours = elapsedMilliseconds / (1000 * 60 * 60);
 
-    if (hash) {
-      const urlParams = new URLSearchParams(window.location.hash.replace('#','?'))
-      let token = urlParams.get('access_token')
+          if (elapsedHours >= 1) {
+            sessionStorage.removeItem('token');
+            sessionStorage.removeItem('tokenTimestamp');
+            alert('Your session has expired. Please login again.');
+          }
+        }
+      }
+    };
 
-      window.location.hash = ''
-      window.sessionStorage.setItem('token',token)
+    checkTokenExpiration();
+  }, []);
+
+  const handleClick = (buttonType) => {
+    if (typeof sessionStorage !== 'undefined') {
+      const token = sessionStorage.getItem('token');
+      if (token) {
+        if (buttonType === 'recommender') {
+          const redirectUrl = '/recommender';
+          window.location.href = redirectUrl;
+        } else if (buttonType === 'game') {
+          const redirectUrl = '/game';
+          window.location.href = redirectUrl;
+        }
+      } else {
+        alert('You are not logged in. Please login to access this functionality.');
+      }
     }
-  }, [])
-
-  const CLIENT_ID = '39dd8906e8044b7eb1715c1a4a1867e7'
-  const REDIRECT_URI = "http://localhost:3000"
-  const AUTH_ENDPOINT = 'https://accounts.spotify.com/authorize'
-  const RESPONSE_TYPE = 'token'
-  const SCOPE = 'user-read-private playlist-read-private user-read-currently-playing user-follow-read user-top-read'
+  };
 
   return (
     <Layout>
-      <a 
-            href={`${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=${RESPONSE_TYPE}&scope=${SCOPE}`}>
-            Login with Spotify
-          </a>
+      <div className="container mt-5 pt-5">
+        <div className="row text-center">
+          <div className={`col-md-6 col-sm-12 ${indexStyles.buttonContainer}`}>
+            <button className={`${indexStyles.homeButton1}`} onClick={() => handleClick('recommender')}>Want to find something new?</button>
+          </div>
+          <div className={`col-md-6 col-sm-12 ${indexStyles.buttonContainer}`}>
+            <button className={`${indexStyles.homeButton1}`} onClick={() => handleClick('game')}>Want to play a game?</button>
+          </div>
+        </div>
+      </div>
     </Layout>
   );
 }

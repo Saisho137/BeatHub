@@ -36,7 +36,7 @@ const getStats = async (req, res) => {
 
         return {
             artists: items.map(({ id, name, images }) => ({ id, name, images: images[0] })),
-            genres: genresList
+            genres: Object.entries(genresList)
         }
     }
 
@@ -69,7 +69,7 @@ const getStats = async (req, res) => {
         })
 
         return {
-            popularity: totalPopularity / count,
+            popularity: totalPopularity / (count * 100),
             happiness: totalHappiness / count,
             danceability: totalDanceability / count,
             energy: totalEnergy / count,
@@ -100,11 +100,19 @@ const getStats = async (req, res) => {
         }
     }
 
-    const user = await getUserProfile()
-    const topArtistsAndGenres = await getTopArtistsAndGenres()
-    const topTracksAndFeatures = await getTopTracks()
+    try {
+        const user = await getUserProfile()
+        const topArtistsAndGenres = await getTopArtistsAndGenres()
+        const topTracksAndFeatures = await getTopTracks()
 
-    res.status(200).send({ user, ...topArtistsAndGenres, ...topTracksAndFeatures })
+        res.status(200).send({ user, ...topArtistsAndGenres, ...topTracksAndFeatures })
+    }
+    catch (error) {
+        res.status(401).send({ message: 'Token expired' })
+    }
+
+
+
 }
 
 module.exports = { getStats }
