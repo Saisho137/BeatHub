@@ -40,8 +40,9 @@ const getSpecificTrack = async (req, res) => {
         const track = {
             name: data.name,
             artistId: data.album.artists[0].id,
+            artistName: data.album.artists[0].name,
             songId: id,
-            images: data.album.images[0].url 
+            images: data.album.images[0].url
         }
         res.status(200).send({ getTrack: track});
     } catch (error) {
@@ -63,6 +64,7 @@ const getSimilarTrack = async (req, res) => {
         })
         const tracks = data.tracks.map(track => ({
             name: track.name,
+            id: track.id,
             images: track.album.images[0].url,
             artist: track.artists.map(artist => artist.name)
           }));
@@ -89,6 +91,7 @@ const getArtist = async (req, res) => {
             name: artists.name,
             id: artists.id,
             images: artists.images[0]? artists.images[0].url: null
+
         }))
         res.status(200).send({ getArtist: artist});
     } catch (error) {
@@ -110,8 +113,8 @@ const getSpecificArtist = async (req, res) => {
         })
         const artist = {
             name: data.name,
-            genres: data.genres,
-            images: data.images[0].url
+            genres: data.genres ? data.genres : "Na",
+            images: data.images[0] ? data.images[0].url : null
         }
         res.status(200).send({ getSpecificArtist: artist});
     } catch (error) {
@@ -133,8 +136,7 @@ const getSimilarArtist = async (req, res) => {
         const artist = data.artists.map(artists => ({
             name: artists.name,
             id: artists.id,
-            images: artists.images[0].url
-
+            images: artists.images[0] ? artists.images[0].url : null
         }))
         res.status(200).send({ getSimilarArtist: artist});
     } catch (error) {
@@ -154,6 +156,7 @@ const getArtistTopTracks = async (req, res) => {
             },
         })
         const track = data.tracks.map(track => ({
+            artist: track.album.artists[0].name,
             name: track.name,
             id: track.id,
             preview: track.preview_url,

@@ -22,4 +22,5 @@ export default function PreviewSong({ preview }) {
                 : <img src='/images/pause-fill.svg' alt='pause'/>}
         </button>
     )
-} 
+}
+
