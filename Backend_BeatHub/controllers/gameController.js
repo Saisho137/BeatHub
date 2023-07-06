@@ -26,21 +26,20 @@ const getRandomSong = async (req, res) => {
             case "genre":
                 const { data } = await axios.get(`https://api.spotify.com/v1/search?query=genre%3A${searchItem}&type=track`, headers)
                 data.tracks.items.map((track) => {
-                    if (track.preview_url) {trackList.push(track.id)}
+                    if (track.preview_url) { trackList.push(track.id) }
                 })
                 break
             case "playlist":
                 const playlistID = searchItem.split('playlist/')[1]
                 const playlist = await axios.get(`https://api.spotify.com/v1/playlists/${playlistID}`, headers)
-                console.log(playlist.data.tracks.items[0])
                 playlist.data.tracks.items.map(pl => {
-                    if (pl.track.preview_url) {trackList.push(pl.track.id)}
+                    if (pl.track.preview_url) { trackList.push(pl.track.id) }
                 })
                 break
             case "artist":
                 const topTracksArtist = await axios.get(`https://api.spotify.com/v1/search?query=artist%3A${searchItem}&type=track`, headers)
                 topTracksArtist.data.tracks.items.map((track) => {
-                    if (track.preview_url) {trackList.push(track.id)}
+                    if (track.preview_url) { trackList.push(track.id) }
                 })
                 break
             default:
@@ -59,7 +58,11 @@ const getRandomSong = async (req, res) => {
         res.status(200).send({ Track: infoTrack })
 
     } catch (err) {
-        res.status(401).send({ message: 'Token missing or invalid.' })
+        if (err.response && err.response.status === 401) {
+            res.status(401).send({ message: 'Token missing or invalid.' })
+            return
+        }
+        res.status(400).send({ message: 'Bad Request' })
     }
 }
 
