@@ -1,4 +1,3 @@
-import '../styles/statistics.module.css'
 import Layout from '../components/layout'
 import FeatureBar from '../components/featureBar'
 import axios from 'axios'
@@ -20,7 +19,7 @@ export default function Statistics() {
     }
 
     const router = useRouter()
-    const [time, setTime] = useState('short_term')
+    const [time, setTime] = useState('long_term')
     const [stats, setStats] = useState('')
 
     useEffect(() => {

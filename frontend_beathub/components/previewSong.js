@@ -16,10 +16,15 @@ export default function PreviewSong({ preview }) {
     }
 
     return (
-        <button onClick={playPreview} className='rounded-circle border-0 align-middle pb-1' style={{ backgroundColor: 'lightgreen' }}>
+        <button
+            onClick={playPreview}
+            className='rounded-circle border-0 align-middle pb-1'
+            style={{ backgroundColor: `${preview ? 'lightgreen' : 'grey'}` }}
+            disabled={!preview}
+        >
             {!isPlaying
-                ? <img src='/images/play-fill.svg' alt='play'/>
-                : <img src='/images/pause-fill.svg' alt='pause'/>}
+                ? <img src='/images/play-fill.svg' alt='play' />
+                : <img src='/images/pause-fill.svg' alt='pause' />}
         </button>
     )
 }
