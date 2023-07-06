@@ -73,7 +73,7 @@ const Navbar = () => {
   };
 
   return (
-    <div className='container-fluid p-0'>
+    <div className='container-fluid p-0 sticky-top'>
       <nav className='navbar navbar-expand-md navbar-dark bg-dark border-3 border-bottom border-success'>
         <div className='container-fluid'>
           <Link href="/" className='navbar-brand fs-4'>BeatHub</Link>
@@ -93,8 +93,8 @@ const Navbar = () => {
               {userData?.image && isLoggedIn && userData?.username && (<img src={userData.image} alt="User Image" className="rounded-circle user-avatar mt-3 d-md-none ms-2" style={{ width: '60px', height: '60px' }} />)}
               {userData?.image && isLoggedIn && userData?.username && (<a className="pt-3 p-2 px-0 nav-item nav-link text-light fs-5 fw-bold d-md-none nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">{userData.username}</a>)}
               {isLoggedIn && (
-                <ul class="dropdown-menu bg-dark border-0">
-                  <li><a class="dropdown-item bg-dark text-danger fw-semibold" href="#" onClick={handleLogout}>Logout</a></li>
+                <ul className="dropdown-menu bg-dark border-0">
+                  <li><a className="dropdown-item bg-dark text-danger fw-semibold" href="#" onClick={handleLogout}>Logout</a></li>
                 </ul>
               )}
             </li>
@@ -107,8 +107,8 @@ const Navbar = () => {
                   </div>
                   <div className='col-6 pt-1 px-0 nav-item dropdown'>
                     {userData?.username && <a className="pt-4 px-0 nav-item nav-link text-light fs-5 fw-bold d-none d-md-block dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">{userData.username}</a>}
-                    <ul class="dropdown-menu bg-dark">
-                      <li><a class="dropdown-item bg-dark text-danger fw-semibold" href="#" onClick={handleLogout}>Logout</a></li>
+                    <ul className="dropdown-menu bg-dark">
+                      <li><a className="dropdown-item bg-dark text-danger fw-semibold" href="#" onClick={handleLogout}>Logout</a></li>
                     </ul>
                   </div>
                 </div>

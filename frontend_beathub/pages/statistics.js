@@ -1,4 +1,4 @@
-import '../styles/statistics.module.css'
+import statisticsStyles from  '../styles/statistics.module.css'
 import Layout from '../components/layout'
 import FeatureBar from '../components/featureBar'
 import axios from 'axios'
@@ -39,7 +39,7 @@ export default function Statistics() {
 
             <h1 className='text-center mt-5'>Statistics</h1>
 
-            <div className='row justify-content-center offset-1 col-10 mt-5 sticky-top rounded' style={{ backgroundColor: 'black' }}>
+            <div className={`row justify-content-center offset-1 col-10 mt-5 sticky-top rounded ${statisticsStyles.paddingDiv}`}>
                 <button
                     className={`col-lg-4 rounded rounded-pill border-dark text-bg-${time == 'short_term' ? 'dark' : 'light'}`}
                     onClick={() => setTime('short_term')}>4 Weeks</button>
