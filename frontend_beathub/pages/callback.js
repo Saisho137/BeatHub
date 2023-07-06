@@ -13,14 +13,19 @@ export default function Callback() {
     const url = `${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=${RESPONSE_TYPE}&scope=${encodeURIComponent(SCOPE)}`;
 
     useEffect(() => {
-        const hash = window.location.hash;
-        if (!hash) {
-            router.replace(url);
-        }
-        const urlParams = new URLSearchParams(hash.replace('#', '?'));
-        const token = urlParams.get('access_token');
-        sessionStorage.setItem('token', token)
-        const callbackUrl = sessionStorage.getItem('callback')
-        router.push(`/${callbackUrl}`)
-    }, [])
+        const getToken = async () => {
+            const hash = window.location.hash;
+            if (!hash) {
+                router.replace(url);
+            } else {
+                const urlParams = new URLSearchParams(hash.replace('#', '?'));
+                const token = urlParams.get('access_token');
+                sessionStorage.setItem('token', token);
+                const callbackUrl = sessionStorage.getItem('callback');
+                await router.push(`/${callbackUrl}`);
+            }
+        };
+
+        getToken();
+    }, []);
 }
