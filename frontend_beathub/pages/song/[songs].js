@@ -22,9 +22,20 @@ const Songs = () => {
                 'Authorization': `Bearer ${token}`
             }
         }
-        const { data } = await axios.get(`http://localhost:8080/getSpecificTrack/${param}`, headers)
-        setSong(data.getTrack)
-        getSimilarTracks(token, data.getTrack)
+
+        try {
+            const { data } = await axios.get(`http://localhost:8080/getSpecificTrack/${param}`, headers)
+            setSong(data.getTrack)
+            getSimilarTracks(token, data.getTrack)
+        }
+        catch (error) {
+            if (error.response && error.response.status == 401) {
+                sessionStorage.setItem('callback', `song/${param}`)
+                router.push('/callback')
+                return
+            }
+        }
+
     }
 
     const getSimilarTracks = async (token, song) => {
@@ -41,9 +52,6 @@ const Songs = () => {
         if (param) {
             const token = sessionStorage.getItem('token')
             getSpecificTrack(token)
-            if (!token) {
-                router.push('/')
-            }
         }
     }, [param]);
 
