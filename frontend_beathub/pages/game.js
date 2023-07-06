@@ -185,14 +185,14 @@ export default function Game() {
 
     return (
         <Layout>
-            <button className={`${styles['toggle-sidebar-button']}`} onClick={toggleSidebar}>
-                <b>{selectedOption.isOpen ? "<" : ">"}</b>
-            </button>
-            <div className={`row`}>
+            <div className={`col-12 row ${styles.body}`}>
+                <button className={`${styles['toggle-sidebar-button']} col-1`} onClick={toggleSidebar}>
+                    <b>{selectedOption.isOpen ? "<" : ">"}</b>
+                </button>
                 {selectedOption.isOpen && (
-                    <div className={`col-xl-6 ${styles['sidebar-column']} border`}>
+                    <div className={`col-xl-6 ${styles['sidebar-column']} border border-success border-3 rounded p-5`}>
                         <div className={`${styles.sidebar} row d-flex justify-content-center mt-4`}>
-                            <h2 className="row col-12 d-flex justify-content-center">Build your Game</h2>
+                            <h2 className={`row col-12 d-flex justify-content-center mb-5 ${styles['instructions-tittle']}`}>Build your Game</h2>
                             <form className="row col-12 d-flex justify-content-center" onSubmit={handleSubmitTrack}>
                                 <label className="col-xl-3 mt-3" htmlFor="typeOfSearch"><b>Select Type of Search:</b></label>
                                 <select className="col-xl-7 mt-3" id="typeOfSearch" value={selectedOption.typeOfSearch} onChange={handleSelectionChange}>
@@ -228,39 +228,40 @@ export default function Game() {
                                     <input className={`col-xl-1 mt-2`} type="checkbox" id="artistChecked" name="artistChecked" max={29} min={1} />
                                     <div className="col-xl-5 mt-2"></div>
                                 </>}
-                                <button className="col-4 mt-2" type="submit">Find</button>
+                                <button className={`col-4 ${styles['input-button']} my-5`} type="submit">Find</button>
                             </form>
                         </div>
                     </div>)}
-                <div className="row col-xl-6 mt-2 d-flex justify-content-center mt-4">
-                    <h2 className="col-xl-8 mt-2 d-flex align-self-center justify-content-center">How to play Guess Game?</h2>
-                    <p className="col-xl-8 align-self-center">First you must generate a random song and then guess which is it, you need to open the sidebar with the top left button,
+                <div className="row col-xl-6 d-flex justify-content-center align-self-center my-5 px-5">
+                    <h1 className={`col-xl-8 d-flex justify-content-center mb-3 ${styles['instructions-tittle']}`}>How to play Guess Game?</h1>
+                    <h4 className={`col-xl-8 d-flex justify-content-center ${styles['instructions-text']}`}>
+                        First you must generate a random song and then guess which is it, you need to open the sidebar with the top left button,
                         choose between genre, playlist or artist and fill in the information, then you must press the ¨find¨ button and a song will be generated on the
                         right side of the page, with a certain duration, number of attempts and if you chose it, the option to also guess the artist. Now you should listen
                         to the mystery track and fill in the song name and artist name fields (if you have it), finally, press the ¨guess¨ button to see if your guess
                         is correct. Good luck!
-                    </p>
+                    </h4>
                 </div>
-                <div className={`${styles['main-column']} row col-xl-6 mt-4 border-start`}>
-                    <form className="row col-12 align-self-center" id="formGuess" onSubmit={handleSubmit}>
-                        <div className="row col-xl-6">
-                            <label className={`col-xl-4  mt-3`} htmlFor="songName"><b>Song Name:</b></label>
-                            <input className={`col-xl-8 ${styles.input} mt-3`} disabled={!response.name} type="text" id="songName" name="songName" required />
+                <div className={`${styles['main-column']} row col-xl-6 mt-4 d-flex justify-content-center align-self-center`}>
+                    <form className="row col-12 align-self-center border border-dark border-2 rounded-5 p-4" id="formGuess" onSubmit={handleSubmit}>
+                        <div className="row col-xl-6 d-flex align-self-center">
+                            <label className={`col-xl-8 mt-3`} htmlFor="songName"><h4><b>Song Name:</b></h4></label>
+                            <input className={`col-xl-10 mt-3 ${styles.input}`} disabled={!response.name} type="text" id="songName" name="songName" required />
                             {selectedOption.typeOfSearch != "artist" && difficulty.artist ? <>
-                                <label className="col-xl-4 my-3"><b>Artist Name:</b></label>
-                                <input className={`col-xl-8 ${styles.input} my-3`} disabled={!response.name} type="text" id="artistName" name="artistName" required />
-                            </> : <div className="col-xl-10 my-3"></div>}
+                                <label className="col-xl-8 mt-3"><h4><b>Artist Name:</b></h4></label>
+                                <input className={`col-xl-10 ${styles.input} mt-3 mb-4`} disabled={!response.name} type="text" id="artistName" name="artistName" required />
+                            </> : <><div className="col-xl-12 my-1"></div><div className="col-xl-12 my-3"></div></>}
                         </div>
-                        <div className="row col-xl-6 d-flex justify-content-center">
-                            {response.name && <h4 className="col-12 d-flex justify-content-center mt-3">Tries: {difficulty.tries}</h4>}
-                            {!response.name && <h4 className="col-12 d-flex justify-content-center mt-3">Find a song to Start!</h4>}
-                            <button className={`col-6 ${styles.input} my-2`} disabled={!response.name} type="submit">Guess!</button>
+                        <div className="row col-xl-6 d-flex justify-content-center align-self-center">
+                            {response.name && <h2 className="col-8 d-flex justify-content-center my-3"><b>Tries: {difficulty.tries}</b></h2>}
+                            {!response.name && <h4 className="col-8 d-flex justify-content-center my-3"><b>Find a song to Start!</b></h4>}
+                            <button className={`col-6 ${styles['input-button']} my-3`} disabled={!response.name} type="submit">Guess!</button>
                         </div>
                     </form>
-                    <div className="row col-xl-12 mt-4 border-start">
+                    <div className="row col-12 align-self-center">
                         {response.name && winner && <>
                             <div className="row d-flex justify-content-center mt-3">
-                                <div className="card col-xl-10">
+                                <div className={`card col-xl-10 ${styles['preview-song']}`}>
                                     <div className="card-body">
                                         <div className="row col-12">
                                             <img className="col-xl-4" src={response.image} alt="Picture of album from artist"></img>
@@ -277,11 +278,11 @@ export default function Game() {
                         {response.name && !winner && difficulty.tries == 0 && <>
                             <div className="row d-flex justify-content-center mt-3">
                                 <h2>It actually was:</h2>
-                                <div className="card col-xl-10">
+                                <div className={`card col-xl-10 ${styles['preview-song']}`}>
                                     <div className="card-body">
                                         <div className="row col-12">
                                             <img className="col-xl-4" src={response.image} alt="Picture of album from artist"></img>
-                                            <div className="row col-xl-8">
+                                            <div className={`row col-xl-8`}>
                                                 <h5 className="card-title col-12">{response.name}</h5>
                                                 <p className="card-text col-12">{listOfArtist()}</p>
                                                 <audio className="col-12" controls src={response.preview}></audio>
@@ -294,15 +295,15 @@ export default function Game() {
                         {response.name && !winner && difficulty.tries > 0 &&
                             (<div className="row d-flex justify-content-center mt-3">
                                 <audio ref={audioRef} src={response.preview}></audio>
-                                <div className="card col-xl-10">
+                                <div className={`card col-xl-10 ${styles['preview-song']}`}>
                                     <div className="card-body">
                                         <div className="row col-12">
                                             <img className="col-xl-4" src="/images/question.JPG" alt="Picture of album from artist"></img>
                                             <div className="row col-xl-8">
                                                 <h5 className="card-title col-12">????????</h5>
                                                 <p className="card-text col-12">????</p>
-                                                {!isPlaying && <button className={`col-4 align-self-start ${styles.input}`} onClick={startPlayback}>Play</button>}
-                                                {isPlaying && <button className={`col-4 align-self-start ${styles.input}`} onClick={stopPlayback}>Stop</button>}
+                                                {!isPlaying && <button className={`col-4 align-self-start ${styles['input-button']}`} onClick={startPlayback}>Play</button>}
+                                                {isPlaying && <button className={`col-4 align-self-start ${styles['input-button']}`} onClick={stopPlayback}>Stop</button>}
                                             </div>
                                         </div>
                                     </div>
