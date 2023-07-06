@@ -10,7 +10,8 @@ export default function Game() {
     const [selectedOption, setSelectedOption] = useState({
         typeOfSearch: 'genre',
         difficultyLevel: 'easy',
-        isOpen: false
+        isOpen: false,
+        isArtistChecked: 'artistTrue'
     })
     const [difficulty, setDifficulty] = useState({
         tries: 3,
@@ -39,6 +40,9 @@ export default function Game() {
     }
     const toggleSidebar = () => {
         setSelectedOption({ ...selectedOption, isOpen: !selectedOption.isOpen })
+    }
+    const handleCheckboxChange = (option) => {
+        setSelectedOption({ ...selectedOption, isArtistChecked: option })
     }
     const listOfArtist = () => {
         const listOfArtist = response.artistName.map(name => (name.toString())).join(', ')
@@ -175,7 +179,7 @@ export default function Game() {
                 setDifficulty({ tries: 1, duration: 5, artist: true })
                 break
             case "custom":
-                setDifficulty({ tries: event.target.tries.value, duration: event.target.duration.value, artist: event.target.artistChecked.checked })
+                setDifficulty({ tries: event.target.tries.value, duration: event.target.duration.value, artist: selectedOption.isArtistChecked === "artistTrue" })
                 break
             default:
                 console.log("Default")
@@ -226,10 +230,10 @@ export default function Game() {
 
     return (
         <Layout>
+            <button className={`${styles['toggle-sidebar-button']}`} onClick={toggleSidebar}>
+                <b>{selectedOption.isOpen ? "<" : ">"}</b>
+            </button>
             <div className={`col-12 row ${styles.body}`}>
-                <button className={`${styles['toggle-sidebar-button']} col-1`} onClick={toggleSidebar}>
-                    <b>{selectedOption.isOpen ? "<" : ">"}</b>
-                </button>
                 <div style={{ left: selectedOption.isOpen ? '-3%' : '-100%' }} className={`col-xl-6 ${styles['sidebar-column']} border border-success border-3 rounded p-5`}>
                     <div className={`${styles.sidebar} row d-flex justify-content-center mt-4`}>
                         <h2 className={`row col-12 d-flex justify-content-center mb-5 ${styles['instructions-tittle']}`}>Build your Game</h2>
@@ -264,9 +268,14 @@ export default function Game() {
                                 <input className="col-xl-6 mt-2" type="number" id="duration" name="duration" max={29} min={1} required />
                                 <label className="col-xl-4 mt-2" htmlFor="tries"><b>Number of Tries:</b></label>
                                 <input className="col-xl-6 mt-2" type="number" id="tries" name="tries" max={99} min={1} required />
-                                <label className="col-xl-4 mt-2" htmlFor="artistChecked"><b>Include artist name: </b></label>
-                                <input className={`col-xl-1 mt-2`} type="checkbox" id="artistChecked" name="artistChecked" max={29} min={1} />
-                                <div className="col-xl-5 mt-2"></div>
+                                <label className="col-xl-4 mt-2"><b>Include artist name: </b></label>
+                                <label className="col-xl-1 mt-2" htmlFor="artistTrue"><b>Yes</b></label>
+                                <input className={`col-xl-1 mt-2`} type="checkbox" id="artistTrue" name="artistTrue"
+                                    checked={selectedOption.isArtistChecked === 'artistTrue'} onChange={() => handleCheckboxChange('artistTrue')} />
+                                <label className="col-xl-1 mt-2" htmlFor="artistFalse"><b>No</b></label>
+                                <input className={`col-xl-1 mt-2`} type="checkbox" id="artistFalse" name="artistFalse"
+                                    checked={selectedOption.isArtistChecked === 'artistFalse'} onChange={() => handleCheckboxChange('artistFalse')} />
+                                <div className="col-xl-2 mt-2"></div>
                             </>}
                             <button className={`col-4 ${styles['input-button']} my-5`} type="submit">Find</button>
                         </form>

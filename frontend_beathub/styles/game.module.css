@@ -24,6 +24,8 @@
   position: absolute;
   z-index: 2;
   left: 0%;
+  top: 45%;
+  bottom: 45%;
 }
 
 .input-button {
