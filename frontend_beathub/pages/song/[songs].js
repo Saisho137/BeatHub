@@ -53,10 +53,13 @@ const Songs = () => {
 
     return (
         <Layout>
-            <div className='row text-center offset-1 col-10 mt-5 pt-5 border'>
+            <div className='row text-center offset-1 col-10 mt-5 border'>
+                <Link href='/recommender' className='m-3 col-2 p-1 btn btn-success'>
+                    <img src='/images/arrow-up-circle-fill-white.svg' className='float-start ms-2 mt-1' style={{ transform: 'rotate(270deg)' }} />
+                    Search More
+                </Link>
                 <h1 className={`${styles.artisttitle}`}>Songs</h1>
                 <div className={`row mb-5`}>
-
                     <div className={`col-12 col-md-6 col-xl-5 ${styles.singleartist}`}>
                         <div className={`card ${styles.artistmargin}`}>
                             <h3 className="card-title card-header" style={{ marginBottom: "2%" }}>{song.name}</h3>
@@ -76,7 +79,7 @@ const Songs = () => {
                     <div className={`col-10 col-md-4 col-xl-5 border-start mt-4 ${styles.cardplacement} ${styles.bordersection} ${styles.left}`}>
                         <h5 className={`mt-5 mb-5 ${styles.artisttitle}`}>Similar Songs</h5>
                         <ul>{similar.map((name) =>
-                            <div key={name.id} className='card col-11 mb-3 ms-1'>
+                            <div className='card col-11 mb-3 ms-1'>
                                 <div className='row g-0 d-flex align-items-center'>
                                     <Image className='img-fluid rounded-start col-2' loader={() => name.images} src={name.images} height={150} width={150} alt="Picture of the author" />
                                     <div className='col-8 card-body'>

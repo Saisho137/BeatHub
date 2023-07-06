@@ -66,7 +66,8 @@ const getSimilarTrack = async (req, res) => {
             name: track.name,
             id: track.id,
             images: track.album.images[0].url,
-            artist: track.artists.map(artist => artist.name)
+            artist: track.artists.map(artist => artist.name),
+            preview: track.preview_url
           }));
         res.status(200).send({ getSimilarTrack: tracks});
     } catch (error) {
@@ -136,7 +137,7 @@ const getSimilarArtist = async (req, res) => {
         const artist = data.artists.map(artists => ({
             name: artists.name,
             id: artists.id,
-            images: artists.images[0] ? artists.images[0].url : null
+            images: artists.images[0] ? artists.images[0].url : null,
         }))
         res.status(200).send({ getSimilarArtist: artist});
     } catch (error) {
@@ -219,6 +220,7 @@ const getTopArtistGenre = async (req, res) => {
     const headers = req.headers.authorization
     const genre = req.params.genre
 
+
     try {
         const { data } = await axios.get(`https://api.spotify.com/v1/search?q=genre:${genre}&type=artist
         `, {
@@ -227,11 +229,10 @@ const getTopArtistGenre = async (req, res) => {
                 Authorization: `${headers}`,
             },
         })
-
         const artist = data.artists.items.map(artists => ({
             name: artists.name,
             id: artists.id,
-            images: artists.images[0]?.url
+            images: artists.images[0].url
         }))
         res.status(200).send({ getTopArtistGenre: artist});
     } catch (error) {
