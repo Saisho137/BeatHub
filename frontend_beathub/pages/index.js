@@ -1,8 +1,13 @@
 import React, { useEffect } from 'react';
 import Layout from "../components/layout";
+import { useRouter } from 'next/router'
+import { toast, ToastContainer } from 'react-toastify'
 import indexStyles from "../styles/index.module.css";
+import 'react-toastify/dist/ReactToastify.css'
 
 export default function Home() {
+  const router = useRouter()
+
   useEffect(() => {
     const checkTokenExpiration = () => {
       if (typeof sessionStorage !== 'undefined') {
@@ -29,14 +34,17 @@ export default function Home() {
       const token = sessionStorage.getItem('token');
       if (token) {
         if (buttonType === 'recommender') {
-          const redirectUrl = '/recommender';
-          window.location.href = redirectUrl;
+          router.push('/recommender')
         } else if (buttonType === 'game') {
-          const redirectUrl = '/game';
-          window.location.href = redirectUrl;
+          router.push('/game')
         }
       } else {
-        alert('You are not logged in. Please login to access this functionality.');
+        toast.warning('You are not logged in. Please login to access this functionality.', {
+          autoClose: 1500,
+          position: toast.POSITION.TOP_CENTER,
+          closeButton: true,
+          className: 'custom-toast',
+        })
       }
     }
   };
@@ -45,6 +53,7 @@ export default function Home() {
     <Layout>
       <div className="container mt-5 pt-5">
         <div className="row text-center">
+          <ToastContainer />
           <div className={`col-md-6 col-sm-12 ${indexStyles.buttonContainer}`}>
             <button className={`${indexStyles.homeButton1}`} onClick={() => handleClick('recommender')}>Want to find something new?</button>
           </div>
