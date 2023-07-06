@@ -114,8 +114,8 @@ const Navbar = () => {
                 </div>
               </div>
             ) : (
-              <div className='bg-success p-3 rounded-5 ms-auto btn btn-sm' style={{margin: '0.6rem'}}>
-                <button className="nav-item nav-link text-light fw-semibold" onClick={handleLogin}>Login with Spotify</button>
+              <div className='bg-success p-3 rounded-5 ms-auto btn btn-sm' style={{margin: '0.6rem'}} onClick={handleLogin}>
+                <button className="nav-item nav-link text-light fw-semibold">Login with Spotify</button>
               </div>
             )}
           </div>
