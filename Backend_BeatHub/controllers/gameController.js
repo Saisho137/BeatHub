@@ -32,7 +32,7 @@ const getRandomSong = async (req, res) => {
                     break
                 } catch (err) {
                     res.status(400).send({ message: 'Something went wrong while searching for genre!', err })
-                    break
+                    return
                 }
 
             case "playlist":
@@ -46,7 +46,7 @@ const getRandomSong = async (req, res) => {
                     break
                 } catch (err) {
                     res.status(400).send({ message: 'Something went wrong while searching for playlist!', err })
-                    break
+                    return
                 }
             case "artist":
                 try {
@@ -57,7 +57,7 @@ const getRandomSong = async (req, res) => {
                     break
                 } catch (err) {
                     res.status(400).send({ message:'Something went wrong while searching for artist!',  err })
-                    break
+                    return
                 }
             default:
                 res.status(400).send({ Message: "Bad Request" })
