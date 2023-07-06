@@ -3,10 +3,12 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Link from 'next/link';
+import { useRouter } from 'next/router'
 
 const Navbar = () => {
   const [userData, setUserData] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const router = useRouter()
 
   const handleAuthentication = () => {
     const hash = window.location.hash;
@@ -67,6 +69,7 @@ const Navbar = () => {
     sessionStorage.removeItem('token');
     sessionStorage.removeItem('tokenTimestamp');
     setIsLoggedIn(false);
+    router.push('/')
   };
 
   return (
@@ -86,11 +89,13 @@ const Navbar = () => {
                 <li className='nav-item'><Link className='nav-link' href="/statistics">Statistics</Link></li>
               </>
             )}
-            <li className='nav-item'>
+            <li className='nav-item dropdown'>
               {userData?.image && isLoggedIn && userData?.username && (<img src={userData.image} alt="User Image" className="rounded-circle user-avatar mt-3 d-md-none ms-2" style={{ width: '60px', height: '60px' }} />)}
-              {userData?.image && isLoggedIn && userData?.username && (<span className="pt-3 p-2 px-0 nav-item nav-link text-light fs-5 fw-bold d-md-none">{userData.username}</span>)}
+              {userData?.image && isLoggedIn && userData?.username && (<a className="pt-3 p-2 px-0 nav-item nav-link text-light fs-5 fw-bold d-md-none nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">{userData.username}</a>)}
               {isLoggedIn && (
-                <button className='nav-link text-success fw-semibold d-md-none' onClick={handleLogout}>Logout</button>
+                <ul class="dropdown-menu bg-dark border-0">
+                  <li><a class="dropdown-item bg-dark text-danger fw-semibold" href="#" onClick={handleLogout}>Logout</a></li>
+                </ul>
               )}
             </li>
           </ul>
@@ -100,9 +105,11 @@ const Navbar = () => {
                   <div className='col-6'>
                     {userData?.image && <img src={userData.image} alt="User Image" className="rounded-circle user-avatar mt-3 d-none d-md-block" style={{ width: '60px', height: '60px' }} />}
                   </div>
-                  <div className='col-6 px-0'>
-                    {userData?.username && <span className="pt-3 p-2 px-0 nav-item nav-link text-light fs-5 fw-bold d-none d-md-block">{userData.username}</span>}
-                    <button className='nav-link text-success fw-semibold d-none d-md-inline d-none d-md-block' onClick={handleLogout}>Logout</button>
+                  <div className='col-6 pt-1 px-0 nav-item dropdown'>
+                    {userData?.username && <a className="pt-4 px-0 nav-item nav-link text-light fs-5 fw-bold d-none d-md-block dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">{userData.username}</a>}
+                    <ul class="dropdown-menu bg-dark">
+                      <li><a class="dropdown-item bg-dark text-danger fw-semibold" href="#" onClick={handleLogout}>Logout</a></li>
+                    </ul>
                   </div>
                 </div>
               </div>
