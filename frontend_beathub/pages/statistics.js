@@ -8,11 +8,7 @@ import Link from 'next/link'
 export default function Statistics() {
 
     const router = useRouter()
-    const [time, setTime] = useState(() => {
-        const storedTime = sessionStorage.getItem('statisticsTime')
-        console.log(storedTime);
-        return storedTime ? storedTime : 'long_term'
-    })
+    const [time, setTime] = useState('')
     const [stats, setStats] = useState('')
 
     async function getStats(token) {
@@ -36,7 +32,11 @@ export default function Statistics() {
 
     useEffect(() => {
         const token = sessionStorage.getItem('token')
-
+        if (!time) {
+            const storedTime = sessionStorage.getItem('statisticsTime')
+            setTime(storedTime ? storedTime : 'long_term')
+            return
+        }
         setStats(getStats(token))
 
     }, [time])
