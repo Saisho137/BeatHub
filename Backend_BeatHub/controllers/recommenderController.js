@@ -235,7 +235,6 @@ const getTopArtistGenre = async (req, res) => {
         }))
         res.status(200).send({ getTopArtistGenre: artist});
     } catch (error) {
-        console.log(error);
         res.status(500).send({ error });
     }
 
