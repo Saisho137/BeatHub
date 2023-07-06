@@ -24,6 +24,7 @@ const getTrack = async (req, res) => {
     } catch (error) {
         if (error.response && error.response.status == 401) {
             res.status(401).send({ message: 'token expired' })
+            return
         }
         res.status(400).send({ error })
     }
@@ -51,6 +52,7 @@ const getSpecificTrack = async (req, res) => {
     } catch (error) {
         if (error.response && error.response.status == 401) {
             res.status(401).send({ message: 'token expired' })
+            return
         }
         res.status(400).send({ error })
     }
@@ -78,6 +80,7 @@ const getSimilarTrack = async (req, res) => {
     } catch (error) {
         if (error.response && error.response.status == 401) {
             res.status(401).send({ message: 'token expired' })
+            return
         }
         res.status(400).send({ error })
     }
@@ -106,6 +109,7 @@ const getArtist = async (req, res) => {
     } catch (error) {
         if (error.response && error.response.status == 401) {
             res.status(401).send({ message: 'token expired' })
+            return
         }
         res.status(400).send({ error })
     }
@@ -132,6 +136,7 @@ const getSpecificArtist = async (req, res) => {
     } catch (error) {
         if (error.response && error.response.status == 401) {
             res.status(401).send({ message: 'token expired' })
+            return
         }
         res.status(400).send({ error })
     }
@@ -157,6 +162,7 @@ const getSimilarArtist = async (req, res) => {
     } catch (error) {
         if (error.response && error.response.status == 401) {
             res.status(401).send({ message: 'token expired' })
+            return
         }
         res.status(400).send({ error })
     }
@@ -184,6 +190,7 @@ const getArtistTopTracks = async (req, res) => {
     } catch (error) {
         if (error.response && error.response.status == 401) {
             res.status(401).send({ message: 'token expired' })
+            return
         }
         res.status(400).send({ error })
     }
@@ -205,6 +212,7 @@ const getGenre = async (req, res) => {
     } catch (error) {
         if (error.response && error.response.status == 401) {
             res.status(401).send({ message: 'token expired' })
+            return
         }
         res.status(400).send({ error })
     }
@@ -236,6 +244,7 @@ const getTopTracksGenre = async (req, res) => {
     } catch (error) {
         if (error.response && error.response.status == 401) {
             res.status(401).send({ message: 'token expired' })
+            return
         }
         res.status(400).send({ error })
     }
@@ -264,6 +273,7 @@ const getTopArtistGenre = async (req, res) => {
     } catch (error) {
         if (error.response && error.response.status == 401) {
             res.status(401).send({ message: 'token expired' })
+            return
         }
         res.status(400).send({ error })
     }
