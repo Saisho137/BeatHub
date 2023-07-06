@@ -16,7 +16,7 @@
   top: 5.8em;
   left: -3%;
   min-height: 42em;
-  background-color:rgb(235, 235, 235);
+  background-color: rgb(235, 235, 235);
   z-index: 1;
 }
 
@@ -65,9 +65,10 @@
 }
 
 .instructions-tittle {
-  font-family:'Cooper Black', sans-serif;
+  font-family: 'Cooper Black', sans-serif;
 }
+
 .instructions-text {
-  font-family:'Berlin Sans FB Demi Bold', sans-serif;
+  font-family: 'Berlin Sans FB Demi Bold', sans-serif;
   line-height: 1.5;
 }

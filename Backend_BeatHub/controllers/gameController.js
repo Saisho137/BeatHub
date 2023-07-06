@@ -39,7 +39,6 @@ const getRandomSong = async (req, res) => {
                 try {
                     const playlistID = searchItem.split('playlist/')[1]
                     const playlist = await axios.get(`https://api.spotify.com/v1/playlists/${playlistID}`, headers)
-                    console.log(playlist.data.tracks.items[0])
                     playlist.data.tracks.items.map(pl => {
                         if (pl.track.preview_url) { trackList.push(pl.track.id) }
                     })
@@ -56,7 +55,7 @@ const getRandomSong = async (req, res) => {
                     })
                     break
                 } catch (err) {
-                    res.status(400).send({ message:'Something went wrong while searching for artist!',  err })
+                    res.status(400).send({ message: 'Something went wrong while searching for artist!', err })
                     return
                 }
             default:

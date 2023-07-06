@@ -1,8 +1,10 @@
-import Layout from "../components/layout"
 import { useEffect, useRef, useState } from "react"
-import axios from "axios"
 import styles from '../styles/game.module.css'
+import Layout from "../components/layout"
 import { useRouter } from 'next/router'
+import axios from "axios"
+import { toast, ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 export default function Game() {
     const [selectedOption, setSelectedOption] = useState({
@@ -29,21 +31,48 @@ export default function Game() {
         }
     }, [])
 
+    const handleSelectionChange = (event) => {
+        setSelectedOption({ ...selectedOption, typeOfSearch: event.target.value })
+    }
+    const handleSelectionChangeDifficult = (event) => {
+        setSelectedOption({ ...selectedOption, difficultyLevel: event.target.value })
+    }
+    const toggleSidebar = () => {
+        setSelectedOption({ ...selectedOption, isOpen: !selectedOption.isOpen })
+    }
     const listOfArtist = () => {
         const listOfArtist = response.artistName.map(name => (name.toString())).join(', ')
         return listOfArtist
     }
-
-    const handleSelectionChange = (event) => {
-        setSelectedOption({ ...selectedOption, typeOfSearch: event.target.value })
-    }
-
-    const handleSelectionChangeDifficult = (event) => {
-        setSelectedOption({ ...selectedOption, difficultyLevel: event.target.value })
-    }
-
-    const toggleSidebar = () => {
-        setSelectedOption({ ...selectedOption, isOpen: !selectedOption.isOpen })
+    const handleNotification = (condition, message) => {
+        switch (condition) {
+            case "success":
+                toast.success(message, {
+                    autoClose: 1500,
+                    position: toast.POSITION.TOP_CENTER,
+                    closeButton: true,
+                    className: 'custom-toast',
+                })
+                break
+            case "error":
+                toast.error(message, {
+                    autoClose: 1500,
+                    position: toast.POSITION.TOP_CENTER,
+                    closeButton: true,
+                    className: 'custom-toast',
+                })
+                break
+            case "warning":
+                toast.warning(message, {
+                    autoClose: 1500,
+                    position: toast.POSITION.TOP_CENTER,
+                    closeButton: true,
+                    className: 'custom-toast',
+                })
+                break
+            default:
+                console.log("default")
+        }
     }
 
     const startPlayback = () => {
@@ -57,7 +86,6 @@ export default function Game() {
             audioRef.current.currentTime = 0
         }, difficulty.duration * 1000)
     }
-
     const stopPlayback = () => {
         clearTimeout(timeoutRef.current)
         timeoutRef.current = null
@@ -65,7 +93,6 @@ export default function Game() {
         audioRef.current.pause()
         audioRef.current.currentTime = 0
     }
-
     const handleSubmit = (event) => {
         event.preventDefault()
         clearTimeout(timeoutRef.current)
@@ -73,51 +100,65 @@ export default function Game() {
         const songName = event.target.songName.value
 
         if (winner) {
-            alert("YOU ALREADY WON!")
+            handleNotification("success", "YOU ALREADY WON!")
+            event.target.reset()
             return
         }
         if (selectedOption.typeOfSearch == "artist" || !difficulty.artist) {
             if (songName.toLowerCase().trim().includes(response.name.toLowerCase().trim())) {
                 if (difficulty.tries == 0) {
-                    alert("YOU LOSE :( - try another song!")
+                    handleNotification("error", "You already Lost, try another song!")
+                    event.target.reset()
                     return
                 }
                 setWinner(true)
                 setDifficulty({ ...difficulty, tries: 0 })
-                alert("YOU WIN!!!")
+                handleNotification("success", "YOU WIN!!!")
             } else {
                 setWinner(false)
-                if (difficulty.tries == 0) {
-                    alert("YOU LOSE :( - try another song!")
+                if (difficulty.tries == 1) {
+                    handleNotification("error", "YOU LOSE :(  |  try another song!")
+                    setDifficulty({ ...difficulty, tries: difficulty.tries - 1 })
+                    event.target.reset()
+                    return
+                } else if (difficulty.tries == 0) {
+                    handleNotification("error", "You already Lost, try another song!")
+                    event.target.reset()
                     return
                 }
                 setDifficulty({ ...difficulty, tries: difficulty.tries - 1 })
-                alert("KEEP TRYING!")
+                handleNotification("warning", "KEEP TRYING!")
             }
         } else {
             const artist = event.target.artistName.value
             if (songName.toLowerCase().trim().includes(response.name.toLowerCase().trim())
                 && response.artistName.map(name => (name.toLowerCase())).includes(artist.toLowerCase())) {
                 if (difficulty.tries == 0) {
-                    alert("YOU LOSE :( - try another song!")
+                    handleNotification("error", "You already Lost, try another song!")
+                    event.target.reset()
                     return
                 }
                 setWinner(true)
                 setDifficulty({ ...difficulty, tries: 0 })
-                alert("YOU WIN!!!")
+                handleNotification("success", "YOU WIN!!!")
             } else {
                 setWinner(false)
-                if (difficulty.tries == 0) {
-                    alert("YOU LOSE :( - try another song!")
+                if (difficulty.tries == 1) {
+                    handleNotification("error", "YOU LOSE :(  |  try another song!")
+                    setDifficulty({ ...difficulty, tries: difficulty.tries - 1 })
+                    event.target.reset()
+                    return
+                } else if (difficulty.tries == 0) {
+                    handleNotification("error", "You already Lost, try another song!")
+                    event.target.reset()
                     return
                 }
                 setDifficulty({ ...difficulty, tries: difficulty.tries - 1 })
-                alert("KEEP TRYING!")
+                handleNotification("warning", "KEEP TRYING!")
             }
         }
         event.target.reset()
     }
-
     const handleSubmitTrack = async (event) => {
         event.preventDefault()
         setWinner(false)
@@ -154,7 +195,7 @@ export default function Game() {
                     setResponse(data.Track)
                     break
                 } catch (err) {
-                    alert("Check your genre and try again!")
+                    handleNotification("warning", "Check your Genre and try again!")
                     return
                 }
             case "playlist":
@@ -163,7 +204,7 @@ export default function Game() {
                     setResponse(playlist.data.Track)
                     break
                 } catch (err) {
-                    alert("Check your playlist and try again!")
+                    handleNotification("warning", "Check your Playlist and try again!")
                     return
                 }
             case "artist":
@@ -172,7 +213,7 @@ export default function Game() {
                     setResponse(artist.data.Track)
                     break
                 } catch (err) {
-                    alert("Check your artist and try again!")
+                    handleNotification("warning", "Check your Artist and try again!")
                     return
                 }
             default:
@@ -189,49 +230,48 @@ export default function Game() {
                 <button className={`${styles['toggle-sidebar-button']} col-1`} onClick={toggleSidebar}>
                     <b>{selectedOption.isOpen ? "<" : ">"}</b>
                 </button>
-                {selectedOption.isOpen && (
-                    <div className={`col-xl-6 ${styles['sidebar-column']} border border-success border-3 rounded p-5`}>
-                        <div className={`${styles.sidebar} row d-flex justify-content-center mt-4`}>
-                            <h2 className={`row col-12 d-flex justify-content-center mb-5 ${styles['instructions-tittle']}`}>Build your Game</h2>
-                            <form className="row col-12 d-flex justify-content-center" onSubmit={handleSubmitTrack}>
-                                <label className="col-xl-3 mt-3" htmlFor="typeOfSearch"><b>Select Type of Search:</b></label>
-                                <select className="col-xl-7 mt-3" id="typeOfSearch" value={selectedOption.typeOfSearch} onChange={handleSelectionChange}>
-                                    <option value="genre">Genre</option>
-                                    <option value="playlist">Playlist</option>
-                                    <option value="artist">Artist</option>
-                                </select>
-                                {selectedOption.typeOfSearch == "genre" && <>
-                                    <label className="col-xl-4 mt-2" htmlFor="genre"><b>Genre:</b></label>
-                                    <input className="col-xl-6 mt-2" type="text" id="genre" name="genre" required />
-                                </>}
-                                {selectedOption.typeOfSearch == "playlist" && <>
-                                    <label className="col-xl-4 mt-2" htmlFor="playlist"><b>Playlist:</b></label>
-                                    <input className="col-xl-6 mt-2" type="text" id="playlist" name="playlist" required />
-                                </>}
-                                {selectedOption.typeOfSearch == "artist" && <>
-                                    <label className="col-xl-4 mt-2" htmlFor="artist"><b>Artist:</b></label>
-                                    <input className="col-xl-6 mt-2" type="text" id="artist" name="artist" required />
-                                </>}
-                                <label className="col-xl-3 mt-2" htmlFor="difficultyLevel"><b>Select difficulty:</b></label>
-                                <select className="col-xl-7 mt-2" id="difficultyLevel" value={selectedOption.difficultyLevel} onChange={handleSelectionChangeDifficult}>
-                                    <option value="easy">Easy</option>
-                                    <option value="normal">Normal</option>
-                                    <option value="hard">Hard</option>
-                                    <option value="custom">Custom</option>
-                                </select>
-                                {selectedOption.difficultyLevel == 'custom' && <>
-                                    <label className="col-xl-4 mt-2" htmlFor="duration"><b>Preview duration (secs):</b></label>
-                                    <input className="col-xl-6 mt-2" type="number" id="duration" name="duration" max={29} min={1} required />
-                                    <label className="col-xl-4 mt-2" htmlFor="tries"><b>Number of Tries:</b></label>
-                                    <input className="col-xl-6 mt-2" type="number" id="tries" name="tries" max={99} min={1} required />
-                                    <label className="col-xl-4 mt-2" htmlFor="artistChecked"><b>Include artist name: </b></label>
-                                    <input className={`col-xl-1 mt-2`} type="checkbox" id="artistChecked" name="artistChecked" max={29} min={1} />
-                                    <div className="col-xl-5 mt-2"></div>
-                                </>}
-                                <button className={`col-4 ${styles['input-button']} my-5`} type="submit">Find</button>
-                            </form>
-                        </div>
-                    </div>)}
+                <div style={{ left: selectedOption.isOpen ? '-3%' : '-100%' }} className={`col-xl-6 ${styles['sidebar-column']} border border-success border-3 rounded p-5`}>
+                    <div className={`${styles.sidebar} row d-flex justify-content-center mt-4`}>
+                        <h2 className={`row col-12 d-flex justify-content-center mb-5 ${styles['instructions-tittle']}`}>Build your Game</h2>
+                        <form className="row col-12 d-flex justify-content-center" onSubmit={handleSubmitTrack}>
+                            <label className="col-xl-3 mt-3" htmlFor="typeOfSearch"><b>Select Type of Search:</b></label>
+                            <select className="col-xl-7 mt-3" id="typeOfSearch" value={selectedOption.typeOfSearch} onChange={handleSelectionChange}>
+                                <option value="genre">Genre</option>
+                                <option value="playlist">Playlist</option>
+                                <option value="artist">Artist</option>
+                            </select>
+                            {selectedOption.typeOfSearch == "genre" && <>
+                                <label className="col-xl-4 mt-2" htmlFor="genre"><b>Genre:</b></label>
+                                <input className="col-xl-6 mt-2" type="text" id="genre" name="genre" required />
+                            </>}
+                            {selectedOption.typeOfSearch == "playlist" && <>
+                                <label className="col-xl-4 mt-2" htmlFor="playlist"><b>Playlist:</b></label>
+                                <input className="col-xl-6 mt-2" type="text" id="playlist" name="playlist" required />
+                            </>}
+                            {selectedOption.typeOfSearch == "artist" && <>
+                                <label className="col-xl-4 mt-2" htmlFor="artist"><b>Artist:</b></label>
+                                <input className="col-xl-6 mt-2" type="text" id="artist" name="artist" required />
+                            </>}
+                            <label className="col-xl-3 mt-2" htmlFor="difficultyLevel"><b>Select difficulty:</b></label>
+                            <select className="col-xl-7 mt-2" id="difficultyLevel" value={selectedOption.difficultyLevel} onChange={handleSelectionChangeDifficult}>
+                                <option value="easy">Easy</option>
+                                <option value="normal">Normal</option>
+                                <option value="hard">Hard</option>
+                                <option value="custom">Custom</option>
+                            </select>
+                            {selectedOption.difficultyLevel == 'custom' && <>
+                                <label className="col-xl-4 mt-2" htmlFor="duration"><b>Preview duration (secs):</b></label>
+                                <input className="col-xl-6 mt-2" type="number" id="duration" name="duration" max={29} min={1} required />
+                                <label className="col-xl-4 mt-2" htmlFor="tries"><b>Number of Tries:</b></label>
+                                <input className="col-xl-6 mt-2" type="number" id="tries" name="tries" max={99} min={1} required />
+                                <label className="col-xl-4 mt-2" htmlFor="artistChecked"><b>Include artist name: </b></label>
+                                <input className={`col-xl-1 mt-2`} type="checkbox" id="artistChecked" name="artistChecked" max={29} min={1} />
+                                <div className="col-xl-5 mt-2"></div>
+                            </>}
+                            <button className={`col-4 ${styles['input-button']} my-5`} type="submit">Find</button>
+                        </form>
+                    </div>
+                </div>
                 <div className="row col-xl-6 d-flex justify-content-center align-self-center my-5 px-5">
                     <h1 className={`col-xl-8 d-flex justify-content-center mb-3 ${styles['instructions-tittle']}`}>How to play Guess Game?</h1>
                     <h4 className={`col-xl-8 d-flex justify-content-center ${styles['instructions-text']}`}>
@@ -243,6 +283,7 @@ export default function Game() {
                     </h4>
                 </div>
                 <div className={`${styles['main-column']} row col-xl-6 mt-4 d-flex justify-content-center align-self-center`}>
+                    <ToastContainer />
                     <form className="row col-12 align-self-center border border-dark border-2 rounded-5 p-4" id="formGuess" onSubmit={handleSubmit}>
                         <div className="row col-xl-6 d-flex align-self-center">
                             <label className={`col-xl-8 mt-3`} htmlFor="songName"><h4><b>Song Name:</b></h4></label>
