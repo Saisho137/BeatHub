@@ -219,6 +219,17 @@ const getTopArtistGenre = async (req, res) => {
     const headers = req.headers.authorization
     const genre = req.params.genre
 
+    const backupArtists = async () => {
+        
+        const { data } = await axios.get(`https://api.spotify.com/v1/search?q=${genre}&type=artist
+        `, {
+            method: 'GET',
+            headers: {
+                Authorization: `${headers}`,
+            },
+        })
+        return data.artists.items
+    }
 
     try {
         const { data } = await axios.get(`https://api.spotify.com/v1/search?q=genre:${genre}&type=artist
@@ -228,13 +239,16 @@ const getTopArtistGenre = async (req, res) => {
                 Authorization: `${headers}`,
             },
         })
-        const artist = data.artists.items.map(artists => ({
+
+        const items = data.artists.items[0] ? data.artists.items : await backupArtists()
+        const artist = items.map(artists => ({
             name: artists.name,
             id: artists.id,
-            images: artists.images[0].url
+            images: artists.images[0]?.url
         }))
         res.status(200).send({ getTopArtistGenre: artist});
     } catch (error) {
+        console.log(error);
         res.status(500).send({ error });
     }
 
