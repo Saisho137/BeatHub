@@ -219,18 +219,6 @@ const getTopArtistGenre = async (req, res) => {
     const headers = req.headers.authorization
     const genre = req.params.genre
 
-    const backupArtists = async () => {
-        
-        const { data } = await axios.get(`https://api.spotify.com/v1/search?q=${genre}&type=artist
-        `, {
-            method: 'GET',
-            headers: {
-                Authorization: `${headers}`,
-            },
-        })
-        return data.artists.items
-    }
-
     try {
         const { data } = await axios.get(`https://api.spotify.com/v1/search?q=genre:${genre}&type=artist
         `, {
@@ -240,8 +228,7 @@ const getTopArtistGenre = async (req, res) => {
             },
         })
 
-        const items = data.artists.items[0] ? data.artists.items : await backupArtists()
-        const artist = items.map(artists => ({
+        const artist = data.artists.items.map(artists => ({
             name: artists.name,
             id: artists.id,
             images: artists.images[0]?.url
