@@ -1,4 +1,3 @@
-import '../styles/statistics.module.css'
 import Layout from '../components/layout'
 import FeatureBar from '../components/featureBar'
 import axios from 'axios'
