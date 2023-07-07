@@ -62,7 +62,7 @@ const Artist = () => {
         }
     }, [param]);
 
-    if (!artist && !topTracks.length) {
+    if (!artist) {
         return <h1>Loading...</h1>
     }
 
@@ -81,7 +81,7 @@ const Artist = () => {
                             <div className="card-img">
                                 <Link href='/recommender'>
                                     <Image className="rounded" loader={() => artist.images ? artist.images : '/images/person-circle.svg'} src={artist.images ? artist.images : '/images/person-circle.svg'} height={300} width={300} alt="Picture of the author" />
-                                </Link>
+                                </Link> 
 
                             </div>
                             <h4 className='card-footer mt-3'>Artist genres</h4>
