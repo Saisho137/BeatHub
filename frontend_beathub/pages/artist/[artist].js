@@ -1,11 +1,11 @@
 import React from 'react'
-import axios from 'axios';
+import axios from 'axios'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
-import Image from 'next/image';
+import Image from 'next/image'
 import styles from "../../styles/artist.module.css"
 import Layout from "../../components/layout"
-import PreviewSong from '../../components/previewSong';
+import PreviewSong from '../../components/previewSong'
 import Link from 'next/link'
 
 
@@ -60,7 +60,7 @@ const Artist = () => {
                 router.push('/')
             }
         }
-    }, [param]);
+    }, [param])
 
     if (!artist) {
         return <h1>Loading...</h1>
@@ -98,7 +98,7 @@ const Artist = () => {
                     <div className={`col-10 col-md-4 col-xl-5 border-start mt-4 ${styles.cardplacement} ${styles.bordersection} ${styles.left}`}>
                         <div className="row" style={{ paddingLeft: "4%" }}>
                             {similar.map((name) => (
-                                <div className="card m-3 p-0" style={{ width: '13rem' }}>
+                                <div key={name.id} className="card m-3 p-0" style={{ width: '13rem' }}>
                                     <Link href={`/artist/${name.id}`}>
                                         <Image className="card-img-top" loader={() => name.images ? name.images : '/images/person-circle.svg'} src={name.images ? name.images : '/images/play-fill.svg'} height={150} width={150} alt="Picture of the author" />
                                     </Link>
@@ -116,7 +116,7 @@ const Artist = () => {
                     <h1 className={`mt-5 mb-5 ${styles.artisttitle}`}>Top Tracks</h1>
                     <div className='col-xl-12 mt-5 mb-5 d-flex justify-content-center'>
                         <ul>{topTracks.map((name) =>
-                            <div className='card col-10 mb-3'>
+                            <div key={name.id} className='card col-10 mb-3'>
                                 <div className='row g-0 d-flex align-items-center'>
                                     <Image className='img-fluid rounded-start col-2' loader={() => name.images} src={name.images} height={150} width={150} alt="Picture of the author" />
                                     <div className='col-8 card-body'>
@@ -141,4 +141,4 @@ const Artist = () => {
     )
 }
 
-export default Artist;
+export default Artist
