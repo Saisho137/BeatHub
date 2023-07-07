@@ -7,6 +7,10 @@ import Link from 'next/link'
 
 export default function Statistics() {
 
+    const router = useRouter()
+    const [time, setTime] = useState('')
+    const [stats, setStats] = useState('')
+
     async function getStats(token) {
         const headers = {
             headers: {
@@ -14,21 +18,25 @@ export default function Statistics() {
             }
         }
 
-        const { data } = await axios.get(`http://localhost:8080/stats/${time}`, headers)
-        setStats(data)
-    }
+        try {
+            const { data } = await axios.get(`http://localhost:8080/stats/${time}`, headers)
+            setStats(data)
+        }
+        catch (error) {
+            sessionStorage.setItem('callback', 'statistics')
+            sessionStorage.setItem('statisticsTime', time)
+            router.push('/callback')
+        }
 
-    const router = useRouter()
-    const [time, setTime] = useState('long_term')
-    const [stats, setStats] = useState('')
+    }
 
     useEffect(() => {
         const token = sessionStorage.getItem('token')
-
-        if (!token) {
-            router.push('/')
+        if (!time) {
+            const storedTime = sessionStorage.getItem('statisticsTime')
+            setTime(storedTime ? storedTime : 'long_term')
+            return
         }
-
         setStats(getStats(token))
 
     }, [time])

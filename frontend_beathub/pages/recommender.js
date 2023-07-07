@@ -54,6 +54,11 @@ const recommender = () => {
 
       setData(response);
     } catch (error) {
+      if (error.response && error.response.status == 401) {
+        sessionStorage.setItem('callback', `recommender`)
+        router.push('/callback')
+        return
+      }
       console.log(error);
     }
   };

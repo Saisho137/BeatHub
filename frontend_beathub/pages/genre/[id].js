@@ -23,27 +23,50 @@ export default function GenrePage({ id }) {
     const [artists, setArtists] = useState('')
 
     async function getGenres(headers) {
-        const { data: { getGenre: { genres } } } = await axios.get('http://localhost:8080/getGenre', headers)
-        setGenres(genres)
+        try {
+            const { data: { getGenre: { genres } } } = await axios.get('http://localhost:8080/getGenre', headers)
+            setGenres(genres)
+        }
+        catch (error) {
+            if (error.response && error.response.status == 401) {
+                sessionStorage.setItem('callback', `genre/${id}`)
+                router.push('/callback')
+                return
+            }
+        }
     }
 
     async function getGenresTopTracks(headers) {
-        const { data: { getTopTracksGenre } } = await axios.get(`http://localhost:8080/getTopTracksGenre/${id}`, headers)
-        setTracks(getTopTracksGenre)
+        try {
+            const { data: { getTopTracksGenre } } = await axios.get(`http://localhost:8080/getTopTracksGenre/${id}`, headers)
+            setTracks(getTopTracksGenre)
+        }
+        catch (error) {
+            if (error.response && error.response.status == 401) {
+                sessionStorage.setItem('callback', `genre/${id}`)
+                router.push('/callback')
+                return
+            }
+        }
     }
 
     async function getGenresTopArtists(headers) {
-        const { data: { getTopArtistGenre } } = await axios.get(`http://localhost:8080/getTopArtistGenre/${id}`, headers)
-        setArtists(getTopArtistGenre)
+        try {
+            const { data: { getTopArtistGenre } } = await axios.get(`http://localhost:8080/getTopArtistGenre/${id}`, headers)
+            setArtists(getTopArtistGenre)
+        }
+        catch (error) {
+            if (error.response && error.response.status == 401) {
+                sessionStorage.setItem('callback', `genre/${id}`)
+                router.push('/callback')
+                return
+            }
+        }
     }
 
     useEffect(() => {
 
         const token = sessionStorage.getItem('token')
-
-        if (!token) {
-            router.push('/')
-        }
 
         const headers = {
             headers: {

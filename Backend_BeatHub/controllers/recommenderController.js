@@ -22,7 +22,11 @@ const getTrack = async (req, res) => {
           }))
         res.status(200).send({ getTrack: tracks})
     } catch (error) {
-        res.status(500).send({ error })
+        if (error.response && error.response.status == 401) {
+            res.status(401).send({ message: 'token expired' })
+            return
+        }
+        res.status(400).send({ error })
     }
 }
 
@@ -46,7 +50,11 @@ const getSpecificTrack = async (req, res) => {
         }
         res.status(200).send({ getTrack: track})
     } catch (error) {
-        res.status(500).send({ error })
+        if (error.response && error.response.status == 401) {
+            res.status(401).send({ message: 'token expired' })
+            return
+        }
+        res.status(400).send({ error })
     }
 }
 
@@ -68,10 +76,14 @@ const getSimilarTrack = async (req, res) => {
             images: track.album.images[0].url,
             artist: track.artists.map(artist => artist.name),
             preview: track.preview_url
-          }))
+          }));
         res.status(200).send({ getSimilarTrack: tracks})
     } catch (error) {
-        res.status(500).send({ error })
+        if (error.response && error.response.status == 401) {
+            res.status(401).send({ message: 'token expired' })
+            return
+        }
+        res.status(400).send({ error })
     }
 }
 
@@ -96,7 +108,11 @@ const getArtist = async (req, res) => {
         }))
         res.status(200).send({ getArtist: artist})
     } catch (error) {
-        res.status(500).send({ error })
+        if (error.response && error.response.status == 401) {
+            res.status(401).send({ message: 'token expired' })
+            return
+        }
+        res.status(400).send({ error })
     }
 
 }
@@ -119,7 +135,11 @@ const getSpecificArtist = async (req, res) => {
         }
         res.status(200).send({ getSpecificArtist: artist})
     } catch (error) {
-        res.status(500).send({ error })
+        if (error.response && error.response.status == 401) {
+            res.status(401).send({ message: 'token expired' })
+            return
+        }
+        res.status(400).send({ error })
     }
 }
 
@@ -141,7 +161,11 @@ const getSimilarArtist = async (req, res) => {
         }))
         res.status(200).send({ getSimilarArtist: artist})
     } catch (error) {
-        res.status(500).send({ error })
+        if (error.response && error.response.status == 401) {
+            res.status(401).send({ message: 'token expired' })
+            return
+        }
+        res.status(400).send({ error })
     }
 }
 
@@ -165,7 +189,11 @@ const getArtistTopTracks = async (req, res) => {
         }))
         res.status(200).send({ getArtistTopTracks: track})
     } catch (error) {
-        res.status(500).send({ error })
+        if (error.response && error.response.status == 401) {
+            res.status(401).send({ message: 'token expired' })
+            return
+        }
+        res.status(400).send({ error })
     }
 }
 
@@ -183,7 +211,11 @@ const getGenre = async (req, res) => {
         })
         res.status(200).send({ getGenre: data})
     } catch (error) {
-        res.status(500).send({ error })
+        if (error.response && error.response.status == 401) {
+            res.status(401).send({ message: 'token expired' })
+            return
+        }
+        res.status(400).send({ error })
     }
 
 }
@@ -211,7 +243,11 @@ const getTopTracksGenre = async (req, res) => {
         }))
         res.status(200).send({ getTopTracksGenre: artist})
     } catch (error) {
-        res.status(500).send({ error })
+        if (error.response && error.response.status == 401) {
+            res.status(401).send({ message: 'token expired' })
+            return
+        }
+        res.status(400).send({ error })
     }
 
 }
@@ -236,7 +272,11 @@ const getTopArtistGenre = async (req, res) => {
         }))
         res.status(200).send({ getTopArtistGenre: artist})
     } catch (error) {
-        res.status(500).send({ error })
+        if (error.response && error.response.status == 401) {
+            res.status(401).send({ message: 'token expired' })
+            return
+        }
+        res.status(400).send({ error })
     }
 
 }

@@ -175,6 +175,11 @@ export default function Game() {
                     setResponse(data.Track)
                     break
                 } catch (err) {
+                    if (err.response && err.response.status == 401) {
+                        sessionStorage.setItem('callback', 'game')
+                        router.push('/callback')
+                        return
+                    }
                     handleNotification("warning", "Check your Genre and try again!")
                     return
                 }
@@ -184,6 +189,11 @@ export default function Game() {
                     setResponse(playlist.data.Track)
                     break
                 } catch (err) {
+                    if (err.response && err.response.status == 401) {
+                        sessionStorage.setItem('callback', 'game')
+                        router.push('/callback')
+                        return
+                    }
                     handleNotification("warning", "Check your Playlist and try again!")
                     return
                 }
@@ -193,6 +203,11 @@ export default function Game() {
                     setResponse(artist.data.Track)
                     break
                 } catch (err) {
+                    if (err.response && err.response.status == 401) {
+                        sessionStorage.setItem('callback', 'game')
+                        router.push('/callback')
+                        return
+                    }
                     handleNotification("warning", "Check your Artist and try again!")
                     return
                 }
