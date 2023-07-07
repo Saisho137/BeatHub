@@ -75,7 +75,7 @@ const Artist = () => {
                 </Link>
                 <h1 className={`${styles.artisttitle}`}>Artist</h1>
                 <div className={`row mb-5`}>
-                    <div className={`col-12 col-md-6 col-xl-5 ${styles.singleartist}`}>
+                    <div className={`col-11 col-md-7 col-xl-4 ${styles.singleartist}`}>
                         <div className={`card ${styles.artistmargin}`}>
                             <h3 className="card-title card-header" style={{ marginBottom: "2%" }}>{artist.name}</h3>
                             <div className="card-img">
@@ -95,8 +95,8 @@ const Artist = () => {
                         </div>
                     </div>
 
-                    <div className={`col-10 col-md-4 col-xl-5 border-start mt-4 ${styles.cardplacement} ${styles.bordersection} ${styles.left}`}>
-                        <div className="row" style={{ paddingLeft: "4%" }}>
+                    <div className={`col-10 col-md-4 col-xl-6 border-start mt-4 ${styles.cardplacement} ${styles.bordersection} ${styles.left}`}>
+                        <div className="row d-flex justify-content-center" style={{ paddingLeft: "4%" }}>
                             {similar.map((name) => (
                                 <div key={name.id} className="card m-3 p-0" style={{ width: '13rem' }}>
                                     <Link href={`/artist/${name.id}`}>

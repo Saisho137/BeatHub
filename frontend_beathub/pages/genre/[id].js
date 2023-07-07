@@ -101,7 +101,7 @@ export default function GenrePage({ id }) {
                     <h3 className='mb-5'>Top Tracks</h3>
                     {tracks[0]
                         ? tracks.map(track =>
-                            <div key={track.id} className='card col-11 mb-3'>
+                            <div key={track.id} className='card col-10 mb-3'>
                                 <div className='row g-0 d-flex align-items-center'>
                                     <Link href={`/song/${track.id}`} className='col-2 text-decoration-none'>
                                         <img src={track.images} className='img-fluid rounded-start' alt='Album picture' />

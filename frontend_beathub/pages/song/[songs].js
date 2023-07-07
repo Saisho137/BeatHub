@@ -60,7 +60,7 @@ const Songs = () => {
                 </Link>
                 <h1 className={`${styles.artisttitle}`}>Songs</h1>
                 <div className={`row mb-5`}>
-                    <div className={`col-12 col-md-6 col-xl-5 ${styles.singleartist}`}>
+                    <div className={`col-11 col-md-7 col-xl-5 ${styles.singleartist}`}>
                         <div className={`card ${styles.artistmargin}`}>
                             <h3 className="card-title card-header" style={{ marginBottom: "2%" }}>{song.name}</h3>
                             <div className="card-img">
@@ -76,24 +76,26 @@ const Songs = () => {
                     </div>
 
 
-                    <div className={`col-10 col-md-4 col-xl-5 border-start mt-4 ${styles.cardplacement} ${styles.bordersection} ${styles.left}`}>
+                    <div className={`col-10 col-md-5 col-xl-5 border-start mt-4 ${styles.cardplacement} ${styles.bordersection} ${styles.left}`}>
                         <h5 className={`mt-5 mb-5 ${styles.artisttitle}`}>Similar Songs</h5>
-                        <ul>{similar.map((name) =>
-                            <div key={name.id} className='card col-11 mb-3 ms-1'>
-                                <div className='row g-0 d-flex align-items-center'>
-                                    <Image className='img-fluid rounded-start col-2' loader={() => name.images} src={name.images} height={150} width={150} alt="Picture of the author" />
-                                    <div className='col-8 card-body'>
-                                        <Link style={{ textDecoration: 'none' }} href={`/song/${name.id}`}>
-                                            <h6 className='text-start card-title'>{name.name}</h6>
-                                            {name.artist.map((name) => <p key={name} className='text-start card-text text-muted'>{name}</p>)}
-                                        </Link>
+                        <div className='d-flex justify-content-center'>
+                            <ul>{similar.map((name) =>
+                                <div key={name.id} className='card col-11 mb-3 ms-2'>
+                                    <div className='row g-0 d-flex align-items-center'>
+                                        <Image className='img-fluid rounded-start col-2' loader={() => name.images} src={name.images} height={150} width={150} alt="Picture of the author" />
+                                        <div className='col-8 card-body'>
+                                            <Link style={{ textDecoration: 'none' }} href={`/song/${name.id}`}>
+                                                <h6 className='text-start card-title'>{name.name}</h6>
+                                                <p key={name} className='text-start card-text text-muted'>{name.artist.join(', ')}</p>
+                                            </Link>
+                                        </div>
+                                        <div className='col-2 h-100 align-items-center'>
+                                            <PreviewSong preview={name.preview} />
+                                        </div>
                                     </div>
-                                    <div className='col-2 h-100 align-items-center'>
-                                        <PreviewSong preview={name.preview} />
-                                    </div>
-                                </div>
-                            </div>)}
-                        </ul>
+                                </div>)}
+                            </ul>
+                        </div>
                     </div>
 
                 </div>
