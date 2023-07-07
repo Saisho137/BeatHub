@@ -24,8 +24,19 @@ const Artist = () => {
                 'Authorization': `Bearer ${token}`
             }
         }
-        const { data } = await axios.get(`http://localhost:8080/getSpecificArtist/${param}`, headers)
-        setArtist(data.getSpecificArtist)
+
+        try {
+            const { data } = await axios.get(`http://localhost:8080/getSpecificArtist/${param}`, headers)
+            setArtist(data.getSpecificArtist)
+        }
+        catch (error) {
+            if (error.response && error.response.status == 401) {
+                sessionStorage.setItem('callback', `artist/${param}`)
+                router.push('/callback')
+                return
+            }
+        }
+
     }
 
     const getSimilarArtist = async (token) => {
@@ -34,18 +45,40 @@ const Artist = () => {
                 'Authorization': `Bearer ${token}`
             }
         }
-        const { data } = await axios.get(`http://localhost:8080/getSimilarArtist/${param}`, headers)
-        setSimilar(data.getSimilarArtist)
+
+        try {
+            const { data } = await axios.get(`http://localhost:8080/getSimilarArtist/${param}`, headers)
+            setSimilar(data.getSimilarArtist)
+        }
+        catch (error) {
+            if (error.response && error.response.status == 401) {
+                sessionStorage.setItem('callback', `artist/${param}`)
+                router.push('/callback')
+                return
+            }
+        }
     }
 
     const getArtistTopTracks = async (token) => {
+
+        if (!token) return
+
         const headers = {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
         }
-        const { data } = await axios.get(`http://localhost:8080/getArtistTopTracks/${param}`, headers)
-        setTopTracks(data.getArtistTopTracks)
+        try {
+            const { data } = await axios.get(`http://localhost:8080/getArtistTopTracks/${param}`, headers)
+            setTopTracks(data.getArtistTopTracks)
+        }
+        catch (error) {
+            if (error.response && error.response.status == 401) {
+                sessionStorage.setItem('callback', `artist/${param}`)
+                router.push('/callback')
+                return
+            }
+        }
     }
 
 
@@ -53,12 +86,10 @@ const Artist = () => {
 
         if (param) {
             const token = sessionStorage.getItem('token')
+
             getSpecificArtist(token)
             getSimilarArtist(token)
             getArtistTopTracks(token)
-            if (!token) {
-                router.push('/')
-            }
         }
     }, [param]);
 

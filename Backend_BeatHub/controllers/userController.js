@@ -12,9 +12,9 @@ const getUserData = async (req,res) => {
     };
   
     try {
-      const { data: { display_name, images } } = await axios.get('https://api.spotify.com/v1/me', headers);
+      const { data: { display_name, images } } = await axios.get('https://api.spotify.com/v1/me', headers)
 
-      const image = images.length > 0 ? images[0].url : null;
+      const image = images.length > 0 ? images[0].url : null
 
       res.status(200).send({
         username: display_name,
@@ -22,7 +22,7 @@ const getUserData = async (req,res) => {
       });
       
     } catch (error) {
-      res.status(500).send({ error });
+      res.status(401).send({ message: 'token expired' })
     }
   };
 
