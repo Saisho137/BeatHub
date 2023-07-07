@@ -85,7 +85,7 @@ const Songs = () => {
                                     <div className='col-8 card-body'>
                                         <Link style={{ textDecoration: 'none' }} href={`/song/${name.id}`}>
                                             <h6 className='text-start card-title'>{name.name}</h6>
-                                            <p className='text-start card-text text-muted'>{name.artist}</p>
+                                            {name.artist.map((name) => <p className='text-start card-text text-muted'>{name}</p>)}
                                         </Link>
                                     </div>
                                     <div className='col-2 h-100 align-items-center'>
