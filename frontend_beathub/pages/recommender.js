@@ -89,7 +89,7 @@ const recommender = () => {
         <ul className="list-group">
           {Array.isArray(data) && data.map((item) => (
             <Link href={category === "Song" ? `/song/${item.id}` : `/artist/${item.id}`} key={item.id} style={{ textDecoration: "none" }}>
-              <li className="row list-group-item align-items-center" key={item.id}>
+              <li className="row list-group-item align-items-center theme theme-border" key={item.id}>
                 <div className="col-auto d-flex align-items-center">
                   <div className={`m-0 ${recoStyles.searchPicContainer}`}>
                     <img
@@ -118,7 +118,7 @@ const recommender = () => {
         <ul className="list-group">
           {Array.isArray(data) && data.map((item) => (
             <Link href={`/genre/${item}`} key={item} style={{ textDecoration: "none" }}>
-              <li className="list-group-item fs-5 fw-semibold">♫ {item}</li>
+              <li className="list-group-item fs-5 fw-semibold theme">♫ {item}</li>
             </Link>
           ))}
         </ul>
@@ -131,35 +131,35 @@ const recommender = () => {
       <div className="container mt-5 pt-5">
         <div className="row text-center">
           <div className="col-12">
-            <div className="input-group mb-3">
+            <div className="input-group mb-3 theme theme-border">
               <input
                 type="text"
                 value={value}
                 onChange={onChange}
-                className="form-control"
+                className="form-control theme theme-border"
                 aria-label="search"
               />
               <button
-                className="btn btn-outline-secondary dropdown-toggle"
+                className="btn btn-outline-secondary dropdown-toggle theme"
                 type="button"
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
               >
                 {category}
               </button>
-              <ul className="dropdown-menu">
+              <ul className="dropdown-menu theme theme-border">
                 <li>
-                  <a className="dropdown-item" href="#" onClick={() => onSelected("Song")}>
+                  <a className="dropdown-item theme" href="#" onClick={() => onSelected("Song")}>
                     Song
                   </a>
                 </li>
                 <li>
-                  <a className="dropdown-item" href="#" onClick={() => onSelected("Artist")}>
+                  <a className="dropdown-item theme" href="#" onClick={() => onSelected("Artist")}>
                     Artist
                   </a>
                 </li>
                 <li>
-                  <a className="dropdown-item" href="#" onClick={() => onSelected("Genre")}>
+                  <a className="dropdown-item theme" href="#" onClick={() => onSelected("Genre")}>
                     Genre
                   </a>
                 </li>
