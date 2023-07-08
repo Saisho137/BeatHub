@@ -1,37 +1,37 @@
-import darkModeStyles from "../styles/darkMode.module.css";
-import { useEffect, useState } from "react";
+import darkModeStyles from "../styles/darkMode.module.css"
+import { useEffect, useState } from "react"
 
 const DarkMode = () => {
-  const [selectedTheme, setSelectedTheme] = useState("light");
+  const [selectedTheme, setSelectedTheme] = useState("light")
 
   const setDarkMode = () => {
-    document.querySelector("body").setAttribute("data-theme", "dark");
-    localStorage.setItem("selectedTheme", "dark");
-    setSelectedTheme("dark");
-  };
+    document.querySelector("body").setAttribute("data-theme", "dark")
+    localStorage.setItem("selectedTheme", "dark")
+    setSelectedTheme("dark")
+  }
 
   const setLightMode = () => {
-    document.querySelector("body").setAttribute("data-theme", "light");
-    localStorage.setItem("selectedTheme", "light");
-    setSelectedTheme("light");
-  };
+    document.querySelector("body").setAttribute("data-theme", "light")
+    localStorage.setItem("selectedTheme", "light")
+    setSelectedTheme("light")
+  }
 
   useEffect(() => {
-    const storedTheme = localStorage.getItem("selectedTheme");
+    const storedTheme = localStorage.getItem("selectedTheme")
     if (storedTheme) {
-      setSelectedTheme(storedTheme);
+      setSelectedTheme(storedTheme)
       if (storedTheme === "dark") {
-        setDarkMode();
+        setDarkMode()
       } else {
-        setLightMode();
+        setLightMode()
       }
     }
-  }, []);
+  }, [])
 
   const toggleTheme = (e) => {
-    if (e.target.checked) setDarkMode();
-    else setLightMode();
-  };
+    if (e.target.checked) setDarkMode()
+    else setLightMode()
+  }
 
   return (
     <div
@@ -46,7 +46,6 @@ const DarkMode = () => {
       />
       <label className={darkModeStyles.dark_mode_label} htmlFor="darkmode-toggle"></label>
     </div>
-  );
-};
-
-export default DarkMode;
+  )
+}
+export default DarkMode

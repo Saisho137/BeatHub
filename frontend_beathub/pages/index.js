@@ -1,8 +1,8 @@
-import React, { useEffect } from 'react';
-import Layout from "../components/layout";
+import React, { useEffect } from 'react'
+import Layout from "../components/layout"
 import { useRouter } from 'next/router'
 import { toast, ToastContainer } from 'react-toastify'
-import indexStyles from "../styles/index.module.css";
+import indexStyles from "../styles/index.module.css"
 import 'react-toastify/dist/ReactToastify.css'
 
 export default function Home() {
@@ -11,27 +11,27 @@ export default function Home() {
   useEffect(() => {
     const checkTokenExpiration = () => {
       if (typeof sessionStorage !== 'undefined') {
-        const tokenTimestamp = sessionStorage.getItem('tokenTimestamp');
+        const tokenTimestamp = sessionStorage.getItem('tokenTimestamp')
         if (tokenTimestamp) {
-          const currentTimestamp = Date.now();
-          const elapsedMilliseconds = currentTimestamp - tokenTimestamp;
-          const elapsedHours = elapsedMilliseconds / (1000 * 60 * 60);
+          const currentTimestamp = Date.now()
+          const elapsedMilliseconds = currentTimestamp - tokenTimestamp
+          const elapsedHours = elapsedMilliseconds / (1000 * 60 * 60)
 
           if (elapsedHours >= 1) {
-            sessionStorage.removeItem('token');
-            sessionStorage.removeItem('tokenTimestamp');
-            alert('Your session has expired. Please login again.');
+            sessionStorage.removeItem('token')
+            sessionStorage.removeItem('tokenTimestamp')
+            alert('Your session has expired. Please login again.')
           }
         }
       }
-    };
+    }
 
-    checkTokenExpiration();
-  }, []);
+    checkTokenExpiration()
+  }, [])
 
   const handleClick = (buttonType) => {
     if (typeof sessionStorage !== 'undefined') {
-      const token = sessionStorage.getItem('token');
+      const token = sessionStorage.getItem('token')
       if (token) {
         if (buttonType === 'recommender') {
           router.push('/recommender')
@@ -47,7 +47,7 @@ export default function Home() {
         })
       }
     }
-  };
+  }
 
   return (
     <Layout>
@@ -63,5 +63,5 @@ export default function Home() {
         </div>
       </div>
     </Layout>
-  );
+  )
 }

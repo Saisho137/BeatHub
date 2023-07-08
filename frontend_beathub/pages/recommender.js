@@ -1,14 +1,14 @@
-import Layout from "../components/layout";
-import { useEffect, useState } from "react";
-import axios from 'axios';
-import Link from "next/link";
-import recoStyles from "../styles/recommender.module.css";
+import Layout from "../components/layout"
+import { useEffect, useState } from "react"
+import axios from 'axios'
+import Link from "next/link"
+import recoStyles from "../styles/recommender.module.css"
 import { useRouter } from 'next/router'
 
 const recommender = () => {
-  const [category, setCategory] = useState("Song");
-  const [value, setValue] = useState('');
-  const [data, setData] = useState([]);
+  const [category, setCategory] = useState("Song")
+  const [value, setValue] = useState('')
+  const [data, setData] = useState([])
   const router = useRouter()
 
   useEffect(() => {
@@ -20,70 +20,69 @@ const recommender = () => {
 
   const fetchData = async (searchValue) => {
     try {
-      const token = sessionStorage.getItem('token');
+      const token = sessionStorage.getItem('token')
       const headers = {
         'Authorization': `Bearer ${token}`
-      };
+      }
 
-      let response = "";
+      let response = ""
 
       switch (category) {
         case "Song":
           if (searchValue !== "") {
-            response = await axios.get(`http://localhost:8080/getTrack/${searchValue}`, { headers });
-            response = response.data.getTrack;
+            response = await axios.get(`http://localhost:8080/getTrack/${searchValue}`, { headers })
+            response = response.data.getTrack
           }
-          break;
+          break
         case "Artist":
           if (searchValue !== "") {
-            response = await axios.get(`http://localhost:8080/getArtist/${searchValue}`, { headers });
-            response = response.data.getArtist;
+            response = await axios.get(`http://localhost:8080/getArtist/${searchValue}`, { headers })
+            response = response.data.getArtist
           }
-          break;
+          break
         case "Genre":
-          response = await axios.get(`http://localhost:8080/getGenre`, { headers });
-          response = response.data.getGenre.genres;
-          break;
+          response = await axios.get(`http://localhost:8080/getGenre`, { headers })
+          response = response.data.getGenre.genres
+          break
         default:
-          break;
+          break
       }
 
       if (category === "Genre" && searchValue !== "") {
-        response = response.filter((genre) => genre.toLowerCase().includes(searchValue.toLowerCase()));
+        response = response.filter((genre) => genre.toLowerCase().includes(searchValue.toLowerCase()))
       }
 
-      setData(response);
+      setData(response)
     } catch (error) {
-      console.log(error);
+      console.log(error)
     }
-  };
+  }
 
   const onSelected = async (param) => {
     try {
-      setCategory(param);
-      setValue('');
-      setData([]);
-      fetchData('');
+      setCategory(param)
+      setValue('')
+      setData([])
+      fetchData('')
     } catch (error) {
-      console.log(error);
+      console.log(error)
     }
-  };
+  }
 
   const onChange = (event) => {
-    const newValue = event.target.value;
-    setValue(newValue);
+    const newValue = event.target.value
+    setValue(newValue)
 
     if (newValue === "") {
-      setData([]);
+      setData([])
     } else {
-      fetchData(newValue);
+      fetchData(newValue)
     }
-  };
-
+  }
 
   const renderTracksAndArtists = () => {
     if (value === "") {
-      return <div></div>;
+      return <div></div>
     } else {
       return (
         <ul className="list-group">
@@ -105,14 +104,13 @@ const recommender = () => {
             </Link>
           ))}
         </ul>
-      );
+      )
     }
-  };
-
+  }
 
   const renderGenres = () => {
     if (value === "") {
-      return <div></div>;
+      return <div></div>
     } else {
       return (
         <ul className="list-group">
@@ -122,9 +120,9 @@ const recommender = () => {
             </Link>
           ))}
         </ul>
-      );
+      )
     }
-  };
+  }
 
   return (
     <Layout>
@@ -175,7 +173,6 @@ const recommender = () => {
         </div>
       </div>
     </Layout>
-  );
-};
-
-export default recommender;
+  )
+}
+export default recommender
