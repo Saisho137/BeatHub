@@ -1,7 +1,8 @@
 :root {
     --body_background: white;
     --body-color: black;
-    --link_color: navy;
+    --link_color: black;
+    --border_color: black;
     --time_btn_color: white;
     --time_btn_color_on: gray;
 }
@@ -9,7 +10,7 @@
 [data-theme="dark"] {
     --body_background: #121212;
     --body_color: white;
-    --link_color: cyan;
+    --link_color: white;
     --border_color: gray;
     --time_btn_color:#121212;
     --time_btn_color_on:gray;
@@ -30,8 +31,4 @@
 
 .time-btn-off{
     background-color: var(--time_btn_color) !important;
-}
-
-.test{
-    fill: red !important;
 }

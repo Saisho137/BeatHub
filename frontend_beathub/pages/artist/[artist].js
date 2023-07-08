@@ -72,15 +72,15 @@ const Artist = () => {
                 <h1 className={`${styles.artisttitle}`}>Artist</h1>
                 <div className={`row mb-5`}>
                     <div className={`col-12 col-md-6 col-xl-5 ${styles.singleartist}`}>
-                        <div className={`card ${styles.artistmargin}`}>
-                            <h3 className="card-title card-header" style={{ marginBottom: "2%" }}>{artist.name}</h3>
+                        <div className={`card theme theme-border ${styles.artistmargin}`}>
+                            <h3 className="card-title card-header theme-border" style={{ marginBottom: "2%" }}>{artist.name}</h3>
                             <div className="card-img">
                                 <Link href='/recommender'>
                                     <Image className="rounded" loader={() => artist.images ? artist.images : '/images/person-circle.svg'} src={artist.images ? artist.images : '/images/person-circle.svg'} height={300} width={300} alt="Picture of the author" />
                                 </Link>
 
                             </div>
-                            <h4 className='card-footer mt-3'>Artist genres</h4>
+                            <h4 className='card-footer mt-3 theme-border'>Artist genres</h4>
                             <div>
                                 {artist.genres.map((genres) => <p key={genres}>{genres}</p>)}
                             </div>
@@ -90,7 +90,7 @@ const Artist = () => {
                     <div className={`col-10 col-md-4 col-xl-5 border-start mt-4 ${styles.cardplacement} ${styles.bordersection} ${styles.left}`}>
                         <div className="row" style={{ paddingLeft: "4%" }}>
                             {similar.map((name) => (
-                                <div key={name.id} className="card m-3 p-0" style={{ width: '13rem' }}>
+                                <div key={name.id} className="card m-3 p-0 theme theme-border" style={{ width: '13rem' }}>
                                     <Link href={`/artist/${name.id}`}>
                                         <Image className="card-img-top" loader={() => name.images ? name.images : '/images/person-circle.svg'} src={name.images ? name.images : '/images/play-fill.svg'} height={150} width={150} alt="Picture of the author" />
                                     </Link>
@@ -109,12 +109,12 @@ const Artist = () => {
                     <div className="col-10 col-md-10 col-xl-7">
                         <ul>{topTracks.map((name) =>
                             <div key={name.id} className='card col-11 mb-3 ms-1'>
-                                <div className='row g-0 d-flex align-items-center'>
+                                <div className='row g-0 d-flex align-items-center theme theme-border'>
                                     <Image className='img-fluid rounded-start col-2' loader={() => name.images} src={name.images} height={150} width={150} alt="Picture of the author" />
                                     <div className='col-8 card-body'>
-                                        <Link style={{ textDecoration: 'none' }} href={`/song/${name.id}`}>
+                                        <Link className='theme' style={{ textDecoration: 'none' }} href={`/song/${name.id}`}>
                                             <h6 className='text-start card-title'>{name.name}</h6>
-                                            <p className='text-start card-text text-muted'>{name.artist}</p>
+                                            <p className='text-start card-text text-muted theme'>{name.artist}</p>
                                         </Link>
                                     </div>
                                     <div className='col-2 h-100 align-items-center'>

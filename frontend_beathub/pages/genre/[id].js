@@ -90,14 +90,14 @@ export default function GenrePage({ id }) {
                 <div className='offset-xl-1 col-xl-5 mt-5 mb-5 border-end'>
                     <h3 className='mb-5'>Top Tracks</h3>
                     {tracks.map(track =>
-                        <div key={track.id} className='card col-11 mb-3'>
+                        <div key={track.id} className='card col-11 mb-3 theme theme-border'>
                             <div className='row g-0 d-flex align-items-center'>
                                 <Link href={`/song/${track.id}`} className='col-2 text-decoration-none'>
                                     <img src={track.images} className='img-fluid rounded-start' alt='Album picture' />
                                 </Link>
                                 <Link href={`/song/${track.id}`} className='col-8 card-body text-decoration-none'>
                                     <h6 className='text-start card-title'>{track.name}</h6>
-                                    <p className='text-start card-text text-muted'>{track.artist}</p>
+                                    <p className='text-start card-text text-muted theme'>{track.artist}</p>
                                 </Link>
                                 <div className='col-2 h-100'>
                                     <PreviewSong preview={track.preview} />
@@ -112,7 +112,7 @@ export default function GenrePage({ id }) {
                         {artists.map(artist =>
                             <Link key={artist.id} href={`/artist/${artist.id}`} className='text-decoration-none text-dark card col-5 col-md-4 col-xl-3 m-2 p-0'>
                                 <img src={artist.images ? artist.images : '/images/person-circle.svg'} className='card-img-top h-100' alt='Artist image' />
-                                <div className='card-body'>
+                                <div className='card-body theme'>
                                     <h6 className='card-title'>{artist.name}</h6>
                                 </div>
                             </Link>
@@ -124,7 +124,7 @@ export default function GenrePage({ id }) {
                     <div className='offset-2 col-8'>
                         {genres.map((genre) =>
                             <Link key={genre} href={`/genre/${genre}`} className='text-decoration-none text-dark' replace>
-                                <p className='bg-light border border-dark d-inline-block p-2 m-1 rounded' >{genre}</p>
+                                <p className='bg-light border border-dark d-inline-block p-2 m-1 rounded theme theme-border' >{genre}</p>
                             </Link>
                         )}
                     </div>

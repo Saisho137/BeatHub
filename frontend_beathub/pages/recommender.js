@@ -88,7 +88,7 @@ const recommender = () => {
       return (
         <ul className="list-group">
           {Array.isArray(data) && data.map((item) => (
-            <Link href={category === "Song" ? `/song/${item.id}` : `/artist/${item.id}`} key={item.id} style={{ textDecoration: "none" }}>
+            <Link className="theme" href={category === "Song" ? `/song/${item.id}` : `/artist/${item.id}`} key={item.id} style={{ textDecoration: "none" }}>
               <li className="row list-group-item align-items-center theme theme-border" key={item.id}>
                 <div className="col-auto d-flex align-items-center">
                   <div className={`m-0 ${recoStyles.searchPicContainer}`}>
@@ -117,7 +117,7 @@ const recommender = () => {
       return (
         <ul className="list-group">
           {Array.isArray(data) && data.map((item) => (
-            <Link href={`/genre/${item}`} key={item} style={{ textDecoration: "none" }}>
+            <Link className="theme" href={`/genre/${item}`} key={item} style={{ textDecoration: "none" }}>
               <li className="list-group-item fs-5 fw-semibold theme">♫ {item}</li>
             </Link>
           ))}
