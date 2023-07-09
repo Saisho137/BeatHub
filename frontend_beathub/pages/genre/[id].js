@@ -124,14 +124,14 @@ export default function GenrePage({ id }) {
                     <h3 className='mb-5'>Top Tracks</h3>
                     {tracks[0]
                         ? tracks.map(track =>
-                            <div key={track.id} className='card col-10 mb-3'>
+                            <div key={track.id} className='card col-10 mb-3 theme theme-border'>
                                 <div className='row g-0 d-flex align-items-center'>
                                     <Link href={`/song/${track.id}`} className='col-2 text-decoration-none'>
                                         <img src={track.images} className='img-fluid rounded-start' alt='Album picture' />
                                     </Link>
                                     <Link href={`/song/${track.id}`} className='col-8 card-body text-decoration-none'>
                                         <h6 className='text-start card-title'>{track.name}</h6>
-                                        <p className='text-start card-text text-muted'>{track.artist}</p>
+                                        <p className='text-start card-text text-muted theme'>{track.artist}</p>
                                     </Link>
                                     <div className='col-2 h-100'>
                                         <PreviewSong preview={track.preview} />
@@ -159,7 +159,7 @@ export default function GenrePage({ id }) {
                                         src={artist.images ? artist.images : '/images/person-circle.svg'}
                                         className='card-img-top h-100'
                                         alt='Artist image' />
-                                    <div className='card-body'>
+                                    <div className='card-body theme'>
                                         <h6 className='card-title'>{artist.name}</h6>
                                     </div>
                                 </Link>
@@ -181,7 +181,7 @@ export default function GenrePage({ id }) {
                                 href={`/genre/${genre}`}
                                 className='text-decoration-none text-dark'
                                 replace>
-                                <p className='bg-light border border-dark d-inline-block p-2 m-1 rounded' >
+                                <p className='bg-light border border-dark d-inline-block p-2 m-1 rounded theme theme-border' >
                                     {genre}
                                 </p>
                             </Link>

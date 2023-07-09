@@ -1,4 +1,3 @@
-
 const Footer = () => {
   return (
     <footer className="bg-dark text-light py-4">
@@ -22,5 +21,4 @@ const Footer = () => {
     </footer>
   )
 }
-
 export default Footer

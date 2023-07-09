@@ -1,0 +1,15 @@
+.paddingDiv {
+    padding-top: 6em;
+}
+  
+@media (max-width: 767px) {
+    .paddingDiv {
+      padding-top: 4em;
+    }
+}
+  
+@media (min-width: 768px) {
+    .paddingDiv {
+      padding-top: 6empx;
+    }
+}

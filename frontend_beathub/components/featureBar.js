@@ -3,7 +3,7 @@ export default function FeatureBar({ name, value }) {
 
     return (
         <div className='col-md-3 mb-5'>
-            <div className='card p-3 mb-2'>
+            <div className='card p-3 mb-2 theme theme-border'>
                 <h5 className='heading text-capitalize'>{name}</h5>
                 <div className='progress'>
                     <div

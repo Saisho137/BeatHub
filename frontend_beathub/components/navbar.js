@@ -1,76 +1,78 @@
 'use client'
-
-import { useState, useEffect } from 'react';
-import axios from 'axios';
-import Link from 'next/link';
+import { useState, useEffect } from 'react'
+import axios from 'axios'
+import Link from 'next/link'
+import { useRouter } from 'next/router'
 
 const Navbar = () => {
-  const [userData, setUserData] = useState(null);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userData, setUserData] = useState(null)
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const router = useRouter()
 
   const handleAuthentication = () => {
-    const hash = window.location.hash;
+    const hash = window.location.hash
     if (hash) {
-      const urlParams = new URLSearchParams(hash.replace('#', '?'));
-      const token = urlParams.get('access_token');
+      const urlParams = new URLSearchParams(hash.replace('#', '?'))
+      const token = urlParams.get('access_token')
 
-      window.location.hash = '';
-      sessionStorage.setItem('token', token);
-      fetchData(token);
+      window.location.hash = ''
+      sessionStorage.setItem('token', token)
+      fetchData(token)
     }
-  };
+  }
 
   const fetchData = async (token) => {
     try {
       const headers = {
         'Authorization': `Bearer ${token}`
-      };
-      const response = await axios.get('http://localhost:8080/getUserData', { headers });
-      let { username, image } = response.data;
+      }
+      const response = await axios.get('http://localhost:8080/getUserData', { headers })
+      let { username, image } = response.data
       if (image == null) {
         image = "/images/person-circle.svg"
       }
-      const user = { username, image };
-      setUserData(user);
-      setIsLoggedIn(true);
+      const user = { username, image }
+      setUserData(user)
+      setIsLoggedIn(true)
 
-      const tokenTimestamp = Date.now();
-      sessionStorage.setItem('token', token);
-      sessionStorage.setItem('tokenTimestamp', tokenTimestamp);
+      const tokenTimestamp = Date.now()
+      sessionStorage.setItem('token', token)
+      sessionStorage.setItem('tokenTimestamp', tokenTimestamp)
     } catch (error) {
-      console.log(error);
-      setIsLoggedIn(false);
+      console.log(error)
+      setIsLoggedIn(false)
     }
-  };
+  }
 
   useEffect(() => {
-    handleAuthentication();
+    handleAuthentication()
 
-    const token = sessionStorage.getItem('token');
+    const token = sessionStorage.getItem('token')
     if (token) {
-      fetchData(token);
+      fetchData(token)
     }
-  }, []);
+  }, [])
 
   const handleLogin = () => {
-    const CLIENT_ID = '39dd8906e8044b7eb1715c1a4a1867e7';
-    const REDIRECT_URI = "http://localhost:3000";
-    const AUTH_ENDPOINT = 'https://accounts.spotify.com/authorize';
-    const RESPONSE_TYPE = 'token';
-    const SCOPE = 'user-read-private playlist-read-private user-read-currently-playing user-follow-read user-top-read';
+    const CLIENT_ID = '39dd8906e8044b7eb1715c1a4a1867e7'
+    const REDIRECT_URI = "http://localhost:3000"
+    const AUTH_ENDPOINT = 'https://accounts.spotify.com/authorize'
+    const RESPONSE_TYPE = 'token'
+    const SCOPE = 'user-read-private playlist-read-private user-read-currently-playing user-follow-read user-top-read'
 
-    const url = `${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=${RESPONSE_TYPE}&scope=${encodeURIComponent(SCOPE)}`;
-    window.location.href = url;
-  };
+    const url = `${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=${RESPONSE_TYPE}&scope=${encodeURIComponent(SCOPE)}`
+    window.location.href = url
+  }
 
   const handleLogout = () => {
-    sessionStorage.removeItem('token');
-    sessionStorage.removeItem('tokenTimestamp');
-    setIsLoggedIn(false);
-  };
+    sessionStorage.removeItem('token')
+    sessionStorage.removeItem('tokenTimestamp')
+    setIsLoggedIn(false)
+    router.push('/')
+  }
 
   return (
-    <div className='container-fluid p-0'>
+    <div className='container-fluid p-0 sticky-top'>
       <nav className='navbar navbar-expand-md navbar-dark bg-dark border-3 border-bottom border-success'>
         <div className='container-fluid'>
           <Link href="/" className='navbar-brand fs-4'>BeatHub</Link>
@@ -86,11 +88,13 @@ const Navbar = () => {
                 <li className='nav-item'><Link className='nav-link' href="/statistics">Statistics</Link></li>
               </>
             )}
-            <li className='nav-item'>
+            <li className='nav-item dropdown'>
               {userData?.image && isLoggedIn && userData?.username && (<img src={userData.image} alt="User Image" className="rounded-circle user-avatar mt-3 d-md-none ms-2" style={{ width: '60px', height: '60px' }} />)}
-              {userData?.image && isLoggedIn && userData?.username && (<span className="pt-3 p-2 px-0 nav-item nav-link text-light fs-5 fw-bold d-md-none">{userData.username}</span>)}
+              {userData?.image && isLoggedIn && userData?.username && (<a className="pt-3 p-2 px-0 nav-item nav-link text-light fs-5 fw-bold d-md-none nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">{userData.username}</a>)}
               {isLoggedIn && (
-                <button className='nav-link text-success fw-semibold d-md-none' onClick={handleLogout}>Logout</button>
+                <ul className="dropdown-menu bg-dark border-0">
+                  <li><a className="dropdown-item bg-dark text-danger fw-semibold" href="#" onClick={handleLogout}>Logout</a></li>
+                </ul>
               )}
             </li>
           </ul>
@@ -100,22 +104,23 @@ const Navbar = () => {
                   <div className='col-6'>
                     {userData?.image && <img src={userData.image} alt="User Image" className="rounded-circle user-avatar mt-3 d-none d-md-block" style={{ width: '60px', height: '60px' }} />}
                   </div>
-                  <div className='col-6 px-0'>
-                    {userData?.username && <span className="pt-3 p-2 px-0 nav-item nav-link text-light fs-5 fw-bold d-none d-md-block">{userData.username}</span>}
-                    <button className='nav-link text-success fw-semibold d-none d-md-inline d-none d-md-block' onClick={handleLogout}>Logout</button>
+                  <div className='col-6 pt-1 px-0 nav-item dropdown'>
+                    {userData?.username && <a className="pt-4 px-0 nav-item nav-link text-light fs-5 fw-bold d-none d-md-block dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">{userData.username}</a>}
+                    <ul className="dropdown-menu bg-dark">
+                      <li><a className="dropdown-item bg-dark text-danger fw-semibold" href="#" onClick={handleLogout}>Logout</a></li>
+                    </ul>
                   </div>
                 </div>
               </div>
             ) : (
-              <div className='bg-success p-3 rounded-5 ms-auto btn btn-sm' style={{margin: '0.6rem'}}>
-                <button className="nav-item nav-link text-light fw-semibold" onClick={handleLogin}>Login with Spotify</button>
+              <div className='bg-success p-3 rounded-5 ms-auto btn btn-sm' style={{margin: '0.6rem'}} onClick={handleLogin}>
+                <button className="nav-item nav-link text-light fw-semibold">Login with Spotify</button>
               </div>
             )}
           </div>
         </div>
       </nav>
     </div>
-  );
-};
-
-export default Navbar;
+  )
+}
+export default Navbar
