@@ -221,34 +221,34 @@ export default function Game() {
 
     return (
         <Layout>
-            <button className={`${styles['toggle-sidebar-button']}`} onClick={toggleSidebar}>
+            <button className={`${styles['toggle-sidebar-button']} theme theme-border`} onClick={toggleSidebar}>
                 <b>{selectedOption.isOpen ? "<" : ">"}</b>
             </button>
             <div className={`col-12 row ${styles.body}`}>
-                <div style={{ left: selectedOption.isOpen ? '-3%' : '-100%' }} className={`col-xl-6 ${styles['sidebar-column']} border border-success border-3 rounded p-5`}>
+                <div style={{ left: selectedOption.isOpen ? '-3%' : '-100%' }} className={`col-xl-6 ${styles['sidebar-column']} border border-success border-3 rounded p-5 theme`}>
                     <div className={`row d-flex justify-content-center mt-4`}>
                         <h1 className={`row col-12 d-flex justify-content-center mb-5 ${styles['instructions-tittle']}`}>Build your Game</h1>
                         <form className="row col-12 d-flex justify-content-center" onSubmit={handleSubmitTrack}>
                             <label className="col-xl-3 mt-3" htmlFor="typeOfSearch"><b>Select Type of Search:</b></label>
-                            <select className={`col-xl-7 mt-3 ${styles['input-combobox']}`} id="typeOfSearch" value={selectedOption.typeOfSearch} onChange={handleSelectionChange}>
+                            <select className={`col-xl-7 mt-3 ${styles['input-combobox']} theme`} id="typeOfSearch" value={selectedOption.typeOfSearch} onChange={handleSelectionChange}>
                                 <option value="genre">Genre</option>
                                 <option value="playlist">Playlist</option>
                                 <option value="artist">Artist</option>
                             </select>
                             {selectedOption.typeOfSearch == "genre" && <>
                                 <label className="col-xl-4 mt-2" htmlFor="genre"><b>Genre:</b></label>
-                                <input className={`col-xl-6 mt-2 ${styles.input}`} type="text" id="genre" name="genre" required />
+                                <input className={`col-xl-6 mt-2 ${styles.input} theme theme-border`} type="text" id="genre" name="genre" required />
                             </>}
                             {selectedOption.typeOfSearch == "playlist" && <>
                                 <label className="col-xl-4 mt-2" htmlFor="playlist"><b>Playlist:</b></label>
-                                <input className={`col-xl-6 mt-2 ${styles.input}`} type="text" id="playlist" name="playlist" required />
+                                <input className={`col-xl-6 mt-2 ${styles.input} theme theme-border`} type="text" id="playlist" name="playlist" required />
                             </>}
                             {selectedOption.typeOfSearch == "artist" && <>
                                 <label className="col-xl-4 mt-2" htmlFor="artist"><b>Artist:</b></label>
-                                <input className={`col-xl-6 mt-2 ${styles.input}`} type="text" id="artist" name="artist" required />
+                                <input className={`col-xl-6 mt-2 ${styles.input} theme theme-border`} type="text" id="artist" name="artist" required />
                             </>}
                             <label className="col-xl-3 mt-2" htmlFor="difficultyLevel"><b>Select difficulty:</b></label>
-                            <select className={`col-xl-7 mt-2 ${styles['input-combobox']}`} id="difficultyLevel" value={selectedOption.difficultyLevel} onChange={handleSelectionChangeDifficult}>
+                            <select className={`col-xl-7 mt-2 ${styles['input-combobox']} theme`} id="difficultyLevel" value={selectedOption.difficultyLevel} onChange={handleSelectionChangeDifficult}>
                                 <option value="easy">Easy</option>
                                 <option value="normal">Normal</option>
                                 <option value="hard">Hard</option>
@@ -256,16 +256,16 @@ export default function Game() {
                             </select>
                             {selectedOption.difficultyLevel == 'custom' && <>
                                 <label className="col-xl-4 mt-2" htmlFor="duration"><b>Preview duration (secs):</b></label>
-                                <input className={`col-xl-6 mt-2 ${styles.input}`} type="number" id="duration" name="duration" max={29} min={1} required />
+                                <input className={`col-xl-6 mt-2 ${styles.input} theme theme-border`} type="number" id="duration" name="duration" max={29} min={1} required />
                                 <label className="col-xl-4 mt-2" htmlFor="tries"><b>Number of Tries:</b></label>
-                                <input className={`col-xl-6 mt-2 ${styles.input}`} type="number" id="tries" name="tries" max={99} min={1} required />
+                                <input className={`col-xl-6 mt-2 ${styles.input} theme theme-border`} type="number" id="tries" name="tries" max={99} min={1} required />
                                 {selectedOption.typeOfSearch != "artist" && <>
                                     <label className="col-xl-4 mt-2"><b>Include artist name: </b></label>
                                     <label className="col-xl-1 mt-2" htmlFor="artistTrue"><b>Yes</b></label>
-                                    <input className={`col-xl-1 mt-2 ${styles['input-checkbox']}`} type="checkbox" id="artistTrue" name="artistTrue"
+                                    <input className={`col-xl-1 mt-2 ${styles['input-checkbox']} theme-border`} type="checkbox" id="artistTrue" name="artistTrue"
                                         checked={selectedOption.isArtistChecked === 'artistTrue'} onChange={() => handleCheckboxChange('artistTrue')} />
                                     <label className="col-xl-1 mt-2" htmlFor="artistFalse"><b>No</b></label>
-                                    <input className={`col-xl-1 mt-2 ${styles['input-checkbox2']}`} type="checkbox" id="artistFalse" name="artistFalse"
+                                    <input className={`col-xl-1 mt-2 ${styles['input-checkbox2']} theme-border`} type="checkbox" id="artistFalse" name="artistFalse"
                                         checked={selectedOption.isArtistChecked === 'artistFalse'} onChange={() => handleCheckboxChange('artistFalse')} />
                                     <div className="col-xl-2 mt-2"></div>
                                 </>}
@@ -286,13 +286,13 @@ export default function Game() {
                 </div>
                 <div className={`${styles['main-column']} row col-xl-6 mt-4 d-flex justify-content-center align-self-center`}>
                     <ToastContainer />
-                    <form className="row col-12 align-self-center border border-dark border-2 rounded-5 p-4" id="formGuess" onSubmit={handleSubmit}>
+                    <form className="row col-12 align-self-center border border-dark border-2 rounded-5 p-4 theme" id="formGuess" onSubmit={handleSubmit}>
                         <div className="row col-xl-6 d-flex align-self-center">
                             <label className={`col-xl-8 mt-3`} htmlFor="songName"><h4><b>Song Name:</b></h4></label>
-                            <input className={`col-xl-10 mt-3 ${styles.input}`} disabled={!response.name || winner != null} type="text" id="songName" name="songName" required />
+                            <input className={`col-xl-10 mt-3 ${styles.input} theme theme-border`} disabled={!response.name || winner != null} type="text" id="songName" name="songName" required />
                             {selectedOption.typeOfSearch != "artist" && difficulty.artist ? <>
                                 <label className="col-xl-8 mt-3"><h4><b>Artist Name:</b></h4></label>
-                                <input className={`col-xl-10 ${styles.input} mt-3 mb-4`} disabled={!response.name || winner != null} type="text" id="artistName" name="artistName" required />
+                                <input className={`col-xl-10 ${styles.input} mt-3 mb-4 theme theme-border`} disabled={!response.name || winner != null} type="text" id="artistName" name="artistName" required />
                             </> : <><div className="col-xl-12 my-1"></div><div className="col-xl-12 my-3"></div></>}
                         </div>
                         <div className="row col-xl-6 d-flex justify-content-center align-self-center">
