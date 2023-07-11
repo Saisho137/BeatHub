@@ -81,7 +81,7 @@ export default function Game() {
 
     const startPlayback = () => {
         setIsPlaying(true)
-        audioRef.current.volume = 0.33
+        audioRef.current.volume = 0.25
         audioRef.current.play()
 
         timeoutRef.current = setTimeout(() => {
@@ -275,7 +275,7 @@ export default function Game() {
                     </div>
                 </div>
                 <div className="row col-xl-6 d-flex justify-content-center align-self-center my-5 px-5">
-                    <h1 className={`col-xl-8 d-flex justify-content-center mb-3 ${styles['instructions-tittle']}`}>How to play Guess Game?</h1>
+                    <h2 className={`col-xl-8 d-flex justify-content-center mb-3 ${styles['instructions-tittle']}`}>How to play Guess Game?</h2>
                     <h4 className={`col-xl-8 d-flex justify-content-center ${styles['instructions-text']}`}>
                         First you must generate a random song and then guess which is it, you need to open the sidebar with the top left button,
                         choose between genre, playlist or artist and fill in the information, then you must press the ¨find¨ button and a song will be generated on the

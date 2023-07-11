@@ -1,19 +1,19 @@
 .body {
-  min-height: 42em;
+  min-height: 44em;
 }
 
 .sidebar-column {
   transition: left 0.5s ease;
-  position: fixed;
+  position: absolute;
   top: 5.8em;
   left: -3%;
-  min-height: 42em;
+  min-height: 46em;
   background-color: rgb(235, 235, 235);
   z-index: 1;
 }
 
 .toggle-sidebar-button {
-  position: fixed;
+  position: absolute;
   z-index: 2;
   left: 0%;
   top: 45%;
@@ -59,11 +59,11 @@
 }
 
 .instructions-tittle {
-  font-family: 'Cooper Black', sans-serif;
+  font-family: 'Bungee', sans-serif;
 }
 
 .instructions-text {
-  font-family: 'Berlin Sans FB Demi Bold', sans-serif;
+  font-family: 'Fredoka', sans-serif;
   line-height: 1.5;
 }
 

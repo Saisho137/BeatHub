@@ -12,23 +12,23 @@
     --body_color: white;
     --link_color: white;
     --border_color: gray;
-    --time_btn_color:#121212;
-    --time_btn_color_on:gray;
+    --time_btn_color: #121212;
+    --time_btn_color_on: gray;
 }
 
-.theme{
- background-color: var(--body_background) !important;
- color: var(--body_color) !important;
+.theme {
+    background-color: var(--body_background) !important;
+    color: var(--body_color) !important;
 }
 
-.theme-border{
+.theme-border {
     border-color: var(--border_color) !important;
 }
 
-.time-btn-on{
+.time-btn-on {
     background-color: var(--time_btn_color_on) !important;
 }
 
-.time-btn-off{
+.time-btn-off {
     background-color: var(--time_btn_color) !important;
 }
