@@ -147,7 +147,7 @@ const Artist = () => {
                     <h1 className={`mt-5 mb-5 ${styles.artisttitle}`}>Top Tracks</h1>
                     <div className='col-xl-12 mt-5 mb-5 d-flex justify-content-center'>
                         <ul>{topTracks.map((name) =>
-                            <div key={name.id} className='card col-10 mb-3'>
+                            <div key={name.id} className={`card col-10 mb-3 ${styles.artistwidth}`}>
                                 <div className='row g-0 d-flex align-items-center theme theme-border'>
                                     <Image className='img-fluid rounded-start col-2' loader={() => name.images} src={name.images} height={150} width={150} alt="Picture of the author" />
                                     <div className='col-8 card-body'>
