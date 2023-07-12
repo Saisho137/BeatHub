@@ -304,13 +304,12 @@ export default function Game() {
                     </form>
                     <div className="row col-12 align-self-center">
                         {loader && <>
-                            {console.log('here')}
                             <div className='d-flex justify-content-center align-items-center' style={{ height: '30em' }}>
                                 <div className="spinner-border text-dark d-flex justify-content-center" role="status" style={{ width: '5em', height: '5em' }}>
                                 </div>
                             </div>
                         </>}
-                        {response.name && winner && <>
+                        {response.name && winner && !loader && <>
                             <div className="row d-flex justify-content-center mt-3">
                                 <div className={`card col-xl-10 ${styles['preview-song']}`}>
                                     <div className="card-body">
@@ -326,7 +325,7 @@ export default function Game() {
                                 </div>
                             </div>
                         </>}
-                        {response.name && !winner && difficulty.tries == 0 && <>
+                        {response.name && !winner  && !loader && difficulty.tries == 0 && <>
                             <div className="row d-flex justify-content-center mt-3">
                                 <h2>It actually was:</h2>
                                 <div className={`card col-xl-10 ${styles['preview-song']}`}>
@@ -343,7 +342,7 @@ export default function Game() {
                                 </div>
                             </div>
                         </>}
-                        {response.name && !winner && difficulty.tries > 0 && <>
+                        {response.name && !winner  && !loader && difficulty.tries > 0 && <>
                             <div className="row d-flex justify-content-center mt-3">
                                 <audio ref={audioRef} src={response.preview}></audio>
                                 <div className={`card col-xl-10 ${styles['preview-song']}`}>

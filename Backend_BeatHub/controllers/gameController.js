@@ -38,8 +38,9 @@ const getRandomSong = async (req, res) => {
                 break
             case "artist":
                 const {data:{artists:{items}}} = await axios.get(`https://api.spotify.com/v1/search?q=artist%3A${searchItem}&type=artist&limit=1`, headers)
+                items.map(i=>{console.log(i.id);})
                 const albumList = []
-                const topAlbumsArtist = await axios.get(`https://api.spotify.com/v1/artists/${items[0].id}/albums`, headers)
+                const topAlbumsArtist = await axios.get(`https://api.spotify.com/v1/artists/${items[0].id}/albums?limit=50&include_groups=single,album`, headers)
                 topAlbumsArtist.data.items.map(album => (albumList.push(album.id)))
                 const topTracksFromAlbum = await axios.get(`https://api.spotify.com/v1/albums/${albumList[Math.floor(Math.random() * albumList.length)]}/tracks`, headers)
                 topTracksFromAlbum.data.items.map((track) => {
