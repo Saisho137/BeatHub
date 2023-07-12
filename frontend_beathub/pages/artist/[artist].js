@@ -119,7 +119,7 @@ const Artist = () => {
                             <div>
                                 {artist.genres.map((genre) =>
                                     <Link key={genre} href={`/genre/${genre}`} className='text-decoration-none text-dark' replace>
-                                        <p className='bg-light border border-dark d-inline-block p-2 m-1 rounded theme theme-border' >{genre}</p>
+                                        <p className='mb-3 bg-light border border-dark d-inline-block p-2 m-1 rounded theme theme-border' >{genre}</p>
                                     </Link>
                                 )}
                             </div>

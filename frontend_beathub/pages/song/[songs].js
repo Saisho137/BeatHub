@@ -72,14 +72,19 @@ const Songs = () => {
                         <div className={`card theme theme-border ${styles.artistmargin}`}>
                             <h3 className="card-title card-header theme-border" style={{ marginBottom: "2%" }}>{song.name}</h3>
                             <div className="card-img">
-                                <Link href={`/artist/${song.artistId}`}>
-                                    <Image className="rounded" loader={() => song.images ? song.images : '/images/person-circle.svg'} src={song.images ? song.images[0] : '/images/person-circle.svg'} height={300} width={300} alt="Picture of the author" />
-                                </Link>
+                                <Image className="rounded" loader={() => song.images ? song.images : '/images/person-circle.svg'} src={song.images ? song.images[0] : '/images/person-circle.svg'} height={300} width={300} alt="Picture of the author" />
                             </div>
-                            <h4 className='card-footer mt-3 theme-border'>Artist</h4>
                             <div>
-                                <p>{song.artistName}</p>
+                                <h4 className='card-footer mt-3 theme-border'>Artist</h4>
+                                {song.artistId.map((id, index) => (
+                                    <Link key={id} href={`/artist/${id}`} className='text-decoration-none text-dark' replace>
+                                        <p className='mb-3 bg-light border border-dark d-inline-block p-2 m-1 rounded theme theme-border'>
+                                            {song.artistName[index]}
+                                        </p>
+                                    </Link>
+                                ))}
                             </div>
+
                         </div>
                     </div>
 

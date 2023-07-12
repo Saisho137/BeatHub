@@ -43,8 +43,8 @@ const getSpecificTrack = async (req, res) => {
         })
         const track = {
             name: data.name,
-            artistId: data.album.artists[0].id,
-            artistName: data.album.artists[0].name,
+            artistId: data.album.artists.map(artist => artist.id),
+            artistName: data.album.artists.map(artist => artist.name),
             songId: id,
             images: data.album.images[0].url
         }
