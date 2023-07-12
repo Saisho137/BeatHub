@@ -1,18 +1,25 @@
 import { useState, useRef } from 'react'
 
-export default function PreviewSong({ preview }) {
-    const [isPlaying, setIsPlaying] = useState(false)
+export default function PreviewSong({ preview, isPlaying, setIsPlaying }) {
+
     const audioRef = useRef(null)
 
+    if (audioRef.current && isPlaying != preview) {
+        audioRef.current.pause()
+    }
+
     const playPreview = () => {
-        if (!isPlaying) {
+
+        if (isPlaying == preview) {
+            setIsPlaying(false)
+            audioRef.current.pause()
+        }
+        else {
+            setIsPlaying(preview)
             audioRef.current = new Audio(preview)
             audioRef.current.volume = 0.25
             audioRef.current.play()
-        } else {
-            audioRef.current.pause()
         }
-        setIsPlaying(!isPlaying)
     }
 
     return (
@@ -22,7 +29,7 @@ export default function PreviewSong({ preview }) {
             style={{ backgroundColor: `${preview ? 'lightgreen' : 'grey'}` }}
             disabled={!preview}
         >
-            {!isPlaying
+            {!isPlaying || isPlaying != preview
                 ? <img src='/images/play-fill.svg' alt='play' />
                 : <img src='/images/pause-fill.svg' alt='pause' />}
         </button>

@@ -15,6 +15,7 @@ const Songs = () => {
 
     const [song, setSong] = useState('')
     const [similar, setSimilar] = useState([])
+    const [isPlaying, setIsPlaying] = useState(false)
 
     const getSpecificTrack = async (token) => {
         const headers = {
@@ -49,11 +50,14 @@ const Songs = () => {
     }
 
     useEffect(() => {
+
+        router.events.on('routeChangeStart', () => setIsPlaying(false))
+
         if (param) {
             const token = sessionStorage.getItem('token')
             getSpecificTrack(token)
         }
-    }, [param])
+    }, [param, router])
 
     if (!song) {
         return <h1>Loading...</h1>
@@ -98,7 +102,7 @@ const Songs = () => {
                                             </Link>
                                         </div>
                                         <div className='col-2 h-100 align-items-center'>
-                                            <PreviewSong preview={name.preview} />
+                                            <PreviewSong preview={name.preview} isPlaying={isPlaying} setIsPlaying={setIsPlaying}/>
                                         </div>
                                     </div>
                                 </div>)}

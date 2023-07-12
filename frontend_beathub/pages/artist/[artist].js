@@ -14,6 +14,7 @@ const Artist = () => {
     const [artist, setArtist] = useState('')
     const [similar, setSimilar] = useState([])
     const [topTracks, setTopTracks] = useState([])
+    const [isPlaying, setIsPlaying] = useState(false)
 
     const router = useRouter()
     const param = router.query.artist
@@ -84,6 +85,8 @@ const Artist = () => {
 
     useEffect(() => {
 
+        router.events.on('routeChangeStart', () => setIsPlaying(false))
+
         if (param) {
             const token = sessionStorage.getItem('token')
 
@@ -91,7 +94,7 @@ const Artist = () => {
             getSimilarArtist(token)
             getArtistTopTracks(token)
         }
-    }, [param])
+    }, [param, router])
 
     if (!artist) {
         return <h1>Loading...</h1>
@@ -159,7 +162,7 @@ const Artist = () => {
                                         </Link>
                                     </div>
                                     <div className='col-2 h-100 align-items-center'>
-                                        <PreviewSong preview={name.preview} />
+                                        <PreviewSong preview={name.preview} isPlaying={isPlaying} setIsPlaying={setIsPlaying}/>
                                     </div>
                                 </div>
                             </div>)}
