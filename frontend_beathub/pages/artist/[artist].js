@@ -126,7 +126,8 @@ const Artist = () => {
                         </div>
                     </div>
 
-                    <div className={`col-10 col-md-4 col-xl-6 border-start mt-4 ${styles.cardplacement} ${styles.bordersection} ${styles.left}`}>
+                    <div className={`col-10 col-md-4 col-xl-6 border rounded mt-4 ${styles.cardplacement} ${styles.bordersection} ${styles.left}`}>
+                    <h5 className={`mt-5 mb-5 ${styles.artisttitle}`}>Similar Artists</h5>
                         <div className="row d-flex justify-content-center" style={{ paddingLeft: "4%" }}>
                             {similar.map((name) => (
                                 <div key={name.id} className="card m-3 p-0 theme theme-border" style={{ width: '13rem' }}>
