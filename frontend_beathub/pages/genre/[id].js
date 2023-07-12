@@ -21,6 +21,7 @@ export default function GenrePage({ id }) {
     const [genres, setGenres] = useState([])
     const [tracks, setTracks] = useState('')
     const [artists, setArtists] = useState('')
+    const [isPlaying, setIsPlaying] = useState(false)
 
     async function getGenres(headers) {
         try {
@@ -66,6 +67,8 @@ export default function GenrePage({ id }) {
 
     useEffect(() => {
 
+        router.events.on('routeChangeStart', () => setIsPlaying(false))
+
         const token = sessionStorage.getItem('token')
 
         const headers = {
@@ -78,7 +81,7 @@ export default function GenrePage({ id }) {
         getGenresTopTracks(headers)
         getGenresTopArtists(headers)
 
-    }, [id])
+    }, [id, router])
 
     /* While the page gets a response from API */
     if (typeof tracks != 'object' || typeof artists != 'object') {
@@ -134,7 +137,7 @@ export default function GenrePage({ id }) {
                                         <p className='text-start card-text text-muted theme'>{track.artist}</p>
                                     </Link>
                                     <div className='col-2 h-100'>
-                                        <PreviewSong preview={track.preview} />
+                                        <PreviewSong preview={track.preview} isPlaying={isPlaying} setIsPlaying={setIsPlaying}/>
                                     </div>
                                 </div>
                             </div>
