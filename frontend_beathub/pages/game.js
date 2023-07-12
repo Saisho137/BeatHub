@@ -21,6 +21,7 @@ export default function Game() {
     const [isPlaying, setIsPlaying] = useState(false)
     const [response, setResponse] = useState({})
     const [winner, setWinner] = useState(null)
+    const [loader, setLoader] = useState(null)
     const timeoutRef = useRef(null)
     const audioRef = useRef(null)
     const router = useRouter()
@@ -141,9 +142,19 @@ export default function Game() {
     }
     const handleSubmitTrack = async (event) => {
         event.preventDefault()
+        setLoader(true)
         setWinner(null)
         document.getElementById('formGuess').reset()
 
+        if (response.preview) {
+            stopPlayback()
+        }
+        const token = sessionStorage.getItem('token')
+        const headers = {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        }
         switch (selectedOption.difficultyLevel) {
             case "easy":
                 setDifficulty({ tries: 5, duration: 20, artist: false })
@@ -160,14 +171,6 @@ export default function Game() {
             default:
                 console.log("Default")
         }
-
-        const token = sessionStorage.getItem('token')
-        const headers = {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        }
-
         switch (selectedOption.typeOfSearch) {
             case "genre":
                 try {
@@ -214,9 +217,7 @@ export default function Game() {
             default:
                 console.log("Default")
         }
-        if (response.preview) {
-            stopPlayback()
-        }
+        setLoader(false)
     }
 
     return (
@@ -302,6 +303,13 @@ export default function Game() {
                         </div>
                     </form>
                     <div className="row col-12 align-self-center">
+                        {loader && <>
+                            {console.log('here')}
+                            <div className='d-flex justify-content-center align-items-center' style={{ height: '30em' }}>
+                                <div className="spinner-border text-dark d-flex justify-content-center" role="status" style={{ width: '5em', height: '5em' }}>
+                                </div>
+                            </div>
+                        </>}
                         {response.name && winner && <>
                             <div className="row d-flex justify-content-center mt-3">
                                 <div className={`card col-xl-10 ${styles['preview-song']}`}>
@@ -311,7 +319,7 @@ export default function Game() {
                                             <div className="row col-xl-8">
                                                 <h4 className="card-title col-12">{response.name}</h4>
                                                 <h5 className="card-text col-12">{listOfArtist()}</h5>
-                                                <audio className="col-12" controls src={response.preview}></audio>
+                                                <audio className="col-12" ref={audioRef} controls src={response.preview}></audio>
                                             </div>
                                         </div>
                                     </div>
@@ -328,15 +336,15 @@ export default function Game() {
                                             <div className={`row col-xl-8`}>
                                                 <h4 className="card-title col-12">{response.name}</h4>
                                                 <h5 className="card-text col-12">{listOfArtist()}</h5>
-                                                <audio className="col-12" controls src={response.preview}></audio>
+                                                <audio className="col-12" ref={audioRef} controls src={response.preview}></audio>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </>}
-                        {response.name && !winner && difficulty.tries > 0 &&
-                            (<div className="row d-flex justify-content-center mt-3">
+                        {response.name && !winner && difficulty.tries > 0 && <>
+                            <div className="row d-flex justify-content-center mt-3">
                                 <audio ref={audioRef} src={response.preview}></audio>
                                 <div className={`card col-xl-10 ${styles['preview-song']}`}>
                                     <div className="card-body">
@@ -351,7 +359,8 @@ export default function Game() {
                                         </div>
                                     </div>
                                 </div>
-                            </div>)}
+                            </div>
+                        </>}
                     </div>
                 </div>
             </div>
