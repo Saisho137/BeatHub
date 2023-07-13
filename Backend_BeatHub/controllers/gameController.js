@@ -37,8 +37,7 @@ const getRandomSong = async (req, res) => {
                 })
                 break
             case "artist":
-                const {data:{artists:{items}}} = await axios.get(`https://api.spotify.com/v1/search?q=artist%3A${searchItem}&type=artist&limit=1`, headers)
-                items.map(i=>{console.log(i.id);})
+                const { data: { artists: { items } } } = await axios.get(`https://api.spotify.com/v1/search?q=artist%3A${searchItem}&type=artist&limit=1`, headers)
                 const albumList = []
                 const topAlbumsArtist = await axios.get(`https://api.spotify.com/v1/artists/${items[0].id}/albums?limit=50&include_groups=single,album`, headers)
                 topAlbumsArtist.data.items.map(album => (albumList.push(album.id)))
@@ -55,6 +54,7 @@ const getRandomSong = async (req, res) => {
 
         const { data } = await axios.get(`https://api.spotify.com/v1/tracks/${track}`, headers)
         const infoTrack = {
+            id: track,
             name: data.name,
             artistName: data.album.artists.map(artist => (artist.name)),
             image: data.album.images[0].url,
@@ -71,6 +71,24 @@ const getRandomSong = async (req, res) => {
     }
 }
 
-module.exports = {
-    getRandomSong
+const saveOnSpotify = async (req, res) => {
+    const token = req.headers.authorization
+    const headers = {
+        headers: {
+            'Authorization': token
+        }
+    }
+    const id = req.body.id
+    try {
+        await axios.put('https://api.spotify.com/v1/me/tracks', { ids: [id] }, headers)
+        res.status(200).send({ message: 'Song Successfully Added' })
+    } catch (err) {
+        if (err.response && err.response.status === 401) {
+            res.status(401).send({ message: 'Token missing or invalid.' })
+            return
+        }
+        res.status(400).send({ message: err })
+    }
 }
+
+module.exports = { getRandomSong, saveOnSpotify }

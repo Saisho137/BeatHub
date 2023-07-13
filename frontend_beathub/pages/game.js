@@ -5,6 +5,7 @@ import { useRouter } from 'next/router'
 import axios from "axios"
 import { toast, ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import { headers } from "next/dist/client/components/headers"
 
 export default function Game() {
     const [selectedOption, setSelectedOption] = useState({
@@ -49,6 +50,39 @@ export default function Game() {
         const listOfArtist = response.artistName.map(name => (name.toString())).join(', ')
         return listOfArtist
     }
+    const startPlayback = () => {
+        setIsPlaying(true)
+        audioRef.current.volume = 0.25
+        audioRef.current.play()
+
+        timeoutRef.current = setTimeout(() => {
+            setIsPlaying(false)
+            audioRef.current.pause()
+            audioRef.current.currentTime = 0
+        }, difficulty.duration * 1000)
+    }
+    const stopPlayback = () => {
+        clearTimeout(timeoutRef.current)
+        timeoutRef.current = null
+        setIsPlaying(false)
+        audioRef.current.pause()
+        audioRef.current.currentTime = 0
+    }
+    const saveSong = async () => {
+        const token = sessionStorage.getItem('token')
+        const headers = {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        }
+        try {
+            await axios.put('http://localhost:8080/saveOnSpotify', { id: response.id }, headers)
+            handleNotification("success", "This Song was added to your library!")
+        } catch (err) {
+            handleNotification("error", "Something went wrong")
+        }
+
+    }
     const handleNotification = (condition, message) => {
         switch (condition) {
             case "success":
@@ -78,25 +112,6 @@ export default function Game() {
             default:
                 console.log("default")
         }
-    }
-
-    const startPlayback = () => {
-        setIsPlaying(true)
-        audioRef.current.volume = 0.25
-        audioRef.current.play()
-
-        timeoutRef.current = setTimeout(() => {
-            setIsPlaying(false)
-            audioRef.current.pause()
-            audioRef.current.currentTime = 0
-        }, difficulty.duration * 1000)
-    }
-    const stopPlayback = () => {
-        clearTimeout(timeoutRef.current)
-        timeoutRef.current = null
-        setIsPlaying(false)
-        audioRef.current.pause()
-        audioRef.current.currentTime = 0
     }
     const handleSubmit = (event) => {
         event.preventDefault()
@@ -323,14 +338,17 @@ export default function Game() {
                                         </div>
                                     </div>
                                 </div>
+                                <div className={`col-12 mt-3 d-flex justify-content-center align-self-center`}>
+                                    <button className={`col-4 ${styles['input-button']}`} onClick={saveSong}>Save this Song!</button>
+                                </div>
                             </div>
                         </>}
-                        {response.name && !winner  && !loader && difficulty.tries == 0 && <>
+                        {response.name && !winner && !loader && difficulty.tries == 0 && <>
                             <div className="row d-flex justify-content-center mt-3">
                                 <h2>It actually was:</h2>
                                 <div className={`card col-xl-10 ${styles['preview-song']}`}>
                                     <div className="card-body">
-                                        <div className="row col-12">
+                                        <div className="row col-12 d-flex justify-content-center align-self-center">
                                             <img className="col-xl-4" src={response.image} alt="Picture of album from artist"></img>
                                             <div className={`row col-xl-8`}>
                                                 <h4 className="card-title col-12">{response.name}</h4>
@@ -340,9 +358,12 @@ export default function Game() {
                                         </div>
                                     </div>
                                 </div>
+                                <div className={`col-12 mt-3 d-flex justify-content-center align-self-center`}>
+                                    <button className={`col-4 ${styles['input-button']}`} onClick={saveSong}>Save this Song!</button>
+                                </div>
                             </div>
                         </>}
-                        {response.name && !winner  && !loader && difficulty.tries > 0 && <>
+                        {response.name && !winner && !loader && difficulty.tries > 0 && <>
                             <div className="row d-flex justify-content-center mt-3">
                                 <audio ref={audioRef} src={response.preview}></audio>
                                 <div className={`card col-xl-10 ${styles['preview-song']}`}>

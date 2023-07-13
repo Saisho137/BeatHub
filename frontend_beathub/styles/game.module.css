@@ -37,6 +37,23 @@
   transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
 
+.input-button-save {
+  max-height: fit-content;
+  min-height: fit-content;
+  max-width: 15rem;
+  min-width: fit-content;
+  padding: 12px 20px;
+  font-size: 15px;
+  font-weight: bold;
+  text-align: center;
+  text-decoration: none;
+  background-color: #ffffff;
+  color: #333333;
+  border: 2px solid #333333;
+  border-radius: 100px;
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
 .input-button:hover {
   background-color: #333333;
   color: #ffffff;

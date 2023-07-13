@@ -58,7 +58,7 @@ const Navbar = () => {
     const REDIRECT_URI = "http://localhost:3000"
     const AUTH_ENDPOINT = 'https://accounts.spotify.com/authorize'
     const RESPONSE_TYPE = 'token'
-    const SCOPE = 'user-read-private playlist-read-private user-read-currently-playing user-follow-read user-top-read'
+    const SCOPE = 'user-read-private playlist-read-private user-read-currently-playing user-follow-read user-top-read user-library-modify'
 
     const url = `${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=${RESPONSE_TYPE}&scope=${encodeURIComponent(SCOPE)}`
     window.location.href = url

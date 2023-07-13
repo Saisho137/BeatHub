@@ -23,9 +23,12 @@ app.get('/getGenre', recommenderController.getGenre)
 app.get('/getTopTracksGenre/:genre', recommenderController.getTopTracksGenre)
 app.get('/getTopArtistGenre/:genre', recommenderController.getTopArtistGenre)
 
+//Guess Game Section
 app.post('/getRandomTrack', gameController.getRandomSong)
-app.get("/stats/:time?", statisticsController.getStats)
+app.put('/saveOnSpotify', gameController.saveOnSpotify)
 
+
+app.get("/stats/:time?", statisticsController.getStats)
 app.get('/getUserData', userController.getUserData)
 
 
