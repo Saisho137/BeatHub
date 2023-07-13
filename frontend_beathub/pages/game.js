@@ -338,7 +338,7 @@ export default function Game() {
                                         </div>
                                     </div>
                                 </div>
-                                <div className={`col-12 mt-3 d-flex justify-content-center align-self-center`}>
+                                <div className={`col-12 my-3 d-flex justify-content-center align-self-center`}>
                                     <button className={`col-4 ${styles['input-button']}`} onClick={saveSong}>Save this Song!</button>
                                 </div>
                             </div>
@@ -358,7 +358,7 @@ export default function Game() {
                                         </div>
                                     </div>
                                 </div>
-                                <div className={`col-12 mt-3 d-flex justify-content-center align-self-center`}>
+                                <div className={`col-12 my-3 d-flex justify-content-center align-self-center`}>
                                     <button className={`col-4 ${styles['input-button']}`} onClick={saveSong}>Save this Song!</button>
                                 </div>
                             </div>
