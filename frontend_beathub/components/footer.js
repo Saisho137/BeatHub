@@ -1,10 +1,10 @@
 const Footer = () => {
   return (
-    <footer className="bg-dark text-light py-4">
+    <footer className="bg-dark text-light py-4 font" style={{ position: 'relative', zIndex:'2'}}>
         <div className="container">
             <div className="row justify-content-between">
             <div className="col-md-6">
-                <h5 className="fs-4">🟢BeatHub</h5>
+                <h5 className="fs-4">BeatHub</h5>
                 <p>Our project connects to your Spotify account and provides personalized music recommendations based on your favorite artists, songs, and genres. Discovering new music and putting your musical knowledge to the test has never been easier. Explore a world of endless musical possibilities and expand your horizons with our innovative platform.</p>
             </div>
             <div className="col-md-3 ">

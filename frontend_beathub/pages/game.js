@@ -241,7 +241,7 @@ export default function Game() {
                 <b>{selectedOption.isOpen ? "<" : ">"}</b>
             </button>
             <div className={`col-12 row ${styles.body}`}>
-                <div style={{ left: selectedOption.isOpen ? '-3%' : '-100%' }} className={`col-xl-6 ${styles['sidebar-column']} border border-success border-3 rounded p-5 theme`}>
+                <div style={{ left: selectedOption.isOpen ? '-3%' : '-100%' }} className={`col-xl-6 ${styles['sidebar-column']} border main-border border-3 rounded p-5 theme`}>
                     <div className={`row d-flex justify-content-center mt-4`}>
                         <h1 className={`row col-12 d-flex justify-content-center mb-5 ${styles['instructions-tittle']}`}>Build your Game</h1>
                         <form className="row col-12 d-flex justify-content-center" onSubmit={handleSubmitTrack}>

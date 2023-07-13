@@ -198,7 +198,7 @@ export default function Statistics() {
                         className='m-5 bg-transparent border-0'
                         style={{ position: 'fixed', bottom: '1%', right: '1%', zIndex: 1000 }}
                     >
-                        <img src='images/arrow-up-circle-fill-green.svg' width='45' />
+                        <img src='images/arrow-up-circle-fill-magenta.svg' width='45' />
                     </button>
                 </>}
 

@@ -59,7 +59,7 @@ const recommender = () => {
         router.push('/callback')
         return
       }
-      console.log(error);
+      console.log(error)
     }
   }
 
@@ -83,6 +83,13 @@ const recommender = () => {
     } else {
       fetchData(newValue)
     }
+  }
+
+  const searchGenre= () =>{
+    const searchInput = document.getElementById('searchInput')
+    const trimmedInput = searchInput.value.trim()
+    const searchTerm = trimmedInput.replace(/\s+/g, ' ')
+    router.push(`/genre/${searchTerm}`)
   }
 
   const renderTracksAndArtists = () => {
@@ -131,8 +138,13 @@ const recommender = () => {
 
   return (
     <Layout>
-      <div className="container mt-5 pt-5">
+      <div className="container mt-3 pt-5">
         <div className="row text-center">
+          <h2>How to search?</h2>
+          <h5 className="">Search by song, artist or genre by changing the category.</h5>
+          <h5 className="mt-2"><span className="fw-bold">Can't find a genre?</span> Write down the genre and click on search.</h5>
+        </div>
+        <div className="row text-center mt-2">
           <div className="col-12">
             <div className="input-group mb-3 theme theme-border">
               <input
@@ -141,6 +153,7 @@ const recommender = () => {
                 onChange={onChange}
                 className="form-control theme theme-border"
                 aria-label="search"
+                id="searchInput"
               />
               <button
                 className="btn btn-outline-secondary dropdown-toggle theme"
@@ -170,6 +183,18 @@ const recommender = () => {
             </div>
           </div>
         </div>
+        {category === "Genre"?
+          (
+            <div className="row text-center">
+              <div className="col-12">
+                <button className="btn mb-3 mt-2 btn-primary main-color main-border" onClick={() => searchGenre()}>
+                Search
+                </button>
+              </div>
+            </div>
+          ):
+          ""
+        }
 
         <div className="row text-center">
           <div className="col-12 border-top">
