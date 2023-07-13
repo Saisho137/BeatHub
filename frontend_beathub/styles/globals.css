@@ -1,4 +1,5 @@
 :root {
+    --transition-duration: 0.5s;
     --body_background: white;
     --body-color: black;
     --link_color: black;
@@ -6,7 +7,7 @@
     --time_btn_color: white;
     --time_btn_color_on: gray;
 }
-
+  
 [data-theme="dark"] {
     --body_background: #121212;
     --body_color: white;
@@ -15,17 +16,20 @@
     --time_btn_color: #121212;
     --time_btn_color_on: gray;
 }
+
 body {
     overflow-x: hidden;
-  }
+}
 
 .theme {
     background-color: var(--body_background) !important;
     color: var(--body_color) !important;
+    transition: background-color var(--transition-duration), color var(--transition-duration);
 }
-
+  
 .theme-border {
     border-color: var(--border_color) !important;
+    transition: border-color var(--transition-duration);
 }
 
 .main-color{
