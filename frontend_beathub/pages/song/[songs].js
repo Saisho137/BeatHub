@@ -91,6 +91,7 @@ const Songs = () => {
 
                     <div className={`col-10 col-md-5 col-xl-5 border-start mt-4 ${styles.cardplacement} ${styles.bordersection} ${styles.left}`}>
                         <h5 className={`mt-5 mb-5 ${styles.artisttitle}`}>Similar Songs</h5>
+                        <button>Save</button>
                         <div className='d-flex justify-content-center'>
                             <ul>{similar.map((name) =>
                                 <div key={name.id} className='card col-11 mb-3 ms-2'>
