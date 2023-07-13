@@ -51,17 +51,24 @@ export default function Home() {
 
   return (
     <Layout>
-      <div className="container mt-5 pt-5">
-        <div className="row text-center">
-          <ToastContainer />
-          <div className={`col-md-6 col-sm-12 ${indexStyles.buttonContainer}`}>
-            <button className={`${indexStyles.homeButton1}`} onClick={() => handleClick('recommender')}>Want to find something new?</button>
+      <div className={`container-fluid text-center m-0 p-0 ${indexStyles.bgTest}`}>
+        <div className='row text-center mt-5 ms-5'>
+          <div className='col-md-6 p-0'>
+            <h1 className='fs-1 mt-5 me-md-5 pe-5'>Dive into a world of music</h1>
+            <h3 className='text-start mx-lg-5 px-lg-5 d-none d-md-block'>Find new music, test your knowledge and learn about yourself with an all-in-one music tool.</h3>
+            <div className='row mt-5 p-3 pe-sm-none'>
+              <ToastContainer />
+              <div className='col-12 d-flex justify-content-center'>
+                <button className={`theme theme-border mx-2 py-3 ${indexStyles.button28} mr-auto ml-auto`} onClick={() => handleClick('game')}>Play</button>
+                <button className={`theme theme-border mx-3 mx-md-5 py-3 ${indexStyles.button28} mr-auto ml-auto`} onClick={() => handleClick('recommender')}>Discover</button>
+              </div>
+            </div>
           </div>
-          <div className={`col-md-6 col-sm-12 ${indexStyles.buttonContainer}`}>
-            <button className={`${indexStyles.homeButton1}`} onClick={() => handleClick('game')}>Want to play a game?</button>
+          <div className="col-md-6" style={{ marginBottom: '50px' }}>
+            <img src='/images/cat-music.png' className={`img-fluid ${indexStyles.homeImage}`} style={{position: 'relative', zIndex:'1'}} alt='cat with headphones' />
           </div>
         </div>
       </div>
     </Layout>
-  )
+  );
 }

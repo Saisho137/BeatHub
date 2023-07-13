@@ -7,7 +7,7 @@ export default function Layout({ children }) {
         <div className="body container-fluid p-0 theme">
             <Navbar />
             <DarkMode />
-                <main className="main" style={{minHeight: '40em'}}>{children}</main>
+                <main className="main font" style={{minHeight: '40em'}}>{children}</main>
             <Footer />
         </div>
     )

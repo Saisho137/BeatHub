@@ -16,6 +16,10 @@
     --time_btn_color_on: gray;
 }
 
+body {
+    overflow-x: hidden;
+  }
+
 .theme {
     background-color: var(--body_background) !important;
     color: var(--body_color) !important;
@@ -25,10 +29,26 @@
     border-color: var(--border_color) !important;
 }
 
+.main-color{
+    background-color: #b930b9 !important;
+}
+
+.main-border{
+    border-color: #b930b9 !important;
+}
+
 .time-btn-on {
     background-color: var(--time_btn_color_on) !important;
 }
 
 .time-btn-off {
     background-color: var(--time_btn_color) !important;
+}
+
+.font {
+    font-family: fredoka !important;
+}
+
+h1, h2 {
+    font-family: Bungee;
 }
