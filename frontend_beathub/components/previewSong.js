@@ -19,7 +19,7 @@ export default function PreviewSong({ preview }) {
         <button
             onClick={playPreview}
             className='rounded-circle border-0 align-middle pb-1'
-            style={{ backgroundColor: `${preview ? 'lightgreen' : 'grey'}` }}
+            style={{ backgroundColor: `${preview ? '#9c439c' : 'grey'}` }}
             disabled={!preview}
         >
             {!isPlaying

@@ -15,7 +15,6 @@
     --time_btn_color: #121212;
     --time_btn_color_on: gray;
 }
-
 body {
     overflow-x: hidden;
   }
@@ -30,11 +29,11 @@ body {
 }
 
 .main-color{
-    background-color: #b930b9 !important;
+    background-color: #9c439c !important;
 }
 
 .main-border{
-    border-color: #b930b9 !important;
+    border-color: #9c439c !important;
 }
 
 .time-btn-on {
