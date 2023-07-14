@@ -7,6 +7,8 @@ import styles from "../../styles/artist.module.css"
 import Layout from "../../components/layout"
 import PreviewSong from '../../components/previewSong'
 import Link from 'next/link'
+import { toast, ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 const Songs = () => {
 
@@ -49,6 +51,34 @@ const Songs = () => {
         setSimilar(data.getSimilarTrack)
     }
 
+    const createPlaylist = async (token) => {
+        const headers = {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        }
+        const body = {
+            name: song.name + " similar songs",
+            uris: similar.map((element) => element.id)
+        }
+        try {
+            axios.post('http://localhost:8080/createPlaylist', body, headers);
+            toast.success('Playlist created succesfully.', {
+                autoClose: 1500,
+                position: toast.POSITION.TOP_CENTER,
+                closeButton: true,
+                className: 'custom-toast',
+              })
+        } catch (error) {
+            toast.error('Error creating playlist.', {
+                autoClose: 1500,
+                position: toast.POSITION.TOP_CENTER,
+                closeButton: true,
+                className: 'custom-toast',
+              })
+        }
+    }
+
     useEffect(() => {
 
         router.events.on('routeChangeStart', () => setIsPlaying(false))
@@ -76,20 +106,27 @@ const Songs = () => {
                         <div className={`card theme theme-border ${styles.artistmargin}`}>
                             <h3 className="card-title card-header theme-border" style={{ marginBottom: "2%" }}>{song.name}</h3>
                             <div className="card-img">
-                                <Link href={`/artist/${song.artistId}`}>
-                                    <Image className="rounded" loader={() => song.images ? song.images : '/images/person-circle.svg'} src={song.images ? song.images[0] : '/images/person-circle.svg'} height={300} width={300} alt="Picture of the author" />
-                                </Link>
+                                <Image className="rounded" loader={() => song.images ? song.images : '/images/person-circle.svg'} src={song.images ? song.images[0] : '/images/person-circle.svg'} height={300} width={300} alt="Picture of the author" />
                             </div>
-                            <h4 className='card-footer mt-3 theme-border'>Artist</h4>
                             <div>
-                                <p>{song.artistName}</p>
+                                <h4 className='card-footer mt-3 theme-border'>Artist</h4>
+                                {song.artistId.map((id, index) => (
+                                    <Link key={id} href={`/artist/${id}`} className='text-decoration-none text-dark' replace>
+                                        <p className='mb-3 bg-light border border-dark d-inline-block p-2 m-1 rounded theme theme-border'>
+                                            {song.artistName[index]}
+                                        </p>
+                                    </Link>
+                                ))}
                             </div>
+
                         </div>
                     </div>
 
 
                     <div className={`col-10 col-md-5 col-xl-5 border-start mt-4 ${styles.cardplacement} ${styles.bordersection} ${styles.left}`}>
                         <h5 className={`mt-5 mb-5 ${styles.artisttitle}`}>Similar Songs</h5>
+                        <ToastContainer />
+                        <button className='btn btn-success mb-4 p-2 main-color main-border' onClick={() => createPlaylist(sessionStorage.getItem('token'))}>Save on a Playlist</button>
                         <div className='d-flex justify-content-center'>
                             <ul>{similar.map((name) =>
                                 <div key={name.id} className='card col-11 mb-3 ms-2'>

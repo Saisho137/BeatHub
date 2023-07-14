@@ -31,5 +31,7 @@ app.put('/saveOnSpotify', gameController.saveOnSpotify)
 app.get("/stats/:time?", statisticsController.getStats)
 app.get('/getUserData', userController.getUserData)
 
+app.post('/createPlaylist' , recommenderController.createPlaylist)
+
 
 module.exports = app

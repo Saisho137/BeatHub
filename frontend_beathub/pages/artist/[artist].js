@@ -122,14 +122,15 @@ const Artist = () => {
                             <div>
                                 {artist.genres.map((genre) =>
                                     <Link key={genre} href={`/genre/${genre}`} className='text-decoration-none text-dark' replace>
-                                        <p className='bg-light border border-dark d-inline-block p-2 m-1 rounded theme theme-border' >{genre}</p>
+                                        <p className='mb-3 bg-light border border-dark d-inline-block p-2 m-1 rounded theme theme-border' >{genre}</p>
                                     </Link>
                                 )}
                             </div>
                         </div>
                     </div>
 
-                    <div className={`col-10 col-md-4 col-xl-6 border-start mt-4 ${styles.cardplacement} ${styles.bordersection} ${styles.left}`}>
+                    <div className={`col-10 col-md-4 col-xl-6 border rounded mt-4 ${styles.cardplacement} ${styles.bordersection} ${styles.left}`}>
+                    <h5 className={`mt-5 mb-5 ${styles.artisttitle}`}>Similar Artists</h5>
                         <div className="row d-flex justify-content-center" style={{ paddingLeft: "4%" }}>
                             {similar.map((name) => (
                                 <div key={name.id} className="card m-3 p-0 theme theme-border" style={{ width: '13rem' }}>
@@ -150,7 +151,7 @@ const Artist = () => {
                     <h1 className={`mt-5 mb-5 ${styles.artisttitle}`}>Top Tracks</h1>
                     <div className='col-xl-12 mt-5 mb-5 d-flex justify-content-center'>
                         <ul>{topTracks.map((name) =>
-                            <div key={name.id} className='card col-10 mb-3'>
+                            <div key={name.id} className={`card col-10 mb-3 ${styles.artistwidth}`}>
                                 <div className='row g-0 d-flex align-items-center theme theme-border'>
                                     <Image className='img-fluid rounded-start col-2' loader={() => name.images} src={name.images} height={150} width={150} alt="Picture of the author" />
                                     <div className='col-8 card-body'>
