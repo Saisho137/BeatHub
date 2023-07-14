@@ -21,6 +21,7 @@ export default function GenrePage({ id }) {
     const [genres, setGenres] = useState([])
     const [tracks, setTracks] = useState('')
     const [artists, setArtists] = useState('')
+    const [isPlaying, setIsPlaying] = useState(false)
 
     async function getGenres(headers) {
         try {
@@ -66,6 +67,8 @@ export default function GenrePage({ id }) {
 
     useEffect(() => {
 
+        router.events.on('routeChangeStart', () => setIsPlaying(false))
+
         const token = sessionStorage.getItem('token')
 
         const headers = {
@@ -78,7 +81,7 @@ export default function GenrePage({ id }) {
         getGenresTopTracks(headers)
         getGenresTopArtists(headers)
 
-    }, [id])
+    }, [id, router])
 
     /* While the page gets a response from API */
     if (typeof tracks != 'object' || typeof artists != 'object') {
@@ -96,10 +99,10 @@ export default function GenrePage({ id }) {
     if (!tracks[0] && !artists[0] && genres[0]) {
         return (
             <Layout>
-                <div className='row justify-content-center text-center mt-5 p-5'>
+                <div className='row justify-content-center text-center mt-5 p-5 theme theme-border'>
                     <h1>:(</h1>
                     <h1>Sorry! Could not find the genre</h1>
-                    <Link href='/recommender' className='m-3 col-2 p-1 btn btn-success'>
+                    <Link href='/recommender' className='m-3 col-2 p-1 btn btn-success main-color main-border'>
                         <img src='/images/arrow-up-circle-fill-white.svg' className='float-start ms-2 mt-1' style={{ transform: 'rotate(270deg)' }} />
                         Search More
                     </Link>
@@ -112,7 +115,7 @@ export default function GenrePage({ id }) {
         <Layout>
             <div className='row text-center offset-1 col-10 mt-5 border'>
 
-                <Link href='/recommender' className='m-3 col-2 p-1 btn btn-success'>
+                <Link href='/recommender' className='m-3 col-2 p-1 btn btn-success main-color main-border'>
                     <img src='/images/arrow-up-circle-fill-white.svg' className='float-start ms-2 mt-1' style={{ transform: 'rotate(270deg)' }} />
                     Search More
                 </Link>
@@ -134,12 +137,12 @@ export default function GenrePage({ id }) {
                                         <p className='text-start card-text text-muted theme'>{track.artist}</p>
                                     </Link>
                                     <div className='col-2 h-100'>
-                                        <PreviewSong preview={track.preview} />
+                                        <PreviewSong preview={track.preview} isPlaying={isPlaying} setIsPlaying={setIsPlaying}/>
                                     </div>
                                 </div>
                             </div>
                         )
-                        : <div className='card row justify-content-center text-center p-3'>
+                        : <div className='card row justify-content-center text-center p-3 theme theme-border'>
                             <h4>:(</h4>
                             <p className='fs-5'>Sorry! Could not find related tracks</p>
                         </div>}
@@ -164,7 +167,7 @@ export default function GenrePage({ id }) {
                                     </div>
                                 </Link>
                             )
-                            : <div className='card row justify-content-center text-center p-3'>
+                            : <div className='card row justify-content-center text-center p-3 theme theme-border'>
                                 <h4>:(</h4>
                                 <p className='fs-5'>Sorry! Could not find related artists</p>
                             </div>}

@@ -5,6 +5,7 @@ import { useRouter } from 'next/router'
 import axios from "axios"
 import { toast, ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import { headers } from "next/dist/client/components/headers"
 
 export default function Game() {
     const [selectedOption, setSelectedOption] = useState({
@@ -21,6 +22,7 @@ export default function Game() {
     const [isPlaying, setIsPlaying] = useState(false)
     const [response, setResponse] = useState({})
     const [winner, setWinner] = useState(null)
+    const [loader, setLoader] = useState(null)
     const timeoutRef = useRef(null)
     const audioRef = useRef(null)
     const router = useRouter()
@@ -47,6 +49,39 @@ export default function Game() {
     const listOfArtist = () => {
         const listOfArtist = response.artistName.map(name => (name.toString())).join(', ')
         return listOfArtist
+    }
+    const startPlayback = () => {
+        setIsPlaying(true)
+        audioRef.current.volume = 0.25
+        audioRef.current.play()
+
+        timeoutRef.current = setTimeout(() => {
+            setIsPlaying(false)
+            audioRef.current.pause()
+            audioRef.current.currentTime = 0
+        }, difficulty.duration * 1000)
+    }
+    const stopPlayback = () => {
+        clearTimeout(timeoutRef.current)
+        timeoutRef.current = null
+        setIsPlaying(false)
+        audioRef.current.pause()
+        audioRef.current.currentTime = 0
+    }
+    const saveSong = async () => {
+        const token = sessionStorage.getItem('token')
+        const headers = {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        }
+        try {
+            await axios.put('http://localhost:8080/saveOnSpotify', { id: response.id }, headers)
+            handleNotification("success", "This Song was added to your library!")
+        } catch (err) {
+            handleNotification("error", "Something went wrong")
+        }
+
     }
     const handleNotification = (condition, message) => {
         switch (condition) {
@@ -77,25 +112,6 @@ export default function Game() {
             default:
                 console.log("default")
         }
-    }
-
-    const startPlayback = () => {
-        setIsPlaying(true)
-        audioRef.current.volume = 0.25
-        audioRef.current.play()
-
-        timeoutRef.current = setTimeout(() => {
-            setIsPlaying(false)
-            audioRef.current.pause()
-            audioRef.current.currentTime = 0
-        }, difficulty.duration * 1000)
-    }
-    const stopPlayback = () => {
-        clearTimeout(timeoutRef.current)
-        timeoutRef.current = null
-        setIsPlaying(false)
-        audioRef.current.pause()
-        audioRef.current.currentTime = 0
     }
     const handleSubmit = (event) => {
         event.preventDefault()
@@ -141,9 +157,19 @@ export default function Game() {
     }
     const handleSubmitTrack = async (event) => {
         event.preventDefault()
+        setLoader(true)
         setWinner(null)
         document.getElementById('formGuess').reset()
 
+        if (response.preview) {
+            stopPlayback()
+        }
+        const token = sessionStorage.getItem('token')
+        const headers = {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        }
         switch (selectedOption.difficultyLevel) {
             case "easy":
                 setDifficulty({ tries: 5, duration: 20, artist: false })
@@ -160,14 +186,6 @@ export default function Game() {
             default:
                 console.log("Default")
         }
-
-        const token = sessionStorage.getItem('token')
-        const headers = {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        }
-
         switch (selectedOption.typeOfSearch) {
             case "genre":
                 try {
@@ -214,9 +232,7 @@ export default function Game() {
             default:
                 console.log("Default")
         }
-        if (response.preview) {
-            stopPlayback()
-        }
+        setLoader(false)
     }
 
     return (
@@ -225,7 +241,7 @@ export default function Game() {
                 <b>{selectedOption.isOpen ? "<" : ">"}</b>
             </button>
             <div className={`col-12 row ${styles.body}`}>
-                <div style={{ left: selectedOption.isOpen ? '-3%' : '-100%' }} className={`col-xl-6 ${styles['sidebar-column']} border border-success border-3 rounded p-5 theme`}>
+                <div style={{ left: selectedOption.isOpen ? '-3%' : '-100%' }} className={`col-xl-6 ${styles['sidebar-column']} border main-border border-3 rounded p-5 theme`}>
                     <div className={`row d-flex justify-content-center mt-4`}>
                         <h1 className={`row col-12 d-flex justify-content-center mb-5 ${styles['instructions-tittle']}`}>Build your Game</h1>
                         <form className="row col-12 d-flex justify-content-center" onSubmit={handleSubmitTrack}>
@@ -302,7 +318,13 @@ export default function Game() {
                         </div>
                     </form>
                     <div className="row col-12 align-self-center">
-                        {response.name && winner && <>
+                        {loader && <>
+                            <div className='d-flex justify-content-center align-items-center' style={{ height: '30em' }}>
+                                <div className="spinner-border text-dark d-flex justify-content-center" role="status" style={{ width: '5em', height: '5em' }}>
+                                </div>
+                            </div>
+                        </>}
+                        {response.name && winner && !loader && <>
                             <div className="row d-flex justify-content-center mt-3">
                                 <div className={`card col-xl-10 ${styles['preview-song']}`}>
                                     <div className="card-body">
@@ -311,32 +333,38 @@ export default function Game() {
                                             <div className="row col-xl-8">
                                                 <h4 className="card-title col-12">{response.name}</h4>
                                                 <h5 className="card-text col-12">{listOfArtist()}</h5>
-                                                <audio className="col-12" controls src={response.preview}></audio>
+                                                <audio className="col-12" ref={audioRef} controls src={response.preview}></audio>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+                                <div className={`col-12 my-3 d-flex justify-content-center align-self-center`}>
+                                    <button className={`col-4 ${styles['input-button']}`} onClick={saveSong}>Save this Song!</button>
+                                </div>
                             </div>
                         </>}
-                        {response.name && !winner && difficulty.tries == 0 && <>
+                        {response.name && !winner && !loader && difficulty.tries == 0 && <>
                             <div className="row d-flex justify-content-center mt-3">
                                 <h2>It actually was:</h2>
                                 <div className={`card col-xl-10 ${styles['preview-song']}`}>
                                     <div className="card-body">
-                                        <div className="row col-12">
+                                        <div className="row col-12 d-flex justify-content-center align-self-center">
                                             <img className="col-xl-4" src={response.image} alt="Picture of album from artist"></img>
                                             <div className={`row col-xl-8`}>
                                                 <h4 className="card-title col-12">{response.name}</h4>
                                                 <h5 className="card-text col-12">{listOfArtist()}</h5>
-                                                <audio className="col-12" controls src={response.preview}></audio>
+                                                <audio className="col-12" ref={audioRef} controls src={response.preview}></audio>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+                                <div className={`col-12 my-3 d-flex justify-content-center align-self-center`}>
+                                    <button className={`col-4 ${styles['input-button']}`} onClick={saveSong}>Save this Song!</button>
+                                </div>
                             </div>
                         </>}
-                        {response.name && !winner && difficulty.tries > 0 &&
-                            (<div className="row d-flex justify-content-center mt-3">
+                        {response.name && !winner && !loader && difficulty.tries > 0 && <>
+                            <div className="row d-flex justify-content-center mt-3">
                                 <audio ref={audioRef} src={response.preview}></audio>
                                 <div className={`card col-xl-10 ${styles['preview-song']}`}>
                                     <div className="card-body">
@@ -351,7 +379,8 @@ export default function Game() {
                                         </div>
                                     </div>
                                 </div>
-                            </div>)}
+                            </div>
+                        </>}
                     </div>
                 </div>
             </div>

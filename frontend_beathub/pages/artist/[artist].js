@@ -14,6 +14,7 @@ const Artist = () => {
     const [artist, setArtist] = useState('')
     const [similar, setSimilar] = useState([])
     const [topTracks, setTopTracks] = useState([])
+    const [isPlaying, setIsPlaying] = useState(false)
 
     const router = useRouter()
     const param = router.query.artist
@@ -84,6 +85,8 @@ const Artist = () => {
 
     useEffect(() => {
 
+        router.events.on('routeChangeStart', () => setIsPlaying(false))
+
         if (param) {
             const token = sessionStorage.getItem('token')
 
@@ -91,7 +94,7 @@ const Artist = () => {
             getSimilarArtist(token)
             getArtistTopTracks(token)
         }
-    }, [param])
+    }, [param, router])
 
     if (!artist) {
         return <h1>Loading...</h1>
@@ -100,7 +103,7 @@ const Artist = () => {
     return (
         <Layout>
             <div className='row text-center offset-1 col-10 mt-5 border'>
-                <Link href='/recommender' className='m-3 col-2 p-1 btn btn-success'>
+                <Link href='/recommender' className='m-3 col-2 p-1 btn btn-success main-color main-border'>
                     <img src='/images/arrow-up-circle-fill-white.svg' className='float-start ms-2 mt-1' style={{ transform: 'rotate(270deg)' }} />
                     Search More
                 </Link>
@@ -132,7 +135,7 @@ const Artist = () => {
                             {similar.map((name) => (
                                 <div key={name.id} className="card m-3 p-0 theme theme-border" style={{ width: '13rem' }}>
                                     <Link href={`/artist/${name.id}`}>
-                                        <Image className="card-img-top" loader={() => name.images ? name.images : '/images/person-circle.svg'} src={name.images ? name.images : '/images/play-fill.svg'} height={150} width={150} alt="Picture of the author" />
+                                        <Image className="card-img-top" loader={() => name.images ? name.images : '/images/person-circle.svg'} src={name.images ? name.images : '/images/play-fill-magenta.svg'} height={150} width={150} alt="Picture of the author" />
                                     </Link>
                                     <div className="card-body">
                                         <h5 className="card-title">{name.name}</h5>
@@ -160,7 +163,7 @@ const Artist = () => {
                                         </Link>
                                     </div>
                                     <div className='col-2 h-100 align-items-center'>
-                                        <PreviewSong preview={name.preview} />
+                                        <PreviewSong preview={name.preview} isPlaying={isPlaying} setIsPlaying={setIsPlaying}/>
                                     </div>
                                 </div>
                             </div>)}

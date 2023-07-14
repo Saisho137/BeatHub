@@ -17,6 +17,7 @@ const Songs = () => {
 
     const [song, setSong] = useState('')
     const [similar, setSimilar] = useState([])
+    const [isPlaying, setIsPlaying] = useState(false)
 
     const getSpecificTrack = async (token) => {
         const headers = {
@@ -79,11 +80,14 @@ const Songs = () => {
     }
 
     useEffect(() => {
+
+        router.events.on('routeChangeStart', () => setIsPlaying(false))
+
         if (param) {
             const token = sessionStorage.getItem('token')
             getSpecificTrack(token)
         }
-    }, [param])
+    }, [param, router])
 
     if (!song) {
         return <h1>Loading...</h1>
@@ -92,7 +96,7 @@ const Songs = () => {
     return (
         <Layout>
             <div className='row text-center offset-1 col-10 mt-5 border'>
-                <Link href='/recommender' className='m-3 col-2 p-1 btn btn-success'>
+                <Link href='/recommender' className='m-3 col-2 p-1 btn btn-success main-color main-border'>
                     <img src='/images/arrow-up-circle-fill-white.svg' className='float-start ms-2 mt-1' style={{ transform: 'rotate(270deg)' }} />
                     Search More
                 </Link>
@@ -135,7 +139,7 @@ const Songs = () => {
                                             </Link>
                                         </div>
                                         <div className='col-2 h-100 align-items-center'>
-                                            <PreviewSong preview={name.preview} />
+                                            <PreviewSong preview={name.preview} isPlaying={isPlaying} setIsPlaying={setIsPlaying}/>
                                         </div>
                                     </div>
                                 </div>)}

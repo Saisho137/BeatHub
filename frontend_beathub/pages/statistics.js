@@ -1,4 +1,4 @@
-import statisticsStyles from  '../styles/statistics.module.css'
+import statisticsStyles from '../styles/statistics.module.css'
 import Layout from '../components/layout'
 import FeatureBar from '../components/featureBar'
 import axios from 'axios'
@@ -87,36 +87,53 @@ export default function Statistics() {
                         {/* User's Top Items */}
                         <div className='col-lg-6 card-group mt-5 mb-5'>
                             <div className='col-lg-3 offset-lg-1 card text-center text-bg-light border-dark theme theme-border'>
-                                <h4 className='card-header theme theme-border'>Top Track</h4>
-                                <img src={stats.tracks[0]?.images.url}
-                                    alt='Artist Picture'
-                                    className='rounded-circle p-1 mx-auto d-block'
-                                    style={{ width: '75%' }} />
-                                <div className="card-footer theme">
-                                    <Link href={`/song/${stats.tracks[0].id}`} className='text-decoration-none text-dark theme'>
+                                <h4 className='card-header theme-border'>Top Track</h4>
+                                <Link href={`/song/${stats.tracks[0].id}`} className='text-decoration-none text-dark theme'>
+                                    <img src={stats.tracks[0]?.images.url}
+                                        alt='Artist Picture'
+                                        className='rounded-circle p-1 mx-auto d-block'
+                                        style={{ width: '75%' }} />
+                                    <div className="card-footer">
                                         <h5 className="card-title">{stats.tracks[0].name}</h5>
+                                    </div>
+                                </Link>
+                                <div className="card-footer bg-white m-0 p-0 pt-1 theme theme-border">
+                                    <Link href='#topTracks' className='text-secondary'>
+                                        <p className="card-title">See More -{'>'}</p>
                                     </Link>
                                 </div>
                             </div>
-                            <div className='col-lg-3 card text-bg-light border-dark d-block theme theme-border'>
+                            <div className='col-lg-3 card text-bg-light border-dark d-block theme theme-border d-flex'>
                                 <h4 className='card-header text-center theme-border'>Top Genre(s)</h4>
-                                {stats.genres
-                                    .filter(genre => genre[1] === Math.max(...stats.genres.map(genre => genre[1])))
-                                    .map(genre =>
-                                        <Link key={genre[0]} href={`/genre/${genre[0]}`} className='text-decoration-none text-dark'>
-                                            <p className='bg-light border border-dark d-inline-block p-2 m-1 rounded theme theme-border' >{genre[0]}</p>
-                                        </Link>
-                                    )}
+                                <div className='card-body'>
+                                    {stats.genres
+                                        .filter(genre => genre[1] === Math.max(...stats.genres.map(genre => genre[1])))
+                                        .map(genre =>
+                                            <Link key={genre[0]} href={`/genre/${genre[0]}`} className='text-decoration-none text-dark'>
+                                                <p className='bg-light border border-dark d-inline-block p-2 m-1 rounded theme theme-border' >{genre[0]}</p>
+                                            </Link>
+                                        )}
+                                </div>
+                                <div className="card-footer bg-white m-0 p-0 pt-1 align-self-end w-100 text-center theme theme-border">
+                                    <Link href='#topGenres' className='text-secondary'>
+                                        <p className="card-title">See More -{'>'}</p>
+                                    </Link>
+                                </div>
                             </div>
                             <div className='col-lg-3 card text-center text-bg-light border-dark theme theme-border'>
                                 <h4 className='card-header theme-border'>Top Artist</h4>
-                                <img src={stats.artists[0]?.images.url}
-                                    alt='Artist Picture'
-                                    className='rounded-circle p-1 mx-auto d-block'
-                                    style={{ width: '75%' }} />
-                                <div className="card-footer">
-                                    <Link href={`/artist/${stats.artists[0].id}`} className='text-decoration-none text-dark theme'>
+                                <Link href={`/artist/${stats.artists[0].id}`} className='text-decoration-none text-dark theme'>
+                                    <img src={stats.artists[0]?.images.url}
+                                        alt='Artist Picture'
+                                        className='rounded-circle p-1 mx-auto d-block'
+                                        style={{ width: '75%' }} />
+                                    <div className="card-footer">
                                         <h5 className="card-title">{stats.artists[0].name}</h5>
+                                    </div>
+                                </Link>
+                                <div className="card-footer bg-white m-0 p-0 pt-1 theme theme-border">
+                                    <Link href='#topArtists' className='text-secondary'>
+                                        <p className="card-title">See More -{'>'}</p>
                                     </Link>
                                 </div>
                             </div>
@@ -132,7 +149,7 @@ export default function Statistics() {
                     </div>
 
                     {/* Top songs list */}
-                    <div className='row text-center border pt-5 pb-5'>
+                    <div className='row text-center border pt-5 pb-5' id='topTracks'>
                         <h1 className='pb-5'>Top Songs</h1>
                         <div className='offset-1 col-10 row justify-content-center'>
                             {stats.tracks.map(track =>
@@ -150,7 +167,7 @@ export default function Statistics() {
                     </div>
 
                     {/* Top genres list */}
-                    <div className='row border text-center pb-5'>
+                    <div className='row border text-center pb-5' id='topGenres'>
                         <h1 className='mt-5 mb-5'>Top Genres</h1>
                         <div className='offset-2 col-8'>
                             {stats.genres.map(([name]) =>
@@ -162,7 +179,7 @@ export default function Statistics() {
                     </div>
 
                     {/* Top Artists list */}
-                    <div className='row border text-center pb-5'>
+                    <div className='row border text-center pb-5' id='topArtists'>
                         <h1 className='mt-5 mb-5'>Top Artists</h1>
                         <div className='offset-1 col-10 row justify-content-center'>
                             {stats.artists.map(artist =>
@@ -181,7 +198,7 @@ export default function Statistics() {
                         className='m-5 bg-transparent border-0'
                         style={{ position: 'fixed', bottom: '1%', right: '1%', zIndex: 1000 }}
                     >
-                        <img src='images/arrow-up-circle-fill-green.svg' width='45' />
+                        <img src='images/arrow-up-circle-fill-magenta.svg' width='45' />
                     </button>
                 </>}
 

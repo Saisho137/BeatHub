@@ -60,6 +60,7 @@ const Navbar = () => {
     const RESPONSE_TYPE = 'token'
     const SCOPE = 'user-read-private playlist-read-private user-read-currently-playing user-follow-read user-top-read playlist-modify-public playlist-modify-private'
 
+
     const url = `${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=${RESPONSE_TYPE}&scope=${encodeURIComponent(SCOPE)}`
     window.location.href = url
   }
@@ -72,10 +73,13 @@ const Navbar = () => {
   }
 
   return (
-    <div className='container-fluid p-0 sticky-top'>
-      <nav className='navbar navbar-expand-md navbar-dark bg-dark border-3 border-bottom border-success'>
+    <div className='container-fluid p-0 sticky-top font'>
+      <nav className='navbar navbar-expand-md navbar-dark bg-dark border-3 border-bottom main-border'>
         <div className='container-fluid'>
-          <Link href="/" className='navbar-brand fs-4'>BeatHub</Link>
+          <Link href="/" className='navbar-brand fs-4'>
+            <img src='/images/logo 10x10.png' className='me-2'/>
+            BeatHub
+          </Link>
           <button type='button' className='navbar-toggler' data-bs-toggle="collapse" data-bs-target="#navMenu">
             <span className='navbar-toggler-icon'></span>
           </button>
@@ -113,7 +117,7 @@ const Navbar = () => {
                 </div>
               </div>
             ) : (
-              <div className='bg-success p-3 rounded-5 ms-auto btn btn-sm' style={{margin: '0.6rem'}} onClick={handleLogin}>
+              <div className='main-color p-3 rounded-5 ms-auto btn btn-sm' style={{margin: '0.6rem'}} onClick={handleLogin}>
                 <button className="nav-item nav-link text-light fw-semibold">Login with Spotify</button>
               </div>
             )}
