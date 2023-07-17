@@ -69,13 +69,13 @@ export default function Game() {
         audioRef.current.currentTime = 0
     }
     const saveSong = async () => {
-        const token = sessionStorage.getItem('token')
-        const headers = {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        }
         try {
+            const token = sessionStorage.getItem('token')
+            const headers = {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            }
             await axios.put('http://localhost:8080/saveOnSpotify', { id: response.id }, headers)
             handleNotification("success", "This Song was added to your library!")
         } catch (err) {

@@ -72,14 +72,14 @@ const getRandomSong = async (req, res) => {
 }
 
 const saveOnSpotify = async (req, res) => {
-    const token = req.headers.authorization
-    const headers = {
-        headers: {
-            'Authorization': token
-        }
-    }
-    const id = req.body.id
     try {
+        const token = req.headers.authorization
+        const id = req.body.id
+        const headers = {
+            headers: {
+                'Authorization': token
+            }
+        }
         await axios.put('https://api.spotify.com/v1/me/tracks', { ids: [id] }, headers)
         res.status(200).send({ message: 'Song Successfully Added' })
     } catch (err) {
