@@ -27,7 +27,7 @@ const Songs = () => {
         }
 
         try {
-            const { data } = await axios.get(`http://localhost:8080/getSpecificTrack/${param}`, headers)
+            const { data } = await axios.get(`/api/song/getSpecificTrack/${param}`, headers)
             setSong(data.getTrack)
             getSimilarTracks(token, data.getTrack)
         }
@@ -47,7 +47,7 @@ const Songs = () => {
                 'Authorization': `Bearer ${token}`
             }
         }
-        const { data } = await axios.get(`http://localhost:8080/getSimilarTracks/${song.artistId}/${song.songId}`, headers)
+        const { data } = await axios.get(`/api/song/${song.artistId}/${song.songId}`, headers)
         setSimilar(data.getSimilarTrack)
     }
 

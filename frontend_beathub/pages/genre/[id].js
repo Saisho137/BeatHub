@@ -39,7 +39,7 @@ export default function GenrePage({ id }) {
 
     async function getGenresTopTracks(headers) {
         try {
-            const { data: { getTopTracksGenre } } = await axios.get(`http://localhost:8080/getTopTracksGenre/${id}`, headers)
+            const { data: { getTopTracksGenre } } = await axios.get(`/api/genre/getTopTracksGenre/${id}`, headers)
             setTracks(getTopTracksGenre)
         }
         catch (error) {
@@ -53,7 +53,7 @@ export default function GenrePage({ id }) {
 
     async function getGenresTopArtists(headers) {
         try {
-            const { data: { getTopArtistGenre } } = await axios.get(`http://localhost:8080/getTopArtistGenre/${id}`, headers)
+            const { data: { getTopArtistGenre } } = await axios.get(`/api/genre/getTopArtistGenre/${id}`, headers)
             setArtists(getTopArtistGenre)
         }
         catch (error) {
@@ -137,7 +137,7 @@ export default function GenrePage({ id }) {
                                         <p className='text-start card-text text-muted theme'>{track.artist}</p>
                                     </Link>
                                     <div className='col-2 h-100'>
-                                        <PreviewSong preview={track.preview} isPlaying={isPlaying} setIsPlaying={setIsPlaying}/>
+                                        <PreviewSong preview={track.preview} isPlaying={isPlaying} setIsPlaying={setIsPlaying} />
                                     </div>
                                 </div>
                             </div>
