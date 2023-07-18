@@ -76,7 +76,7 @@ export default function Game() {
                     'Authorization': `Bearer ${token}`
                 }
             }
-            await axios.put('http://localhost:8080/saveOnSpotify', { id: response.id }, headers)
+            await axios.put('/api/saveOnSpotify', { id: response.id }, headers)
             handleNotification("success", "This Song was added to your library!")
         } catch (err) {
             handleNotification("error", "Something went wrong")
@@ -189,7 +189,7 @@ export default function Game() {
         switch (selectedOption.typeOfSearch) {
             case "genre":
                 try {
-                    const { data } = await axios.post('http://localhost:8080/getRandomTrack', { findBy: selectedOption.typeOfSearch, searchItem: event.target.genre.value }, headers)
+                    const { data } = await axios.post('/api/getRandomTrack', { findBy: selectedOption.typeOfSearch, searchItem: event.target.genre.value }, headers)
                     setResponse(data.Track)
                     break
                 } catch (err) {
@@ -203,7 +203,7 @@ export default function Game() {
                 }
             case "playlist":
                 try {
-                    const playlist = await axios.post('http://localhost:8080/getRandomTrack', { findBy: selectedOption.typeOfSearch, searchItem: event.target.playlist.value }, headers)
+                    const playlist = await axios.post('/api/getRandomTrack', { findBy: selectedOption.typeOfSearch, searchItem: event.target.playlist.value }, headers)
                     setResponse(playlist.data.Track)
                     break
                 } catch (err) {
@@ -217,7 +217,7 @@ export default function Game() {
                 }
             case "artist":
                 try {
-                    const artist = await axios.post('http://localhost:8080/getRandomTrack', { findBy: selectedOption.typeOfSearch, searchItem: event.target.artist.value }, headers)
+                    const artist = await axios.post('/api/getRandomTrack', { findBy: selectedOption.typeOfSearch, searchItem: event.target.artist.value }, headers)
                     setResponse(artist.data.Track)
                     break
                 } catch (err) {

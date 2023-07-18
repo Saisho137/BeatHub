@@ -2,14 +2,12 @@
 
 const recommenderController = require('../controllers/recommenderController')
 const statisticsController = require('../controllers/statisticsController')
-const gameController = require('../controllers/gameController')
 const userController = require('../controllers/userController')
 
-const express = require('express') 
+const express = require('express')
 const app = express.Router()
 
-
-//Artis
+//Artist
 app.get('/getArtist/:artist', recommenderController.getArtist)
 app.get('/getSpecificArtist/:id', recommenderController.getSpecificArtist)
 app.get('/getSimilarArtist/:id', recommenderController.getSimilarArtist)
@@ -22,16 +20,11 @@ app.get('/getSimilarTracks/:idArtist/:idTrack', recommenderController.getSimilar
 app.get('/getGenre', recommenderController.getGenre)
 app.get('/getTopTracksGenre/:genre', recommenderController.getTopTracksGenre)
 app.get('/getTopArtistGenre/:genre', recommenderController.getTopArtistGenre)
+//Save on spotify
+app.post('/createPlaylist', recommenderController.createPlaylist)
 
-//Guess Game Section
-app.post('/getRandomTrack', gameController.getRandomSong)
-app.put('/saveOnSpotify', gameController.saveOnSpotify)
-
-
+//Statistics
 app.get("/stats/:time?", statisticsController.getStats)
 app.get('/getUserData', userController.getUserData)
-
-app.post('/createPlaylist' , recommenderController.createPlaylist)
-
 
 module.exports = app
