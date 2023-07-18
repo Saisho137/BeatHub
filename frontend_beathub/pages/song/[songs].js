@@ -62,7 +62,7 @@ const Songs = () => {
             uris: similar.map((element) => element.id)
         }
         try {
-            axios.post('http://localhost:8080/createPlaylist', body, headers);
+            axios.post('../api/createPlaylist', body, headers);
             toast.success('Playlist created succesfully.', {
                 autoClose: 1500,
                 position: toast.POSITION.TOP_CENTER,

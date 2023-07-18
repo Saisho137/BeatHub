@@ -86,50 +86,6 @@ const getSimilarTrack = async (req, res) => {
     }
 }
 
-const createPlaylist = async (req, res) => {
-    const token = req.headers.authorization
-    const name = req.body.name
-    const uris = req.body.uris
-
-    const headers = {
-        headers: {
-            'Authorization': token
-        }
-    }
-
-    try {
-        const response = await axios.get('http://localhost:8080/getUserData', headers)
-        let { id } = response.data
-        const user = { id }
-
-        const body = {
-            name: name,
-            description: "BeatHub Recommendations!"
-        }
-        const { data } = await axios.post(`https://api.spotify.com/v1/users/${user.id}/playlists`, body, headers)
-
-        const modifiedUris = uris.map((id) => {
-            return "spotify:track:" + id
-        }) 
-
-        const itemsBody = {
-            uris: modifiedUris
-        }
-        axios.post(`https://api.spotify.com/v1/playlists/${data.id}/tracks`, itemsBody, headers )
-
-        res.status(200).send({message: "Playlist created succesfully!" })
-
-    } catch (error) {
-        if (error.response && error.response.status == 401) {
-            res.status(401).send({ message: 'token expired' })
-            return
-        }
-        res.status(400).send({ error })
-    }
-}
-
-
-
 //ARTIST ENDPOINTS
 const getArtist = async (req, res) => {
     const headers = req.headers.authorization
@@ -327,5 +283,5 @@ const getTopArtistGenre = async (req, res) => {
 module.exports = {
     getTrack, getArtist, getGenre, getSpecificArtist,
     getSimilarArtist, getArtistTopTracks, getSpecificTrack,
-    getSimilarTrack, getTopTracksGenre, getTopArtistGenre, createPlaylist
+    getSimilarTrack, getTopTracksGenre, getTopArtistGenre
 }

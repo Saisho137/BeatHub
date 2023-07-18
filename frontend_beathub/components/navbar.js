@@ -26,7 +26,7 @@ const Navbar = () => {
       const headers = {
         'Authorization': `Bearer ${token}`
       }
-      const response = await axios.get('http://localhost:8080/getUserData', { headers })
+      const response = await axios.get('/api/getUserData', { headers })
       let { username, image } = response.data
       if (image == null) {
         image = "/images/person-circle.svg"
@@ -46,7 +46,6 @@ const Navbar = () => {
 
   useEffect(() => {
     handleAuthentication()
-
     const token = sessionStorage.getItem('token')
     if (token) {
       fetchData(token)
