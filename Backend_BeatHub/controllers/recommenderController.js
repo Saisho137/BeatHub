@@ -3,32 +3,6 @@
 const axios = require('axios')
 
 //TRACK ENDPOINTS
-const getTrack = async (req, res) => {
-    const headers = req.headers.authorization
-    const track = req.params.track
-
-    try {
-        const { data } = await axios.get(`https://api.spotify.com/v1/search?q=${track}&type=track`, {
-            method: 'GET',
-            headers: {
-                Authorization: `${headers}`,
-            },
-        })
-        const tracks = data.tracks.items.map(track => ({
-            id: track.id,
-            name: track.name,
-            images: track.album.images[0].url
-        }))
-        res.status(200).send({ getTrack: tracks })
-    } catch (error) {
-        if (error.response && error.response.status == 401) {
-            res.status(401).send({ message: 'token expired' })
-            return
-        }
-        res.status(400).send({ error })
-    }
-}
-
 const getSpecificTrack = async (req, res) => {
     const headers = req.headers.authorization
     const id = req.params.id
@@ -87,34 +61,6 @@ const getSimilarTrack = async (req, res) => {
 }
 
 //ARTIST ENDPOINTS
-const getArtist = async (req, res) => {
-    const headers = req.headers.authorization
-    const artists = req.params.artist
-
-    try {
-        const { data } = await axios.get(`https://api.spotify.com/v1/search?q=${artists}&type=artist`, {
-            method: 'GET',
-            headers: {
-                Authorization: `${headers}`,
-            },
-        })
-        const artist = data.artists.items.map(artists => ({
-            name: artists.name,
-            id: artists.id,
-            images: artists.images[0] ? artists.images[0].url : null
-
-        }))
-        res.status(200).send({ getArtist: artist })
-    } catch (error) {
-        if (error.response && error.response.status == 401) {
-            res.status(401).send({ message: 'token expired' })
-            return
-        }
-        res.status(400).send({ error })
-    }
-
-}
-
 const getSpecificArtist = async (req, res) => {
     const headers = req.headers.authorization
     const artistsId = req.params.id
@@ -196,27 +142,6 @@ const getArtistTopTracks = async (req, res) => {
 }
 
 //GENRE ENDPOINTS
-const getGenre = async (req, res) => {
-    const headers = req.headers.authorization
-
-    try {
-        const { data } = await axios.get(`https://api.spotify.com/v1/recommendations/available-genre-seeds
-        `, {
-            method: 'GET',
-            headers: {
-                Authorization: `${headers}`,
-            },
-        })
-        res.status(200).send({ getGenre: data })
-    } catch (error) {
-        if (error.response && error.response.status == 401) {
-            res.status(401).send({ message: 'token expired' })
-            return
-        }
-        res.status(400).send({ error })
-    }
-
-}
 
 const getTopTracksGenre = async (req, res) => {
     const headers = req.headers.authorization
@@ -281,7 +206,6 @@ const getTopArtistGenre = async (req, res) => {
 
 
 module.exports = {
-    getTrack, getArtist, getGenre, getSpecificArtist,
-    getSimilarArtist, getArtistTopTracks, getSpecificTrack,
+    getSpecificArtist, getSimilarArtist, getArtistTopTracks, getSpecificTrack,
     getSimilarTrack, getTopTracksGenre, getTopArtistGenre
 }

@@ -25,7 +25,7 @@ export default function GenrePage({ id }) {
 
     async function getGenres(headers) {
         try {
-            const { data: { getGenre: { genres } } } = await axios.get('http://localhost:8080/getGenre', headers)
+            const { data: { getGenre: { genres } } } = await axios.get('/api/recommenderItems/getGenre', headers)
             setGenres(genres)
         }
         catch (error) {

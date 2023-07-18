@@ -30,18 +30,18 @@ const recommender = () => {
       switch (category) {
         case "Song":
           if (searchValue !== "") {
-            response = await axios.get(`http://localhost:8080/getTrack/${searchValue}`, { headers })
+            response = await axios.get(`/api/recommenderItems/getTrack/${searchValue}`, { headers })
             response = response.data.getTrack
           }
           break
         case "Artist":
           if (searchValue !== "") {
-            response = await axios.get(`http://localhost:8080/getArtist/${searchValue}`, { headers })
+            response = await axios.get(`/api/recommenderItems/getArtist/${searchValue}`, { headers })
             response = response.data.getArtist
           }
           break
         case "Genre":
-          response = await axios.get(`http://localhost:8080/getGenre`, { headers })
+          response = await axios.get(`/api/recommenderItems/getGenre`, { headers })
           response = response.data.getGenre.genres
           break
         default:

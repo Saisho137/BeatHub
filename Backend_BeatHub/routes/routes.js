@@ -5,11 +5,6 @@ const recommenderController = require('../controllers/recommenderController')
 const express = require('express')
 const app = express.Router()
 
-//Recommender
-app.get('/getArtist/:artist', recommenderController.getArtist)
-app.get('/getTrack/:track', recommenderController.getTrack)
-app.get('/getGenre', recommenderController.getGenre)
-
 //Artist
 app.get('/getSpecificArtist/:id', recommenderController.getSpecificArtist)
 app.get('/getSimilarArtist/:id', recommenderController.getSimilarArtist)
@@ -20,6 +15,5 @@ app.get('/getSimilarTracks/:idArtist/:idTrack', recommenderController.getSimilar
 //Genre
 app.get('/getTopTracksGenre/:genre', recommenderController.getTopTracksGenre)
 app.get('/getTopArtistGenre/:genre', recommenderController.getTopArtistGenre)
-
 
 module.exports = app
