@@ -1,7 +1,7 @@
 import axios from "axios"
 
 export default async function handler(req, res) {
-    const time = req.params.time ?? "short_term"
+    const time = req.query.time ?? "short_term"
     const token = req.headers.authorization
 
     const headers = {
