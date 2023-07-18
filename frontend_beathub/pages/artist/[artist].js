@@ -27,7 +27,7 @@ const Artist = () => {
         }
 
         try {
-            const { data } = await axios.get(`http://localhost:8080/getSpecificArtist/${param}`, headers)
+            const { data } = await axios.get(`/api/artist/getSpecificArtist/${param}`, headers)
             setArtist(data.getSpecificArtist)
         }
         catch (error) {
@@ -48,7 +48,7 @@ const Artist = () => {
         }
 
         try {
-            const { data } = await axios.get(`http://localhost:8080/getSimilarArtist/${param}`, headers)
+            const { data } = await axios.get(`/api/artist/getSimilarArtist/${param}`, headers)
             setSimilar(data.getSimilarArtist)
         }
         catch (error) {
@@ -70,7 +70,7 @@ const Artist = () => {
             }
         }
         try {
-            const { data } = await axios.get(`http://localhost:8080/getArtistTopTracks/${param}`, headers)
+            const { data } = await axios.get(`/api/artist/getArtistTopTracks/${param}`, headers)
             setTopTracks(data.getArtistTopTracks)
         }
         catch (error) {

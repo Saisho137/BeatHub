@@ -1,9 +1,7 @@
-'use strict'
+import axios from "axios"
 
-const axios = require('axios')
-
-const getStats = async (req, res) => {
-    const time = req.params.time ?? "short_term"
+export default async function handler(req, res) {
+    const time = req.query.time ?? "short_term"
     const token = req.headers.authorization
 
     const headers = {
@@ -110,9 +108,4 @@ const getStats = async (req, res) => {
     catch (error) {
         res.status(401).send({ message: 'Token expired' })
     }
-
-
-
 }
-
-module.exports = { getStats }

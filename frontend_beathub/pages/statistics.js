@@ -20,7 +20,7 @@ export default function Statistics() {
         }
 
         try {
-            const { data } = await axios.get(`http://localhost:8080/stats/${time}`, headers)
+            const { data } = await axios.get(`/api/stats/${time}`, headers)
             setStats(data)
         }
         catch (error) {
