@@ -137,7 +137,7 @@ export default function Game() {
         } else {
             const artist = event.target.artistName.value
             if (songName.toLowerCase().trim().includes(response.name.toLowerCase().trim())
-                && response.artistName.map(name => (name.toLowerCase())).includes(artist.toLowerCase())) {
+                && response.artistName.map(name => (name.toLowerCase().trim())).includes(artist.toLowerCase().trim())) {
                 setWinner(true)
                 setDifficulty({ ...difficulty, tries: 0 })
                 handleNotification("success", "YOU WIN!!!")
