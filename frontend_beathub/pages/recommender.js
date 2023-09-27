@@ -4,6 +4,8 @@ import axios from 'axios'
 import Link from "next/link"
 import recoStyles from "../styles/recommender.module.css"
 import { useRouter } from 'next/router'
+import { toast, ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 const recommender = () => {
   const [category, setCategory] = useState("Song")
@@ -88,8 +90,17 @@ const recommender = () => {
   const searchGenre= () =>{
     const searchInput = document.getElementById('searchInput')
     const trimmedInput = searchInput.value.trim()
-    const searchTerm = trimmedInput.replace(/\s+/g, ' ')
-    router.push(`/genre/${searchTerm}`)
+    if (trimmedInput != ""){
+      const searchTerm = trimmedInput.replace(/\s+/g, ' ')
+      router.push(`/genre/${searchTerm}`)
+    } else {
+      toast.warning('No search parameters submitted.', {
+        autoClose: 1500,
+        position: toast.POSITION.TOP_CENTER,
+        closeButton: true,
+        className: 'custom-toast',
+      })
+    }
   }
 
   const renderTracksAndArtists = () => {
@@ -139,6 +150,7 @@ const recommender = () => {
   return (
     <Layout>
       <div className="container mt-3 pt-5">
+      <ToastContainer />
         <div className="row text-center">
           <h2>How to search?</h2>
           <h5 className="">Search by song, artist or genre by changing the category.</h5>
