@@ -41,7 +41,7 @@ export default function Statistics() {
         setStats(getStats(token))
 
     }, [time])
-
+    console.log(stats)
     return (
         <Layout>
 
