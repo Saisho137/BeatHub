@@ -1,34 +1,62 @@
 import axios from 'axios'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
+import { readCache, writeCache } from '../lib/clientCache'
+import { blockedForSeconds } from '../lib/spotifyQuota'
+import { formatWait } from '../lib/format'
 
-const REFRESH_MS = 30000
+const REFRESH_MS = 90 * 1000
 
-// Slim strip under the navbar with the song playing on the user's Spotify
+// Slim strip under the navbar: the song playing on the user's Spotify, or a notice
+// while Spotify is rate limiting the app
 export default function NowPlaying() {
     const [nowPlaying, setNowPlaying] = useState(null)
+    const [blockedSeconds, setBlockedSeconds] = useState(0)
 
     useEffect(() => {
         const refresh = async () => {
-            if (document.hidden) return
+            const blocked = blockedForSeconds()
+            setBlockedSeconds(blocked)
+            if (blocked > 0 || document.hidden) return
+
+            // Shared between pages: navigating does not trigger a new request
+            const cached = readCache('nowPlaying', REFRESH_MS, 'session')
+            if (cached) {
+                setNowPlaying(cached.value)
+                return
+            }
             try {
                 const headers = { headers: { 'Authorization': `Bearer ${sessionStorage.getItem('token')}` } }
                 const { data } = await axios.get('/api/nowPlaying', headers)
-                setNowPlaying(data.track ? data : null)
+                const value = data.track ? data : null
+                writeCache('nowPlaying', value, 'session')
+                setNowPlaying(value)
             } catch {
                 // Not critical: just hide it (expired sessions are handled by each page)
                 setNowPlaying(null)
+                setBlockedSeconds(blockedForSeconds())
             }
         }
 
         refresh()
-        const interval = setInterval(refresh, REFRESH_MS)
+        // Cheap tick: it only calls Spotify when the cached value is older than REFRESH_MS
+        const interval = setInterval(refresh, 15 * 1000)
         document.addEventListener('visibilitychange', refresh)
         return () => {
             clearInterval(interval)
             document.removeEventListener('visibilitychange', refresh)
         }
     }, [])
+
+    if (blockedSeconds > 0) {
+        return (
+            <div className='now-playing-bar'>
+                <div className='container-fluid px-3 px-lg-4 py-2 small text-muted'>
+                    Spotify is limiting requests right now. Your data will be back in {formatWait(blockedSeconds)}.
+                </div>
+            </div>
+        )
+    }
 
     if (!nowPlaying) return null
 

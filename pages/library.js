@@ -9,9 +9,12 @@ import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { computeLibraryInsights } from '../lib/libraryInsights'
-import { formatHours, formatNumber, formatReleaseDate, yearOf } from '../lib/format'
+import { formatHours, formatNumber, formatReleaseDate, formatTimeAgo, yearOf } from '../lib/format'
+import { readCache, writeCache, HOUR } from '../lib/clientCache'
+import { blockedForSeconds } from '../lib/spotifyQuota'
 
 const CHUNK_SIZE = 250 // must match PAGES_PER_CHUNK * PAGE_SIZE in /api/library
+const LIBRARY_CACHE_MS = 24 * HOUR
 
 function TrackHighlight({ title, track, detail }) {
     if (!track) return null
@@ -37,10 +40,25 @@ export default function Library() {
     const [progress, setProgress] = useState({ loaded: 0, total: null })
     const [insights, setInsights] = useState(null)
     const [error, setError] = useState(null)
+    const [savedAt, setSavedAt] = useState(null)
+    // Incremented by the Refresh button to analyze the library again
+    const [reloadCount, setReloadCount] = useState(0)
 
     useEffect(() => {
         let cancelled = false
         const headers = { headers: { 'Authorization': `Bearer ${sessionStorage.getItem('token')}` } }
+
+        // Analyzing a library costs dozens of Spotify requests: reuse the last result for a day
+        const cached = reloadCount === 0 && readCache('library', LIBRARY_CACHE_MS)
+        if (cached) {
+            setInsights(cached.value)
+            setSavedAt(cached.savedAt)
+            return
+        }
+
+        setInsights(null)
+        setError(null)
+        setProgress({ loaded: 0, total: null })
 
         const loadLibrary = async () => {
             const tracks = []
@@ -52,7 +70,12 @@ export default function Library() {
                     tracks.push(...data.tracks)
                     if (!cancelled) setProgress({ loaded: Math.min(offset + CHUNK_SIZE, total), total })
                 }
-                if (!cancelled) setInsights(computeLibraryInsights(tracks) || 'empty')
+                if (!cancelled) {
+                    const result = computeLibraryInsights(tracks) || 'empty'
+                    writeCache('library', result)
+                    setInsights(result)
+                    setSavedAt(Date.now())
+                }
             }
             catch (error) {
                 if (cancelled) return
@@ -67,7 +90,7 @@ export default function Library() {
 
         loadLibrary()
         return () => { cancelled = true }
-    }, [])
+    }, [reloadCount])
 
     let content
     if (error) {
@@ -155,6 +178,16 @@ export default function Library() {
             <div className={`container pb-5 ${statisticsStyles.page}`}>
                 <h1 className='text-center mt-5'>Your Library</h1>
                 <p className={`text-center ${statisticsStyles.muted}`}>Everything you have saved with ♡ in Spotify</p>
+                {insights && savedAt && (
+                    <p className={`text-center small ${statisticsStyles.muted}`}>
+                        Analyzed {formatTimeAgo(savedAt)} ·{' '}
+                        <button type='button' className='btn btn-link btn-sm p-0 align-baseline' style={{ color: 'var(--brand)' }}
+                            disabled={blockedForSeconds() > 0} title={blockedForSeconds() > 0 ? 'Spotify is limiting requests right now' : undefined}
+                            onClick={() => setReloadCount(count => count + 1)}>
+                            Refresh
+                        </button>
+                    </p>
+                )}
                 {content}
             </div>
         </Layout>

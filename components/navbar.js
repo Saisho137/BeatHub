@@ -3,6 +3,7 @@ import axios from 'axios'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { redirectToSpotifyLogin } from '../lib/spotifyAuth'
+import { readCache, writeCache, clearCaches, HOUR } from '../lib/clientCache'
 import NowPlaying from './nowPlaying'
 import ThemeToggle from './themeToggle'
 
@@ -18,15 +19,30 @@ const Navbar = () => {
   const router = useRouter()
 
   const fetchData = async (token) => {
+    // The header mounts on every page: keep the profile for the whole session
+    const cached = readCache('user', 12 * HOUR, 'session')
+    if (cached) {
+      setUserData(cached.value)
+      setIsLoggedIn(true)
+      return
+    }
     try {
       const headers = {
         'Authorization': `Bearer ${token}`
       }
       const response = await axios.get('/api/getUserData', { headers })
       const { username, image } = response.data
-      setUserData({ username, image: image ?? '/images/person-circle.svg' })
+      const user = { username, image: image ?? '/images/person-circle.svg' }
+      writeCache('user', user, 'session')
+      setUserData(user)
       setIsLoggedIn(true)
     } catch (error) {
+      if (error.response?.status === 429) {
+        // Still logged in; Spotify is only limiting requests for a while
+        setUserData({ username: 'My account', image: '/images/person-circle.svg' })
+        setIsLoggedIn(true)
+        return
+      }
       setIsLoggedIn(false)
     }
   }
@@ -59,6 +75,7 @@ const Navbar = () => {
     event.preventDefault()
     sessionStorage.removeItem('token')
     sessionStorage.removeItem('tokenTimestamp')
+    clearCaches()
     setIsLoggedIn(false)
     router.push('/')
   }

@@ -1,6 +1,7 @@
 import statisticsStyles from '../styles/statistics.module.css'
 import Layout from '../components/layout'
 import { errorMessage } from '../lib/errorMessage'
+import { readCache, writeCache, MINUTE } from '../lib/clientCache'
 import PageLoader from '../components/pageLoader'
 import StatTile from '../components/statTile'
 import ColumnChart from '../components/columnChart'
@@ -10,6 +11,8 @@ import axios from 'axios'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
+
+const STATS_CACHE_MS = 10 * MINUTE
 
 const PERIODS = [
     { key: 'short_term', label: '4 Weeks' },
@@ -49,6 +52,13 @@ export default function Statistics() {
         const storedTime = sessionStorage.getItem('statisticsTime')
         if (storedTime) setTime(storedTime)
 
+        // Top items change slowly: reuse them for a few minutes instead of 10 Spotify requests
+        const cached = readCache('stats', STATS_CACHE_MS)
+        if (cached) {
+            setStats(cached.value)
+            return
+        }
+
         const getStats = async () => {
             const headers = {
                 headers: {
@@ -57,6 +67,7 @@ export default function Statistics() {
             }
             try {
                 const { data } = await axios.get('/api/stats', headers)
+                writeCache('stats', data)
                 setStats(data)
             }
             catch (error) {
