@@ -17,6 +17,7 @@ export default async function handler(req, res) {
             artistName: data.artists.map(artist => artist.name),
             songId: id,
             album: data.album.name,
+            albumId: data.album.id,
             albumType: data.album.album_type,
             releaseDate: data.album.release_date,
             trackNumber: data.track_number,

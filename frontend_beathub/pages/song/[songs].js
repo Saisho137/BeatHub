@@ -49,7 +49,7 @@ const Songs = () => {
     }
 
     const details = [
-        { label: 'Album', value: song.album },
+        { label: 'Album', value: <Link href={`/album/${song.albumId}`} className='theme'>{song.album}</Link> },
         { label: 'Released', value: formatReleaseDate(song.releaseDate) },
         { label: 'Duration', value: formatDuration(song.durationMs) },
         { label: 'Track', value: `${song.trackNumber} of ${song.totalTracks}` },

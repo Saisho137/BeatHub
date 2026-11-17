@@ -42,6 +42,12 @@ const recommender = () => {
             response = response.data.getArtist
           }
           break
+        case "Album":
+          if (searchValue !== "") {
+            response = await axios.get(`/api/recommenderItems/getAlbum/${searchValue}`, { headers })
+            response = response.data.getAlbum
+          }
+          break
         default:
           break
       }
@@ -100,7 +106,7 @@ const recommender = () => {
       return (
         <ul className="list-group">
           {Array.isArray(data) && data.map((item) => (
-            <Link className="theme" href={category === "Song" ? `/song/${item.id}` : `/artist/${item.id}`} key={item.id} style={{ textDecoration: "none" }}>
+            <Link className="theme" href={`/${{ Song: 'song', Artist: 'artist', Album: 'album' }[category]}/${item.id}`} key={item.id} style={{ textDecoration: "none" }}>
               <li className="row list-group-item align-items-center theme theme-border" key={item.id}>
                 <div className="col-auto d-flex align-items-center">
                   <div className={`m-0 ${recoStyles.searchPicContainer}`}>
@@ -127,7 +133,7 @@ const recommender = () => {
       <ToastContainer />
         <div className="row text-center">
           <h2>How to search?</h2>
-          <h5 className="">Search by song, artist or genre by changing the category.</h5>
+          <h5 className="">Search by song, artist, album or genre by changing the category.</h5>
           <h5 className="mt-2"><span className="fw-bold">Looking for a genre?</span> Write down the genre and click on search.</h5>
         </div>
         <div className="row text-center mt-2">
@@ -158,6 +164,11 @@ const recommender = () => {
                 <li>
                   <a className="dropdown-item theme" href="#" onClick={() => onSelected("Artist")}>
                     Artist
+                  </a>
+                </li>
+                <li>
+                  <a className="dropdown-item theme" href="#" onClick={() => onSelected("Album")}>
+                    Album
                   </a>
                 </li>
                 <li>

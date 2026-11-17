@@ -2,88 +2,121 @@ import React from 'react'
 import axios from 'axios'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
-import Image from 'next/image'
-import styles from "../../styles/artist.module.css"
 import Layout from "../../components/layout"
 import SpotifyEmbed from '../../components/spotifyEmbed'
+import StatTile from '../../components/statTile'
+import statisticsStyles from '../../styles/statistics.module.css'
 import Link from 'next/link'
+import { yearOf } from '../../lib/format'
 
-
+function ReleaseGrid({ title, releases }) {
+    if (releases.length === 0) return null
+    return (
+        <>
+            <h3 className={statisticsStyles.sectionTitle}>{title}</h3>
+            <div className='row justify-content-center'>
+                {releases.map(release =>
+                    <div key={release.id} className='col-6 col-md-4 col-lg-3 col-xl-2 mb-3'>
+                        <Link href={`/album/${release.id}`} className='card h-100 text-decoration-none theme theme-border'>
+                            {release.image && <img src={release.image} className='card-img-top' alt='' />}
+                            <div className='card-body p-2'>
+                                <h6 className='card-title mb-1'>{release.name}</h6>
+                                <p className={`small mb-0 ${statisticsStyles.muted}`}>
+                                    {yearOf(release.releaseDate)} · {release.totalTracks} {release.totalTracks === 1 ? 'track' : 'tracks'}
+                                </p>
+                            </div>
+                        </Link>
+                    </div>
+                )}
+            </div>
+        </>
+    )
+}
 
 const Artist = () => {
     const [artist, setArtist] = useState('')
+    const [discography, setDiscography] = useState(null)
 
     const router = useRouter()
     const param = router.query.artist
 
-    const getSpecificArtist = async (token) => {
-        const headers = {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        }
-
-        try {
-            const { data } = await axios.get(`/api/artist/getSpecificArtist/${param}`, headers)
-            setArtist(data.getSpecificArtist)
-        }
-        catch (error) {
-            if (error.response && error.response.status == 401) {
-                sessionStorage.setItem('callback', `artist/${param}`)
-                router.push('/callback')
-                return
-            }
-        }
-
+    const redirectToLogin = () => {
+        sessionStorage.setItem('callback', `artist/${param}`)
+        router.push('/callback')
     }
 
     useEffect(() => {
-        if (param) {
-            const token = sessionStorage.getItem('token')
-            getSpecificArtist(token)
-        }
+        if (!param) return
+        const headers = { headers: { 'Authorization': `Bearer ${sessionStorage.getItem('token')}` } }
+        setArtist('')
+        setDiscography(null)
+
+        axios.get(`/api/artist/getSpecificArtist/${param}`, headers)
+            .then(({ data }) => setArtist(data.getSpecificArtist))
+            .catch(error => {
+                if (error.response && error.response.status == 401) redirectToLogin()
+            })
+
+        axios.get(`/api/artist/getArtistAlbums/${param}`, headers)
+            .then(({ data }) => setDiscography(data))
+            .catch(error => {
+                if (error.response && error.response.status == 401) return redirectToLogin()
+                setDiscography({ releases: [], failed: true })
+            })
     }, [param])
 
     if (!artist) {
         return <h1>Loading...</h1>
     }
 
+    const releases = discography?.releases ?? []
+    const albums = releases.filter(release => release.type === 'album')
+    const singles = releases.filter(release => release.type === 'single')
+    const years = releases.map(release => yearOf(release.releaseDate)).filter(Boolean)
+
     return (
         <Layout>
-            <div className='row text-center offset-1 col-10 mt-5 border'>
-                <Link href='/recommender' className='m-3 col-2 p-1 btn btn-success main-color main-border'>
-                    <img src='/images/arrow-up-circle-fill-white.svg' className='float-start ms-2 mt-1' style={{ transform: 'rotate(270deg)' }} />
+            <div className={`container pb-5 text-center ${statisticsStyles.page}`}>
+                <Link href='/recommender' className='m-3 p-1 px-3 btn btn-success main-color main-border'>
+                    <img src='/images/arrow-up-circle-fill-white.svg' className='me-2' style={{ transform: 'rotate(270deg)' }} alt='' />
                     Search More
                 </Link>
-                <h1 className={`${styles.artisttitle}`}>Artist</h1>
-                <div className={`row mb-5 justify-content-center`}>
-                    <div className={`col-11 col-md-9 col-xl-6 ${styles.singleartist}`}>
-                        <div className={`card theme theme-border`}>
-                            <h3 className="card-title card-header theme-border" style={{ marginBottom: "2%" }}>{artist.name}</h3>
-                            <div className="card-img">
-                                <Link href='/recommender'>
-                                    <Image className="rounded" loader={() => artist.images ? artist.images : '/images/person-circle.svg'} src={artist.images ? artist.images : '/images/person-circle.svg'} height={300} width={300} alt="Picture of the author" />
-                                </Link>
 
-                            </div>
-                            <div className='p-3'>
-                                <SpotifyEmbed type='artist' id={param} height={352} />
-                            </div>
-                            {artist.genres.length > 0 && (
-                                <>
-                                    <h4 className='card-footer mt-3 theme-border'>Artist genres</h4>
-                                    <div>
-                                        {artist.genres.map((genre) =>
-                                            <Link key={genre} href={`/genre/${genre}`} className='text-decoration-none text-dark' replace>
-                                                <p className='mb-3 bg-light border border-dark d-inline-block p-2 m-1 rounded theme theme-border' >{genre}</p>
-                                            </Link>
-                                        )}
-                                    </div>
-                                </>
-                            )}
-                        </div>
+                <div className='d-flex align-items-center justify-content-center gap-3 mt-3'>
+                    <img src={artist.images || '/images/person-circle.svg'}
+                        className='rounded-circle border border-dark'
+                        style={{ width: '120px', height: '120px', objectFit: 'cover' }}
+                        alt='' />
+                    <h1 className='mb-0'>{artist.name}</h1>
+                </div>
+
+                <div className='row justify-content-center mt-4'>
+                    <div className='col-12 col-lg-8'>
+                        <SpotifyEmbed type='artist' id={param} height={352} />
                     </div>
                 </div>
+
+                {discography === null ? (
+                    <div className='d-flex justify-content-center p-5'>
+                        <div className='spinner-border' role='status'><span className='visually-hidden'>Loading discography</span></div>
+                    </div>
+                ) : releases.length > 0 && (
+                    <>
+                        <div className='row justify-content-center mt-4'>
+                            <StatTile label='albums' value={albums.length} />
+                            <StatTile label='singles & EPs' value={singles.length} />
+                            <StatTile label='active since' value={Math.min(...years)} />
+                            <StatTile label='latest release' value={Math.max(...years)} />
+                        </div>
+                        <ReleaseGrid title='Albums' releases={albums} />
+                        <ReleaseGrid title='Singles & EPs' releases={singles} />
+                        {discography.truncated && (
+                            <p className={`small mt-3 ${statisticsStyles.muted}`}>
+                                Showing the latest releases only: this artist has more than 200.
+                            </p>
+                        )}
+                    </>
+                )}
             </div>
         </Layout>
     )
