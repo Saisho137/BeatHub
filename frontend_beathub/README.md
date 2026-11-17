@@ -1,38 +1,46 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# BeatHub
+
+Your Spotify listening statistics: top songs and artists by period, how your taste changes over time, your library, the decades you listen to and when you listen. You can also explore and play any song, album or artist.
+
+Built with [Next.js](https://nextjs.org/) (pages router) and the [Spotify Web API](https://developer.spotify.com/documentation/web-api).
 
 ## Getting Started
 
-First, run the development server:
+### 1. Create a Spotify app
+
+1. Go to the [Spotify Developer Dashboard](https://developer.spotify.com/dashboard) and create an app (select **Web API**).
+2. Add these **Redirect URIs** (they must match exactly):
+   - `http://127.0.0.1:3000/callback` (local development; Spotify does not accept `localhost`)
+   - `https://<your-domain>/callback` (production)
+3. Copy the app's **Client ID**. The Client Secret is not needed: login uses the Authorization Code flow with PKCE.
+
+### 2. Configure and run
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
+cp .env.example .env.local   # then set NEXT_PUBLIC_SPOTIFY_CLIENT_ID
+npm install
+npm run dev -- -H 127.0.0.1
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://127.0.0.1:3000](http://127.0.0.1:3000) (not `localhost`).
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+### 3. Deploy
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
+Set `NEXT_PUBLIC_SPOTIFY_CLIENT_ID` in your hosting provider (e.g. Vercel → Settings → Environment Variables) and register the production `/callback` URL in the Spotify dashboard.
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+## Spotify Development Mode limits
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+Apps in Development Mode (the default) have restrictions:
 
-## Learn More
+- The app owner needs **Spotify Premium**, and only **5 users** can log in. Add them in the dashboard under **User Management**.
+- Some endpoints are not available (recommendations, related artists, audio features, artist top tracks, 30s previews, among others). See the [February 2026 migration guide](https://developer.spotify.com/documentation/web-api/tutorials/february-2026-migration-guide).
+- Search returns at most 10 results per request, and artist albums 10 per page.
+- Requests are rate limited. If Spotify answers `429 Too Many Requests`, the app shows a message to try again later.
+- Access tokens last 1 hour; after that you are asked to log in again.
 
-To learn more about Next.js, take a look at the following resources:
+## Project structure
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+- `pages/` – pages (`statistics`, `library`, `recommender` = Explore, `song`, `artist`, `album`, `genre`)
+- `pages/api/` – API routes that call the Spotify Web API with the user's token
+- `lib/` – Spotify auth (PKCE), API helper (retries and error handling), formatting and insights
+- `components/` – layout, header, charts and shared UI
