@@ -1,15 +1,143 @@
 .paddingDiv {
     padding-top: 6em;
 }
-  
+
 @media (max-width: 767px) {
     .paddingDiv {
       padding-top: 4em;
     }
 }
-  
-@media (min-width: 768px) {
-    .paddingDiv {
-      padding-top: 6empx;
-    }
+
+/* Chart color: validated for contrast on both surfaces */
+.page {
+    --chart-bar: #9c439c;
+    --chart-muted: #5f5f5f;
+}
+
+:global([data-theme="dark"]) .page {
+    --chart-bar: #c060c0;
+    --chart-muted: #b5b5b5;
+}
+
+.muted {
+    color: var(--chart-muted);
+}
+
+.tile {
+    justify-content: center;
+}
+
+.tileValue {
+    font-family: Bungee;
+    font-size: 1.8rem;
+    line-height: 1.1;
+}
+
+.sectionTitle {
+    margin-top: 3rem;
+    margin-bottom: 1.5rem;
+}
+
+/* Decade column chart */
+.chart {
+    display: flex;
+    align-items: flex-end;
+    gap: 2px;
+    height: 220px;
+    padding-top: 1.75rem;
+    border-bottom: 1px solid var(--chart-muted);
+}
+
+.column {
+    position: relative;
+    flex: 1;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+    outline: none;
+}
+
+.bar {
+    width: 60%;
+    max-width: 48px;
+    min-height: 2px;
+    background: var(--chart-bar);
+    border-radius: 4px 4px 0 0;
+}
+
+.peakLabel {
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.tooltip {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    background: #1a1a1a;
+    color: white;
+    z-index: 2;
+}
+
+.column:hover .tooltip,
+.column:focus .tooltip {
+    display: block;
+}
+
+.column:hover .bar,
+.column:focus .bar {
+    opacity: 0.8;
+}
+
+.axis {
+    display: flex;
+    gap: 2px;
+    font-size: 0.8rem;
+    color: var(--chart-muted);
+}
+
+.axis span {
+    flex: 1;
+    text-align: center;
+}
+
+/* Horizontal list of small items (artists / tracks) */
+.chipList {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    justify-content: center;
+}
+
+.chip {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.35rem 0.75rem 0.35rem 0.35rem;
+    border: 1px solid;
+    border-radius: 999px;
+    text-decoration: none;
+    max-width: 100%;
+}
+
+.chip img {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.chip span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }

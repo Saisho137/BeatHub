@@ -13,10 +13,16 @@ export default async function handler(req, res) {
         })
         const track = {
             name: data.name,
-            artistId: data.album.artists.map(artist => artist.id),
-            artistName: data.album.artists.map(artist => artist.name),
+            artistId: data.artists.map(artist => artist.id),
+            artistName: data.artists.map(artist => artist.name),
             songId: id,
-            images: data.album.images[0].url
+            album: data.album.name,
+            albumType: data.album.album_type,
+            releaseDate: data.album.release_date,
+            trackNumber: data.track_number,
+            totalTracks: data.album.total_tracks,
+            durationMs: data.duration_ms,
+            explicit: data.explicit
         }
         res.status(200).send({ getTrack: track })
     } catch (error) {
@@ -24,6 +30,6 @@ export default async function handler(req, res) {
             res.status(401).send({ message: 'token expired' })
             return
         }
-        res.status(400).send({ error })
+        res.status(400).send({ message: 'Bad Request' })
     }
 }

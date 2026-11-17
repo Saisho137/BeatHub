@@ -2,10 +2,22 @@ import React from 'react'
 import axios from 'axios'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
-import Image from 'next/image'
 import styles from "../../styles/artist.module.css"
 import Layout from "../../components/layout"
+import SpotifyEmbed from '../../components/spotifyEmbed'
 import Link from 'next/link'
+
+const formatDuration = (ms) => {
+    const totalSeconds = Math.round(ms / 1000)
+    return `${Math.floor(totalSeconds / 60)}:${String(totalSeconds % 60).padStart(2, '0')}`
+}
+
+const formatReleaseDate = (date) => {
+    if (!date) return null
+    // Spotify dates can be "YYYY", "YYYY-MM" or "YYYY-MM-DD"
+    if (date.length < 10) return date.slice(0, 4)
+    return new Date(`${date}T00:00:00`).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+}
 
 const Songs = () => {
 
@@ -46,6 +58,15 @@ const Songs = () => {
         return <h1>Loading...</h1>
     }
 
+    const details = [
+        { label: 'Album', value: song.album },
+        { label: 'Released', value: formatReleaseDate(song.releaseDate) },
+        { label: 'Duration', value: formatDuration(song.durationMs) },
+        { label: 'Track', value: `${song.trackNumber} of ${song.totalTracks}` },
+        { label: 'Type', value: song.albumType ? song.albumType.charAt(0).toUpperCase() + song.albumType.slice(1) : null },
+        { label: 'Explicit', value: song.explicit ? 'Yes' : 'No' },
+    ].filter(detail => detail.value)
+
     return (
         <Layout>
             <div className='row text-center offset-1 col-10 mt-5 border'>
@@ -53,16 +74,24 @@ const Songs = () => {
                     <img src='/images/arrow-up-circle-fill-white.svg' className='float-start ms-2 mt-1' style={{ transform: 'rotate(270deg)' }} />
                     Search More
                 </Link>
-                <h1 className={`${styles.artisttitle}`}>Songs</h1>
+                <h1 className={`${styles.artisttitle}`}>Song</h1>
                 <div className={`row mb-5 justify-content-center`}>
-                    <div className={`col-11 col-md-7 col-xl-5 ${styles.singleartist}`}>
+                    <div className={`col-11 col-md-9 col-xl-6 ${styles.singleartist}`}>
                         <div className={`card theme theme-border`}>
-                            <h3 className="card-title card-header theme-border" style={{ marginBottom: "2%" }}>{song.name}</h3>
-                            <div className="card-img">
-                                <Image className="rounded" loader={() => song.images ? song.images : '/images/person-circle.svg'} src={song.images ? song.images[0] : '/images/person-circle.svg'} height={300} width={300} alt="Picture of the author" />
+                            <h3 className="card-title card-header theme-border">{song.name}</h3>
+                            <div className='p-3'>
+                                <SpotifyEmbed type='track' id={song.songId} />
                             </div>
+                            <ul className='list-group list-group-flush text-start'>
+                                {details.map(({ label, value }) =>
+                                    <li key={label} className='list-group-item d-flex justify-content-between theme theme-border'>
+                                        <span className='fw-semibold'>{label}</span>
+                                        <span>{value}</span>
+                                    </li>
+                                )}
+                            </ul>
                             <div>
-                                <h4 className='card-footer mt-3 theme-border'>Artist</h4>
+                                <h4 className='card-footer mt-3 theme-border'>{song.artistId.length > 1 ? 'Artists' : 'Artist'}</h4>
                                 {song.artistId.map((id, index) => (
                                     <Link key={id} href={`/artist/${id}`} className='text-decoration-none text-dark' replace>
                                         <p className='mb-3 bg-light border border-dark d-inline-block p-2 m-1 rounded theme theme-border'>
@@ -71,7 +100,6 @@ const Songs = () => {
                                     </Link>
                                 ))}
                             </div>
-
                         </div>
                     </div>
                 </div>

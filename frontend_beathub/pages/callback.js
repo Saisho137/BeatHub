@@ -30,7 +30,7 @@ export default function Callback() {
 
             try {
                 await exchangeCodeForToken(code)
-                const callbackUrl = sessionStorage.getItem('callback') || ''
+                const callbackUrl = sessionStorage.getItem('callback') || 'statistics'
                 sessionStorage.removeItem('callback')
                 await router.replace(`/${callbackUrl}`)
             } catch (err) {

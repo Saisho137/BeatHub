@@ -5,6 +5,7 @@ import { useRouter } from 'next/router'
 import Image from 'next/image'
 import styles from "../../styles/artist.module.css"
 import Layout from "../../components/layout"
+import SpotifyEmbed from '../../components/spotifyEmbed'
 import Link from 'next/link'
 
 
@@ -56,7 +57,7 @@ const Artist = () => {
                 </Link>
                 <h1 className={`${styles.artisttitle}`}>Artist</h1>
                 <div className={`row mb-5 justify-content-center`}>
-                    <div className={`col-11 col-md-7 col-xl-4 ${styles.singleartist}`}>
+                    <div className={`col-11 col-md-9 col-xl-6 ${styles.singleartist}`}>
                         <div className={`card theme theme-border`}>
                             <h3 className="card-title card-header theme-border" style={{ marginBottom: "2%" }}>{artist.name}</h3>
                             <div className="card-img">
@@ -64,6 +65,9 @@ const Artist = () => {
                                     <Image className="rounded" loader={() => artist.images ? artist.images : '/images/person-circle.svg'} src={artist.images ? artist.images : '/images/person-circle.svg'} height={300} width={300} alt="Picture of the author" />
                                 </Link>
 
+                            </div>
+                            <div className='p-3'>
+                                <SpotifyEmbed type='artist' id={param} height={352} />
                             </div>
                             {artist.genres.length > 0 && (
                                 <>

@@ -63,8 +63,8 @@ const Navbar = () => {
           <ul className='navbar-nav ms-3'>
             {isLoggedIn && (
               <>
-                <li className='nav-item'><Link className='nav-link' href="/recommender">Recommender</Link></li>
                 <li className='nav-item'><Link className='nav-link' href="/statistics">Statistics</Link></li>
+                <li className='nav-item'><Link className='nav-link' href="/recommender">Explore</Link></li>
               </>
             )}
             <li className='nav-item dropdown'>
