@@ -3,23 +3,12 @@ import { useState, useEffect } from 'react'
 import axios from 'axios'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
+import { redirectToSpotifyLogin } from '../lib/spotifyAuth'
 
 const Navbar = () => {
   const [userData, setUserData] = useState(null)
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const router = useRouter()
-
-  const handleAuthentication = () => {
-    const hash = window.location.hash
-    if (hash) {
-      const urlParams = new URLSearchParams(hash.replace('#', '?'))
-      const token = urlParams.get('access_token')
-
-      window.location.hash = ''
-      sessionStorage.setItem('token', token)
-      fetchData(token)
-    }
-  }
 
   const fetchData = async (token) => {
     try {
@@ -34,10 +23,6 @@ const Navbar = () => {
       const user = { username, image }
       setUserData(user)
       setIsLoggedIn(true)
-
-      const tokenTimestamp = Date.now()
-      sessionStorage.setItem('token', token)
-      sessionStorage.setItem('tokenTimestamp', tokenTimestamp)
     } catch (error) {
       console.log(error)
       setIsLoggedIn(false)
@@ -45,7 +30,6 @@ const Navbar = () => {
   }
 
   useEffect(() => {
-    handleAuthentication()
     const token = sessionStorage.getItem('token')
     if (token) {
       fetchData(token)
@@ -53,15 +37,8 @@ const Navbar = () => {
   }, [])
 
   const handleLogin = () => {
-    const CLIENT_ID = '39dd8906e8044b7eb1715c1a4a1867e7'
-    const REDIRECT_URI = "beat-hub-two.vercel.app/callback"
-    const AUTH_ENDPOINT = 'https://accounts.spotify.com/authorize'
-    const RESPONSE_TYPE = 'token'
-    const SCOPE = 'user-read-private playlist-read-private user-read-currently-playing user-follow-read user-top-read playlist-modify-public playlist-modify-private user-library-modify'
-
-
-    const url = `${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=${RESPONSE_TYPE}&scope=${encodeURIComponent(SCOPE)}`
-    window.location.href = url
+    sessionStorage.removeItem('callback')
+    redirectToSpotifyLogin()
   }
 
   const handleLogout = () => {
