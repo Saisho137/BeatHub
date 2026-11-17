@@ -4,6 +4,7 @@ import axios from 'axios'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { redirectToSpotifyLogin } from '../lib/spotifyAuth'
+import NowPlaying from './nowPlaying'
 
 const Navbar = () => {
   const [userData, setUserData] = useState(null)
@@ -66,6 +67,7 @@ const Navbar = () => {
                 <li className='nav-item'><Link className='nav-link' href="/statistics">Statistics</Link></li>
                 <li className='nav-item'><Link className='nav-link' href="/library">Library</Link></li>
                 <li className='nav-item'><Link className='nav-link' href="/recommender">Explore</Link></li>
+                <NowPlaying />
               </>
             )}
             <li className='nav-item dropdown'>

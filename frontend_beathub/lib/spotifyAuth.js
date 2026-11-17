@@ -7,8 +7,9 @@
 const CLIENT_ID = process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID
 const AUTH_ENDPOINT = 'https://accounts.spotify.com/authorize'
 const TOKEN_ENDPOINT = 'https://accounts.spotify.com/api/token'
-// Read-only scopes: profile, top items, saved songs, followed artists and playlists
-const SCOPE = 'user-read-private user-top-read user-library-read user-follow-read playlist-read-private'
+// Read-only scopes: profile, top items, saved songs, followed artists, playlists,
+// recently played and currently playing
+const SCOPE = 'user-read-private user-top-read user-library-read user-follow-read playlist-read-private user-read-recently-played user-read-currently-playing'
 const VERIFIER_KEY = 'spotify_code_verifier'
 
 // Must match EXACTLY one of the Redirect URIs registered in the Spotify dashboard.

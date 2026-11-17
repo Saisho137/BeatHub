@@ -2,6 +2,7 @@ import statisticsStyles from '../styles/statistics.module.css'
 import Layout from '../components/layout'
 import StatTile from '../components/statTile'
 import ColumnChart from '../components/columnChart'
+import ListeningClock from '../components/listeningClock'
 import { formatDuration, formatHours, formatNumber } from '../lib/format'
 import axios from 'axios'
 import { useEffect, useState } from 'react'
@@ -242,6 +243,9 @@ export default function Statistics() {
                         )}
                     </div>
                 )}
+
+                {/* Listening clock (independent of the selected period) */}
+                <ListeningClock />
 
                 {/* Top songs list */}
                 {tracks.length > 0 && (
