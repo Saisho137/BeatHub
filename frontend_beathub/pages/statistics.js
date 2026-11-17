@@ -95,6 +95,7 @@ export default function Statistics() {
 
                         {/* User's Top Items */}
                         <div className='col-lg-6 card-group mt-5 mb-5'>
+                            {stats.tracks.length > 0 && (
                             <div className='col-lg-3 offset-lg-1 card text-center text-bg-light border-dark theme theme-border'>
                                 <h4 className='card-header theme-border'>Top Track</h4>
                                 <Link href={`/song/${stats.tracks[0].id}`} className='text-decoration-none text-dark theme'>
@@ -112,6 +113,8 @@ export default function Statistics() {
                                     </Link>
                                 </div>
                             </div>
+                            )}
+                            {stats.genres.length > 0 && (
                             <div className='col-lg-3 card text-bg-light border-dark d-block theme theme-border d-flex'>
                                 <h4 className='card-header text-center theme-border'>Top Genre(s)</h4>
                                 <div className='card-body'>
@@ -129,6 +132,8 @@ export default function Statistics() {
                                     </Link>
                                 </div>
                             </div>
+                            )}
+                            {stats.artists.length > 0 && (
                             <div className='col-lg-3 card text-center text-bg-light border-dark theme theme-border'>
                                 <h4 className='card-header theme-border'>Top Artist</h4>
                                 <Link href={`/artist/${stats.artists[0].id}`} className='text-decoration-none text-dark theme'>
@@ -146,10 +151,19 @@ export default function Statistics() {
                                     </Link>
                                 </div>
                             </div>
+                            )}
                         </div>
                     </div>
 
+                    {stats.tracks.length === 0 && stats.artists.length === 0 && (
+                        <div className='text-center p-5'>
+                            <h3>Not enough listening activity in this period</h3>
+                            <p>Try a longer period.</p>
+                        </div>
+                    )}
+
                     {/* Top songs list */}
+                    {stats.tracks.length > 0 && (
                     <div className='row text-center border pt-5 pb-5' id='topTracks'>
                         <h1 className='pb-5'>Top Songs</h1>
                         <div className='offset-1 col-10 row justify-content-center'>
@@ -166,8 +180,10 @@ export default function Statistics() {
                             )}
                         </div>
                     </div>
+                    )}
 
                     {/* Top genres list */}
+                    {stats.genres.length > 0 && (
                     <div className='row border text-center pb-5' id='topGenres'>
                         <h1 className='mt-5 mb-5'>Top Genres</h1>
                         <div className='offset-2 col-8'>
@@ -178,8 +194,10 @@ export default function Statistics() {
                             )}
                         </div>
                     </div>
+                    )}
 
                     {/* Top Artists list */}
+                    {stats.artists.length > 0 && (
                     <div className='row border text-center pb-5' id='topArtists'>
                         <h1 className='mt-5 mb-5'>Top Artists</h1>
                         <div className='offset-1 col-10 row justify-content-center'>
@@ -193,6 +211,7 @@ export default function Statistics() {
                             )}
                         </div>
                     </div>
+                    )}
 
                     <button
                         onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
