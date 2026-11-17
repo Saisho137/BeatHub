@@ -53,7 +53,7 @@ Install and start the app:
 
 ```bash
 npm install
-npm run dev -- -H 127.0.0.1
+npm run dev
 ```
 
 Open **http://127.0.0.1:3000** (not `localhost`) and click **Login with Spotify**.
