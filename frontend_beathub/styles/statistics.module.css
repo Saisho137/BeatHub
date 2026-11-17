@@ -10,13 +10,13 @@
 
 /* Chart color: validated for contrast on both surfaces */
 .page {
-    --chart-bar: #9c439c;
+    --chart-bar: #15883e;
     --chart-muted: #5f5f5f;
     --chart-track: #ececec;
 }
 
 :global([data-theme="dark"]) .page {
-    --chart-bar: #c060c0;
+    --chart-bar: #1db054;
     --chart-muted: #b5b5b5;
     --chart-track: #2a2a2a;
 }
@@ -30,7 +30,7 @@
 }
 
 .tileValue {
-    font-family: Bungee;
+    font-weight: 900;
     font-size: 1.8rem;
     line-height: 1.1;
 }

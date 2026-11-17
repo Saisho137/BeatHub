@@ -43,8 +43,8 @@
 }
 
 .button28:hover {
-  color: #fff;
-  background-color: #1A1A1A;
+  color: var(--on-brand) !important;
+  background-color: var(--brand) !important;
   box-shadow: rgba(0, 0, 0, 0.25) 0 8px 15px;
   transform: translateY(-2px);
 }

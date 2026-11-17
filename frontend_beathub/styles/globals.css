@@ -1,24 +1,27 @@
 :root {
     --transition-duration: 0.5s;
     --body_background: white;
-    --body-color: black;
+    --body_color: black;
     --link_color: black;
     --border_color: black;
     --time_btn_color: white;
-    --time_btn_color_on: gray;
+    /* Spotify green; text on it must be black (white fails contrast) */
+    --brand: #1DB954;
+    --brand-hover: #1ED760;
+    --on-brand: #000000;
 }
-  
+
 [data-theme="dark"] {
     --body_background: #121212;
     --body_color: white;
     --link_color: white;
     --border_color: gray;
     --time_btn_color: #121212;
-    --time_btn_color_on: gray;
 }
 
 body {
     overflow-x: hidden;
+    font-family: var(--font-roboto), system-ui, sans-serif;
 }
 
 .theme {
@@ -26,22 +29,31 @@ body {
     color: var(--body_color) !important;
     transition: background-color var(--transition-duration), color var(--transition-duration);
 }
-  
+
 .theme-border {
     border-color: var(--border_color) !important;
     transition: border-color var(--transition-duration);
 }
 
-.main-color{
-    background-color: #9c439c !important;
+.main-color {
+    background-color: var(--brand) !important;
+    color: var(--on-brand) !important;
+    font-weight: 500;
 }
 
-.main-border{
-    border-color: #9c439c !important;
+a.main-color:hover,
+button.main-color:hover {
+    background-color: var(--brand-hover) !important;
+}
+
+.main-border {
+    border-color: var(--brand) !important;
 }
 
 .time-btn-on {
-    background-color: var(--time_btn_color_on) !important;
+    background-color: var(--brand) !important;
+    color: var(--on-brand) !important;
+    font-weight: 500;
 }
 
 .time-btn-off {
@@ -49,9 +61,11 @@ body {
 }
 
 .font {
-    font-family: fredoka !important;
+    font-family: var(--font-roboto), system-ui, sans-serif !important;
 }
 
 h1, h2 {
-    font-family: Bungee;
+    font-family: var(--font-roboto), system-ui, sans-serif;
+    font-weight: 900;
+    letter-spacing: -0.02em;
 }

@@ -54,7 +54,7 @@ const Navbar = () => {
       <nav className='navbar navbar-expand-md navbar-dark bg-dark border-3 border-bottom main-border'>
         <div className='container-fluid'>
           <Link href="/" className='navbar-brand fs-4'>
-            <img src='/images/logo 10x10.png' className='me-2'/>
+            <img src='/favicon.svg' className='me-2' width='32' height='32' alt='' />
             BeatHub
           </Link>
           <button type='button' className='navbar-toggler' data-bs-toggle="collapse" data-bs-target="#navMenu">

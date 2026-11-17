@@ -290,7 +290,7 @@ export default function Statistics() {
                     style={{ position: 'fixed', bottom: '1%', right: '1%', zIndex: 1000 }}
                     aria-label='Back to top'
                 >
-                    <img src='images/arrow-up-circle-fill-magenta.svg' width='45' alt='' />
+                    <img src='/images/arrow-up-circle-fill-green.svg' width='45' alt='' />
                 </button>
             </div>
         </Layout>

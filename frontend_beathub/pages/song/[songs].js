@@ -61,7 +61,7 @@ const Songs = () => {
         <Layout>
             <div className='row text-center offset-1 col-10 mt-5 border'>
                 <Link href='/recommender' className='m-3 col-2 p-1 btn btn-success main-color main-border'>
-                    <img src='/images/arrow-up-circle-fill-white.svg' className='float-start ms-2 mt-1' style={{ transform: 'rotate(270deg)' }} />
+                    <img src='/images/arrow-up-circle-fill.svg' className='float-start ms-2 mt-1' style={{ transform: 'rotate(270deg)' }} />
                     Search More
                 </Link>
                 <h1 className={`${styles.artisttitle}`}>Song</h1>
