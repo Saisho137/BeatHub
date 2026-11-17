@@ -78,7 +78,7 @@ const Artist = () => {
         <Layout>
             <div className={`container pb-5 text-center ${statisticsStyles.page}`}>
                 <Link href='/recommender' className='m-3 p-1 px-3 btn btn-success main-color main-border'>
-                    <img src='/images/arrow-up-circle-fill-white.svg' className='me-2' style={{ transform: 'rotate(270deg)' }} alt='' />
+                    <img src='/images/arrow-up-circle-fill.svg' className='me-2' style={{ transform: 'rotate(270deg)' }} alt='' />
                     Search More
                 </Link>
 
@@ -100,6 +100,8 @@ const Artist = () => {
                     <div className='d-flex justify-content-center p-5'>
                         <div className='spinner-border' role='status'><span className='visually-hidden'>Loading discography</span></div>
                     </div>
+                ) : discography.failed ? (
+                    <p className={`mt-4 ${statisticsStyles.muted}`}>Sorry! Could not load the discography of this artist.</p>
                 ) : releases.length > 0 && (
                     <>
                         <div className='row justify-content-center mt-4'>

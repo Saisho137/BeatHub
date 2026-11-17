@@ -5,7 +5,7 @@ export default async function handler(req, res) {
     const id = encodeURIComponent(req.query.id)
 
     try {
-        const album = await spotifyGet(`/albums/${id}?market=from_token`, authorization)
+        const album = await spotifyGet(`/albums/${id}`, authorization)
 
         // Albums with more tracks than the first page: try to load the rest,
         // but keep the first page if the extra request is not allowed

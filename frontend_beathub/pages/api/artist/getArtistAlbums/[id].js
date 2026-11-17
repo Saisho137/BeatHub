@@ -6,7 +6,7 @@ const MAX_RELEASES = 200
 export default async function handler(req, res) {
     const authorization = req.headers.authorization
     const path = (offset) =>
-        `/artists/${encodeURIComponent(req.query.id)}/albums?include_groups=album,single&market=from_token&limit=${PAGE_SIZE}&offset=${offset}`
+        `/artists/${encodeURIComponent(req.query.id)}/albums?include_groups=album,single&limit=${PAGE_SIZE}&offset=${offset}`
 
     try {
         const first = await spotifyGet(path(0), authorization)

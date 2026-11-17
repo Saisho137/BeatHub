@@ -20,6 +20,12 @@ export default async function handler(req, res) {
             }
         })
     } catch (error) {
-        sendSpotifyError(res, error)
+        if (error.response?.status === 401) {
+            sendSpotifyError(res, error)
+            return
+        }
+        // Decorative widget: after the retries, hide it instead of failing the request
+        console.error('[Spotify] now playing unavailable:', error.response?.status ?? error.message)
+        res.status(200).send({ track: null })
     }
 }

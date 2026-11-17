@@ -11,8 +11,10 @@ export async function spotifyGet(path, authorization, attempt = 0) {
         const { data, status } = await axios.get(`${BASE_URL}${path}`, { headers: { Authorization: authorization } })
         return status === 204 ? null : data
     } catch (error) {
-        if (error.response?.status === 429 && attempt < MAX_RETRIES) {
-            const retryAfter = Number(error.response.headers['retry-after']) || 1
+        const status = error.response?.status
+        // 429: rate limited; 5xx: Spotify sometimes fails transiently (e.g. currently-playing)
+        if ((status === 429 || status >= 500) && attempt < MAX_RETRIES) {
+            const retryAfter = status === 429 ? Number(error.response.headers['retry-after']) || 1 : 0.5 * (attempt + 1)
             await wait(retryAfter * 1000)
             return spotifyGet(path, authorization, attempt + 1)
         }
@@ -31,5 +33,9 @@ export async function inBatches(tasks, size = 4) {
 
 export function sendSpotifyError(res, error) {
     const status = error.response?.status === 401 ? 401 : 500
+    if (status === 500) {
+        // Visible in the server terminal: Spotify's own reason for the failure
+        console.error('[Spotify]', error.response?.status ?? '', error.config?.url ?? '', error.response?.data?.error ?? error.message)
+    }
     res.status(status).send({ message: status === 401 ? 'Token expired' : 'Spotify request failed' })
 }
