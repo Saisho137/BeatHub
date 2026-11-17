@@ -5,7 +5,7 @@ export default async function handler(req, res) {
     const track = req.query.track
 
     try {
-        const { data } = await axios.get(`https://api.spotify.com/v1/search?q=${track}&type=track`, {
+        const { data } = await axios.get(`https://api.spotify.com/v1/search?q=${track}&type=track&limit=10`, {
             method: 'GET',
             headers: {
                 Authorization: `${headers}`,

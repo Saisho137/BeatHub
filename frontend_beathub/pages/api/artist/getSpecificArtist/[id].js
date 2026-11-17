@@ -13,7 +13,7 @@ export default async function handler(req, res) {
         })
         const artist = {
             name: data.name,
-            genres: data.genres ? data.genres : "Na",
+            genres: data.genres ?? [],
             images: data.images[0] ? data.images[0].url : null
         }
         res.status(200).send({ getSpecificArtist: artist })

@@ -35,8 +35,8 @@ export default function Home() {
       if (token) {
         if (buttonType === 'recommender') {
           router.push('/recommender')
-        } else if (buttonType === 'game') {
-          router.push('/game')
+        } else if (buttonType === 'statistics') {
+          router.push('/statistics')
         }
       } else {
         toast.warning('You are not logged in. Please login to access this functionality.', {
@@ -55,11 +55,11 @@ export default function Home() {
         <div className='row text-center mt-5 ms-5'>
           <div className='col-md-6 p-0'>
             <h1 className='fs-1 mt-5 me-md-5 pe-5'>Dive into a world of music</h1>
-            <h3 className='text-start mx-lg-5 px-lg-5 d-none d-md-block'>Find new music, test your knowledge and learn about yourself with an all-in-one music tool.</h3>
+            <h3 className='text-start mx-lg-5 px-lg-5 d-none d-md-block'>Find new music and learn about yourself with an all-in-one music tool.</h3>
             <div className='row mt-5 p-3 pe-sm-none'>
               <ToastContainer />
               <div className='col-12 d-flex justify-content-center'>
-                <button className={`theme theme-border mx-2 py-3 ${indexStyles.button28} mr-auto ml-auto`} onClick={() => handleClick('game')}>Play</button>
+                <button className={`theme theme-border mx-2 py-3 ${indexStyles.button28} mr-auto ml-auto`} onClick={() => handleClick('statistics')}>Stats</button>
                 <button className={`theme theme-border mx-3 mx-md-5 py-3 ${indexStyles.button28} mr-auto ml-auto`} onClick={() => handleClick('recommender')}>Discover</button>
               </div>
             </div>

@@ -1,6 +1,5 @@
 import statisticsStyles from '../styles/statistics.module.css'
 import Layout from '../components/layout'
-import FeatureBar from '../components/featureBar'
 import axios from 'axios'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
@@ -11,6 +10,7 @@ export default function Statistics() {
     const router = useRouter()
     const [time, setTime] = useState('')
     const [stats, setStats] = useState('')
+    const [error, setError] = useState(false)
 
     async function getStats(token) {
         const headers = {
@@ -20,13 +20,19 @@ export default function Statistics() {
         }
 
         try {
+            setError(false)
             const { data } = await axios.get(`/api/stats/${time}`, headers)
             setStats(data)
         }
         catch (error) {
-            sessionStorage.setItem('callback', 'statistics')
-            sessionStorage.setItem('statisticsTime', time)
-            router.push('/callback')
+            // Only re-login on an expired token; other errors would cause a login loop
+            if (error.response && error.response.status == 401) {
+                sessionStorage.setItem('callback', 'statistics')
+                sessionStorage.setItem('statisticsTime', time)
+                router.push('/callback')
+                return
+            }
+            setError(true)
         }
 
     }
@@ -58,7 +64,12 @@ export default function Statistics() {
                     onClick={() => setTime('long_term')}>All Time</button>
             </div>
 
-            {!stats.user ?
+            {error ?
+                <div className='text-center mt-5 p-5'>
+                    <h1>:(</h1>
+                    <h3>Sorry! Could not load your statistics</h3>
+                </div> :
+            !stats.user ?
                 <div className='d-flex justify-content-center align-items-center' style={{ height: '30em' }}>
                     <div className="spinner-border text-dark d-flex justify-content-center" role="status" style={{ width: '5em', height: '5em' }}>
                     </div>
@@ -77,7 +88,6 @@ export default function Statistics() {
                                 <div className='col-lg-8'>
                                     <div className="card-body">
                                         <h1 className='card-title'>{stats.user.display_name}</h1>
-                                        <p className='card-text'>followers: {stats.user.followers.total}</p>
                                     </div>
                                 </div>
                             </div>
@@ -136,14 +146,6 @@ export default function Statistics() {
                                     </Link>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-
-                    {/* Top songs features average */}
-                    <div className='row text-center border pt-5'>
-                        <h1>Top songs analysis</h1>
-                        <div className='offset-1 col-10 row mt-5'>
-                            {Object.entries(stats.features).map(([name, value]) => <FeatureBar key={name} name={name} value={value} />)}
                         </div>
                     </div>
 

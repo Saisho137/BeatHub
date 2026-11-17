@@ -64,7 +64,6 @@ const Navbar = () => {
             {isLoggedIn && (
               <>
                 <li className='nav-item'><Link className='nav-link' href="/recommender">Recommender</Link></li>
-                <li className='nav-item'><Link className='nav-link' href="/game">Game</Link></li>
                 <li className='nav-item'><Link className='nav-link' href="/statistics">Statistics</Link></li>
               </>
             )}

@@ -42,16 +42,8 @@ const recommender = () => {
             response = response.data.getArtist
           }
           break
-        case "Genre":
-          response = await axios.get(`/api/recommenderItems/getGenre`, { headers })
-          response = response.data.getGenre.genres
-          break
         default:
           break
-      }
-
-      if (category === "Genre" && searchValue !== "") {
-        response = response.filter((genre) => genre.toLowerCase().includes(searchValue.toLowerCase()))
       }
 
       setData(response)
@@ -65,20 +57,18 @@ const recommender = () => {
     }
   }
 
-  const onSelected = async (param) => {
-    try {
-      setCategory(param)
-      setValue('')
-      setData([])
-      fetchData('')
-    } catch (error) {
-      console.log(error)
-    }
+  const onSelected = (param) => {
+    setCategory(param)
+    setValue('')
+    setData([])
   }
 
   const onChange = (event) => {
     const newValue = event.target.value
     setValue(newValue)
+
+    // Genres are searched on submit (Spotify no longer provides a genre list)
+    if (category === "Genre") return
 
     if (newValue === "") {
       setData([])
@@ -131,22 +121,6 @@ const recommender = () => {
     }
   }
 
-  const renderGenres = () => {
-    if (value === "") {
-      return <div></div>
-    } else {
-      return (
-        <ul className="list-group">
-          {Array.isArray(data) && data.map((item) => (
-            <Link className="theme" href={`/genre/${item}`} key={item} style={{ textDecoration: "none" }}>
-              <li className="list-group-item fs-5 fw-semibold theme">♫ {item}</li>
-            </Link>
-          ))}
-        </ul>
-      )
-    }
-  }
-
   return (
     <Layout>
       <div className="container mt-3 pt-5">
@@ -154,7 +128,7 @@ const recommender = () => {
         <div className="row text-center">
           <h2>How to search?</h2>
           <h5 className="">Search by song, artist or genre by changing the category.</h5>
-          <h5 className="mt-2"><span className="fw-bold">Can't find a genre?</span> Write down the genre and click on search.</h5>
+          <h5 className="mt-2"><span className="fw-bold">Looking for a genre?</span> Write down the genre and click on search.</h5>
         </div>
         <div className="row text-center mt-2">
           <div className="col-12">
@@ -210,7 +184,7 @@ const recommender = () => {
 
         <div className="row text-center">
           <div className="col-12 border-top">
-            {category === "Genre" ? renderGenres() : renderTracksAndArtists()}
+            {category !== "Genre" && renderTracksAndArtists()}
           </div>
         </div>
       </div>

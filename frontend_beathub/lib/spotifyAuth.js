@@ -7,7 +7,8 @@
 const CLIENT_ID = process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID
 const AUTH_ENDPOINT = 'https://accounts.spotify.com/authorize'
 const TOKEN_ENDPOINT = 'https://accounts.spotify.com/api/token'
-const SCOPE = 'user-read-private playlist-read-private user-read-currently-playing user-follow-read user-top-read playlist-modify-public playlist-modify-private user-library-modify'
+// Only the scopes still used: profile (GET /me) and top items (GET /me/top/*)
+const SCOPE = 'user-read-private user-top-read'
 const VERIFIER_KEY = 'spotify_code_verifier'
 
 // Must match EXACTLY one of the Redirect URIs registered in the Spotify dashboard.
