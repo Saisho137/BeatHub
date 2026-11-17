@@ -17,8 +17,10 @@ export default function ColumnChart({ data, title, valueName = 'songs' }) {
                 {data.map(({ key, value, tooltip }) => (
                     <div key={key} className={styles.column} tabIndex={0}>
                         <span className={styles.tooltip}>{tooltip}</span>
-                        {key === peakKey && <span className={styles.peakLabel}>{value}</span>}
-                        <div className={styles.bar} style={{ height: max > 0 ? `${(value / max) * 100}%` : 0 }} />
+                        <div className={styles.bar} style={{ height: max > 0 ? `${(value / max) * 100}%` : 0 }}>
+                            {/* Positioned above the bar so it never shortens it */}
+                            {key === peakKey && <span className={styles.peakLabel}>{value}</span>}
+                        </div>
                     </div>
                 ))}
             </div>

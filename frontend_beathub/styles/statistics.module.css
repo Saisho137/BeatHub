@@ -52,6 +52,7 @@
 }
 
 .bar {
+    position: relative;
     width: 60%;
     max-width: 48px;
     min-height: 2px;
@@ -60,9 +61,14 @@
 }
 
 .peakLabel {
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-bottom: 4px;
     font-size: 0.85rem;
     font-weight: 600;
-    margin-bottom: 4px;
+    white-space: nowrap;
 }
 
 .tooltip {

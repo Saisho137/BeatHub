@@ -18,7 +18,7 @@ function TrackHighlight({ title, track, detail }) {
         <div className='col-12 col-md-4 mb-3'>
             <Link href={`/song/${track.id}`} className='card h-100 text-decoration-none theme theme-border'>
                 <h6 className='card-header text-center theme-border'>{title}</h6>
-                <div className={`card-body ${statisticsStyles.trackRow}`}>
+                <div className={`card-body p-3 ${statisticsStyles.trackRow}`}>
                     {track.image && <img src={track.image} alt='' />}
                     <div className='text-start' style={{ minWidth: 0 }}>
                         <div className='fw-semibold text-truncate'>{track.name}</div>
