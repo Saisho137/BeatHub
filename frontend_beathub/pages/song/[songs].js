@@ -6,18 +6,8 @@ import styles from "../../styles/artist.module.css"
 import Layout from "../../components/layout"
 import SpotifyEmbed from '../../components/spotifyEmbed'
 import Link from 'next/link'
+import { formatDuration, formatReleaseDate } from '../../lib/format'
 
-const formatDuration = (ms) => {
-    const totalSeconds = Math.round(ms / 1000)
-    return `${Math.floor(totalSeconds / 60)}:${String(totalSeconds % 60).padStart(2, '0')}`
-}
-
-const formatReleaseDate = (date) => {
-    if (!date) return null
-    // Spotify dates can be "YYYY", "YYYY-MM" or "YYYY-MM-DD"
-    if (date.length < 10) return date.slice(0, 4)
-    return new Date(`${date}T00:00:00`).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
-}
 
 const Songs = () => {
 

@@ -1,7 +1,8 @@
 import statisticsStyles from '../styles/statistics.module.css'
 import Layout from '../components/layout'
 import StatTile from '../components/statTile'
-import DecadeChart from '../components/decadeChart'
+import ColumnChart from '../components/columnChart'
+import { formatDuration, formatHours, formatNumber } from '../lib/format'
 import axios from 'axios'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
@@ -13,14 +14,13 @@ const PERIODS = [
     { key: 'long_term', label: 'All Time' },
 ]
 
-const formatDuration = (ms) => {
-    const totalSeconds = Math.round(ms / 1000)
-    return `${Math.floor(totalSeconds / 60)}:${String(totalSeconds % 60).padStart(2, '0')}`
-}
 
-const formatHours = (minutes) => minutes >= 60
-    ? `${Math.floor(minutes / 60)}h ${minutes % 60}m`
-    : `${minutes}m`
+const decadeData = (decades, total) => decades.map(({ decade, count }) => ({
+    key: decade,
+    label: `'${String(decade).slice(2)}s`,
+    value: count,
+    tooltip: `${decade}s: ${count} ${count === 1 ? 'song' : 'songs'} (${Math.round(100 * count / total)}%)`
+}))
 
 function ChipList({ items, type }) {
     return (
@@ -114,7 +114,11 @@ export default function Statistics() {
                     />
                     <div>
                         <h1 className='mb-0'>{stats.user.display_name}</h1>
-                        <p className={`mb-0 ${statisticsStyles.muted}`}>Your Spotify, in numbers</p>
+                        <p className={`mb-0 ${statisticsStyles.muted}`}>
+                            <Link href='/library' className='theme'>{formatNumber(stats.user.savedTracks)} saved songs</Link>
+                            {' · '}{formatNumber(stats.user.followedArtists)} followed artists
+                            {' · '}{formatNumber(stats.user.playlists)} playlists
+                        </p>
                     </div>
                 </div>
 
@@ -204,7 +208,7 @@ export default function Statistics() {
                                 <div className='col-12 col-lg-8'>
                                     <h2 className={`text-center ${statisticsStyles.sectionTitle}`}>Your decades</h2>
                                     <p className={`text-center ${statisticsStyles.muted}`}>Release decade of your top songs</p>
-                                    <DecadeChart decades={insights.decades} total={insights.trackCount} />
+                                    <ColumnChart title='Songs per decade' data={decadeData(insights.decades, insights.trackCount)} />
                                 </div>
                             </div>
                         )}

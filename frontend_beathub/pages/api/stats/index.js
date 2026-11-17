@@ -1,12 +1,8 @@
 import axios from "axios"
+import { yearOf } from "../../../lib/format"
 
 const PERIODS = ['short_term', 'medium_term', 'long_term']
 const SPOTIFY = 'https://api.spotify.com/v1'
-
-const yearOf = (releaseDate) => {
-    const year = parseInt((releaseDate || '').slice(0, 4), 10)
-    return year > 0 ? year : null
-}
 
 const simplifyTrack = ({ id, name, album, artists }) => ({
     id,
@@ -44,9 +40,14 @@ const computeInsights = (tracks) => {
         totalMinutes: Math.round(totalMs / 60000),
         averageDurationMs: Math.round(totalMs / tracks.length),
         averageYear: years.length ? Math.round(years.reduce((a, b) => a + b, 0) / years.length) : null,
-        decades: Object.entries(decades)
-            .map(([decade, count]) => ({ decade: Number(decade), count }))
-            .sort((a, b) => a.decade - b.decade),
+        // Continuous decade axis: empty decades show as 0 instead of disappearing
+        decades: years.length === 0 ? [] : Array.from(
+            { length: (Math.floor(Math.max(...years) / 10) - Math.floor(Math.min(...years) / 10)) + 1 },
+            (_, i) => {
+                const decade = Math.floor(Math.min(...years) / 10) * 10 + i * 10
+                return { decade, count: decades[decade] || 0 }
+            }
+        ),
         explicitPercent: Math.round(100 * tracks.filter(t => t.explicit).length / tracks.length),
         singlesPercent: Math.round(100 * tracks.filter(t => t.album.album_type === 'single').length / tracks.length),
         uniqueArtists: Object.keys(artistCount).length,
@@ -72,8 +73,11 @@ export default async function handler(req, res) {
     const headers = { headers: { 'Authorization': req.headers.authorization } }
 
     try {
-        const [{ data: me }, ...tops] = await Promise.all([
+        const [{ data: me }, { data: following }, { data: playlists }, { data: library }, ...tops] = await Promise.all([
             axios.get(`${SPOTIFY}/me`, headers),
+            axios.get(`${SPOTIFY}/me/following?type=artist&limit=1`, headers),
+            axios.get(`${SPOTIFY}/me/playlists?limit=1`, headers),
+            axios.get(`${SPOTIFY}/me/tracks?limit=1`, headers),
             ...PERIODS.flatMap(period => [
                 axios.get(`${SPOTIFY}/me/top/tracks?time_range=${period}&limit=50`, headers),
                 axios.get(`${SPOTIFY}/me/top/artists?time_range=${period}&limit=50`, headers)
@@ -107,7 +111,14 @@ export default async function handler(req, res) {
         }
 
         res.status(200).send({
-            user: { id: me.id, display_name: me.display_name, images: me.images },
+            user: {
+                id: me.id,
+                display_name: me.display_name,
+                images: me.images,
+                followedArtists: following.artists.total,
+                playlists: playlists.total,
+                savedTracks: library.total
+            },
             periods,
             comparison
         })

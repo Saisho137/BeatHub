@@ -12,11 +12,13 @@
 .page {
     --chart-bar: #9c439c;
     --chart-muted: #5f5f5f;
+    --chart-track: #ececec;
 }
 
 :global([data-theme="dark"]) .page {
     --chart-bar: #c060c0;
     --chart-muted: #b5b5b5;
+    --chart-track: #2a2a2a;
 }
 
 .muted {
@@ -93,6 +95,18 @@
     display: block;
 }
 
+/* Keep edge tooltips inside the chart */
+.column:first-child .tooltip {
+    left: 0;
+    transform: none;
+}
+
+.column:last-child .tooltip {
+    left: auto;
+    right: 0;
+    transform: none;
+}
+
 .column:hover .bar,
 .column:focus .bar {
     opacity: 0.8;
@@ -140,4 +154,78 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+}
+
+/* Ranked horizontal bar list */
+.barList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.barRow {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+}
+
+.barRank {
+    width: 1.5rem;
+    text-align: right;
+    color: var(--chart-muted);
+    font-weight: 600;
+}
+
+.barBody {
+    flex: 1;
+    min-width: 0;
+}
+
+.barName {
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.barTrack {
+    height: 8px;
+    border-radius: 4px;
+    background: var(--chart-track);
+    margin-top: 4px;
+}
+
+.barFill {
+    height: 100%;
+    min-width: 4px;
+    border-radius: 4px;
+    background: var(--chart-bar);
+}
+
+/* Small "now playing"/recent rows */
+.trackRow {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 0;
+    text-decoration: none;
+}
+
+.trackRow img {
+    width: 48px;
+    height: 48px;
+    border-radius: 6px;
+    object-fit: cover;
+}
+
+.progressTrack {
+    height: 8px;
+    border-radius: 4px;
+    background: var(--chart-track);
+    overflow: hidden;
+}
+
+.progressFill {
+    height: 100%;
+    background: var(--chart-bar);
+    transition: width 0.3s;
 }
