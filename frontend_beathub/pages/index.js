@@ -35,8 +35,8 @@ export default function Home() {
       if (token) {
         if (buttonType === 'recommender') {
           router.push('/recommender')
-        } else if (buttonType === 'game') {
-          router.push('/game')
+        } else if (buttonType === 'statistics') {
+          router.push('/statistics')
         }
       } else {
         toast.warning('You are not logged in. Please login to access this functionality.', {
@@ -51,21 +51,22 @@ export default function Home() {
 
   return (
     <Layout>
-      <div className={`container-fluid text-center m-0 p-0 ${indexStyles.bgTest}`}>
-        <div className='row text-center mt-5 ms-5'>
-          <div className='col-md-6 p-0'>
-            <h1 className='fs-1 mt-5 me-md-5 pe-5'>Dive into a world of music</h1>
-            <h3 className='text-start mx-lg-5 px-lg-5 d-none d-md-block'>Find new music, test your knowledge and learn about yourself with an all-in-one music tool.</h3>
-            <div className='row mt-5 p-3 pe-sm-none'>
+      <div className={`container-fluid m-0 px-0 pt-0 ${indexStyles.hero}`}>
+        <div className='container py-5'>
+          <div className='row align-items-center gy-4 pt-lg-4'>
+            <div className='col-md-6 text-center text-md-start'>
+              <p className='text-muted small text-uppercase fw-semibold mb-2'>Spotify statistics</p>
+              <h1 className='display-4 mb-3' style={{ fontWeight: 900 }}>Your Spotify, in numbers</h1>
+              <p className='fs-5 text-muted mb-4'>Discover your top songs and artists, how your taste changes over time and which decades you really listen to.</p>
               <ToastContainer />
-              <div className='col-12 d-flex justify-content-center'>
-                <button className={`theme theme-border mx-2 py-3 ${indexStyles.button28} mr-auto ml-auto`} onClick={() => handleClick('game')}>Play</button>
-                <button className={`theme theme-border mx-3 mx-md-5 py-3 ${indexStyles.button28} mr-auto ml-auto`} onClick={() => handleClick('recommender')}>Discover</button>
+              <div className='d-flex flex-wrap gap-3 justify-content-center justify-content-md-start'>
+                <button className='btn main-color btn-lg' onClick={() => handleClick('statistics')}>My Stats</button>
+                <button className='btn btn-soft btn-lg' onClick={() => handleClick('recommender')}>Explore</button>
               </div>
             </div>
-          </div>
-          <div className="col-md-6" style={{ marginBottom: '50px' }}>
-            <img src='/images/cat-music.png' className={`img-fluid ${indexStyles.homeImage}`} style={{position: 'relative', zIndex:'1'}} alt='cat with headphones' />
+            <div className='col-md-6 text-center'>
+              <img src='/images/cat-music.png' className={`img-fluid ${indexStyles.homeImage}`} alt='cat with headphones' />
+            </div>
           </div>
         </div>
       </div>

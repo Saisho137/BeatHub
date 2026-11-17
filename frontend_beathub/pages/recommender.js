@@ -2,7 +2,7 @@ import Layout from "../components/layout"
 import { useEffect, useState } from "react"
 import axios from 'axios'
 import Link from "next/link"
-import recoStyles from "../styles/recommender.module.css"
+import statisticsStyles from "../styles/statistics.module.css"
 import { useRouter } from 'next/router'
 import { toast, ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
@@ -42,16 +42,14 @@ const recommender = () => {
             response = response.data.getArtist
           }
           break
-        case "Genre":
-          response = await axios.get(`/api/recommenderItems/getGenre`, { headers })
-          response = response.data.getGenre.genres
+        case "Album":
+          if (searchValue !== "") {
+            response = await axios.get(`/api/recommenderItems/getAlbum/${searchValue}`, { headers })
+            response = response.data.getAlbum
+          }
           break
         default:
           break
-      }
-
-      if (category === "Genre" && searchValue !== "") {
-        response = response.filter((genre) => genre.toLowerCase().includes(searchValue.toLowerCase()))
       }
 
       setData(response)
@@ -65,20 +63,18 @@ const recommender = () => {
     }
   }
 
-  const onSelected = async (param) => {
-    try {
-      setCategory(param)
-      setValue('')
-      setData([])
-      fetchData('')
-    } catch (error) {
-      console.log(error)
-    }
+  const onSelected = (param) => {
+    setCategory(param)
+    setValue('')
+    setData([])
   }
 
   const onChange = (event) => {
     const newValue = event.target.value
     setValue(newValue)
+
+    // Genres are searched on submit (Spotify no longer provides a genre list)
+    if (category === "Genre") return
 
     if (newValue === "") {
       setData([])
@@ -103,116 +99,78 @@ const recommender = () => {
     }
   }
 
-  const renderTracksAndArtists = () => {
-    if (value === "") {
-      return <div></div>
-    } else {
-      return (
-        <ul className="list-group">
-          {Array.isArray(data) && data.map((item) => (
-            <Link className="theme" href={category === "Song" ? `/song/${item.id}` : `/artist/${item.id}`} key={item.id} style={{ textDecoration: "none" }}>
-              <li className="row list-group-item align-items-center theme theme-border" key={item.id}>
-                <div className="col-auto d-flex align-items-center">
-                  <div className={`m-0 ${recoStyles.searchPicContainer}`}>
-                    <img
-                      className={`img-thumbnail ${recoStyles.searchPic} ${category === "Artist" ? "rounded-circle" : ""}`}
-                      src={item.images ? item.images : "/images/person-circle.svg"}
-                    />
-                  </div>
-                  <div className="ms-3">
-                    <span className="fs-5 fw-semibold">{item.name}</span>
-                  </div>
-                </div>
-              </li>
-            </Link>
-          ))}
-        </ul>
-      )
-    }
-  }
+  const CATEGORIES = ["Song", "Artist", "Album", "Genre"]
 
-  const renderGenres = () => {
-    if (value === "") {
-      return <div></div>
-    } else {
-      return (
-        <ul className="list-group">
-          {Array.isArray(data) && data.map((item) => (
-            <Link className="theme" href={`/genre/${item}`} key={item} style={{ textDecoration: "none" }}>
-              <li className="list-group-item fs-5 fw-semibold theme">♫ {item}</li>
-            </Link>
-          ))}
-        </ul>
-      )
-    }
+  const renderTracksAndArtists = () => {
+    if (value === "" || !Array.isArray(data) || data.length === 0) return null
+    return (
+      <div className="card theme theme-border px-3 text-start">
+        {data.map((item, index) => (
+          <Link
+            key={item.id}
+            href={`/${{ Song: 'song', Artist: 'artist', Album: 'album' }[category]}/${item.id}`}
+            className={`theme ${index > 0 ? 'border-top theme-border' : ''} ${statisticsStyles.trackRow}`}
+          >
+            <img
+              src={item.images ? item.images : "/images/person-circle.svg"}
+              style={category === "Artist" ? { borderRadius: '50%' } : undefined}
+              alt=""
+            />
+            <span className="fw-semibold text-truncate">{item.name}</span>
+          </Link>
+        ))}
+      </div>
+    )
   }
 
   return (
     <Layout>
-      <div className="container mt-3 pt-5">
-      <ToastContainer />
-        <div className="row text-center">
-          <h2>How to search?</h2>
-          <h5 className="">Search by song, artist or genre by changing the category.</h5>
-          <h5 className="mt-2"><span className="fw-bold">Can't find a genre?</span> Write down the genre and click on search.</h5>
+      <div className={`container py-4 py-lg-5 ${statisticsStyles.page}`} style={{ maxWidth: '760px' }}>
+        <ToastContainer />
+        <div className="text-center mb-4">
+          <h1>Explore</h1>
+          <p className="text-muted mb-1">Search by song, artist, album or genre by changing the category.</p>
+          <p className="text-muted"><span className="fw-semibold">Looking for a genre?</span> Write down the genre and click on search.</p>
         </div>
-        <div className="row text-center mt-2">
-          <div className="col-12">
-            <div className="input-group mb-3 theme theme-border">
-              <input
-                type="text"
-                value={value}
-                onChange={onChange}
-                className="form-control theme theme-border"
-                aria-label="search"
-                id="searchInput"
-              />
-              <button
-                className="btn btn-outline-secondary dropdown-toggle theme"
-                type="button"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
-              >
-                {category}
-              </button>
-              <ul className="dropdown-menu theme theme-border">
-                <li>
-                  <a className="dropdown-item theme" href="#" onClick={() => onSelected("Song")}>
-                    Song
-                  </a>
-                </li>
-                <li>
-                  <a className="dropdown-item theme" href="#" onClick={() => onSelected("Artist")}>
-                    Artist
-                  </a>
-                </li>
-                <li>
-                  <a className="dropdown-item theme" href="#" onClick={() => onSelected("Genre")}>
-                    Genre
-                  </a>
-                </li>
-              </ul>
-            </div>
+        <div className="input-group mb-3">
+          <input
+            type="text"
+            value={value}
+            onChange={onChange}
+            onKeyDown={(event) => { if (category === "Genre" && event.key === "Enter") searchGenre() }}
+            className="form-control theme theme-border"
+            placeholder={`Search ${category.toLowerCase()}s…`}
+            aria-label="search"
+            id="searchInput"
+          />
+          <button
+            className="btn btn-soft dropdown-toggle"
+            style={{ borderRadius: '0 999px 999px 0' }}
+            type="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            {category}
+          </button>
+          <ul className="dropdown-menu dropdown-menu-end">
+            {CATEGORIES.map(option =>
+              <li key={option}>
+                <a className={`dropdown-item ${option === category ? 'active' : ''}`} href="#" onClick={(event) => { event.preventDefault(); onSelected(option) }}>
+                  {option}
+                </a>
+              </li>
+            )}
+          </ul>
+        </div>
+        {category === "Genre" && (
+          <div className="text-center">
+            <button className="btn main-color mb-3 mt-2" onClick={() => searchGenre()}>
+              Search
+            </button>
           </div>
-        </div>
-        {category === "Genre"?
-          (
-            <div className="row text-center">
-              <div className="col-12">
-                <button className="btn mb-3 mt-2 btn-primary main-color main-border" onClick={() => searchGenre()}>
-                Search
-                </button>
-              </div>
-            </div>
-          ):
-          ""
-        }
+        )}
 
-        <div className="row text-center">
-          <div className="col-12 border-top">
-            {category === "Genre" ? renderGenres() : renderTracksAndArtists()}
-          </div>
-        </div>
+        {category !== "Genre" && renderTracksAndArtists()}
       </div>
     </Layout>
   )

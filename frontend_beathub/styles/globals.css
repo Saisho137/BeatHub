@@ -1,57 +1,390 @@
+/* ===== Design tokens ===== */
 :root {
-    --transition-duration: 0.5s;
-    --body_background: white;
-    --body-color: black;
-    --link_color: black;
-    --border_color: black;
-    --time_btn_color: white;
-    --time_btn_color_on: gray;
+    --transition-duration: 0.3s;
+    --radius: 16px;
+    --radius-sm: 10px;
+
+    /* Light theme */
+    --body_background: #f4f5f7;
+    --surface: #ffffff;
+    --surface-2: #eceef1;
+    --body_color: #16181c;
+    --link_color: #16181c;
+    --muted: #5f6368;
+    --border_color: rgba(0, 0, 0, 0.08);
+    --header-bg: rgba(255, 255, 255, 0.82);
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 4px 16px rgba(0, 0, 0, 0.04);
+    --time_btn_color: transparent;
+
+    /* Spotify green; text on it must be black (white fails contrast) */
+    --brand: #1DB954;
+    --brand-hover: #1ED760;
+    --on-brand: #000000;
+    --brand-soft: rgba(29, 185, 84, 0.12);
 }
-  
+
 [data-theme="dark"] {
-    --body_background: #121212;
-    --body_color: white;
-    --link_color: white;
-    --border_color: gray;
-    --time_btn_color: #121212;
-    --time_btn_color_on: gray;
+    --body_background: #0f0f11;
+    --surface: #18181b;
+    --surface-2: #242428;
+    --body_color: #f1f1f3;
+    --link_color: #f1f1f3;
+    --muted: #a1a1aa;
+    --border_color: rgba(255, 255, 255, 0.08);
+    --header-bg: rgba(15, 15, 17, 0.82);
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 4px 16px rgba(0, 0, 0, 0.25);
+    --brand-soft: rgba(29, 185, 84, 0.16);
+}
+
+/* Keep Bootstrap components in sync with our tokens */
+:root, [data-theme] {
+    --bs-body-bg: var(--body_background);
+    --bs-body-color: var(--body_color);
+    --bs-border-color: var(--border_color);
+    --bs-secondary-color: var(--muted);
+    --bs-tertiary-bg: var(--surface-2);
+    --bs-border-radius: var(--radius-sm);
+    --bs-border-radius-lg: var(--radius);
+    --bs-link-color-rgb: 29, 185, 84;
 }
 
 body {
     overflow-x: hidden;
-}
-
-.theme {
-    background-color: var(--body_background) !important;
-    color: var(--body_color) !important;
-    transition: background-color var(--transition-duration), color var(--transition-duration);
-}
-  
-.theme-border {
-    border-color: var(--border_color) !important;
-    transition: border-color var(--transition-duration);
-}
-
-.main-color{
-    background-color: #9c439c !important;
-}
-
-.main-border{
-    border-color: #9c439c !important;
-}
-
-.time-btn-on {
-    background-color: var(--time_btn_color_on) !important;
-}
-
-.time-btn-off {
-    background-color: var(--time_btn_color) !important;
+    font-family: var(--font-roboto), system-ui, sans-serif;
+    background-color: var(--body_background);
+    color: var(--body_color);
 }
 
 .font {
-    font-family: fredoka !important;
+    font-family: var(--font-roboto), system-ui, sans-serif !important;
 }
 
 h1, h2 {
-    font-family: Bungee;
+    font-family: var(--font-roboto), system-ui, sans-serif;
+    font-weight: 900;
+    letter-spacing: -0.02em;
+}
+
+a {
+    color: inherit;
+}
+
+/* ===== Theme helpers (used across pages) ===== */
+.theme {
+    background-color: var(--body_background) !important;
+    color: var(--body_color) !important;
+    transition: background-color var(--transition-duration), color var(--transition-duration), border-color var(--transition-duration);
+}
+
+.theme-border,
+.border-dark {
+    border-color: var(--border_color) !important;
+}
+
+.text-muted {
+    color: var(--muted) !important;
+}
+
+/* ===== Cards & lists: elevated surfaces ===== */
+.card {
+    border-radius: var(--radius);
+    border: 1px solid var(--border_color);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+}
+
+.card.theme,
+.card .theme,
+.dropdown-menu.theme,
+.list-group-item.theme {
+    background-color: var(--surface) !important;
+}
+
+a.card {
+    transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+}
+
+a.card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(29, 185, 84, 0.5) !important;
+}
+
+.card-header {
+    background: transparent;
+    border-bottom: 1px solid var(--border_color);
+    padding: 0.85rem 1rem;
+}
+
+.card-footer {
+    background: transparent;
+    border-top: 1px solid var(--border_color);
+}
+
+.card-img-top {
+    border-radius: 0;
+}
+
+.list-group {
+    border-radius: var(--radius);
+    overflow: hidden;
+}
+
+.list-group-item {
+    border-color: var(--border_color) !important;
+    padding: 0.75rem 1rem;
+}
+
+/* Tag pills (genres, artists on a song) */
+.bg-light.theme {
+    background-color: var(--surface-2) !important;
+    border-radius: 999px !important;
+    padding: 0.4rem 0.9rem !important;
+}
+
+/* ===== Buttons ===== */
+.main-color {
+    background-color: var(--brand) !important;
+    color: var(--on-brand) !important;
+    font-weight: 600;
+}
+
+.btn.main-color {
+    border: 0;
+    border-radius: 999px;
+    padding: 0.55rem 1.25rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+a.main-color:hover,
+button.main-color:hover {
+    background-color: var(--brand-hover) !important;
+}
+
+.main-border {
+    border-color: var(--brand) !important;
+}
+
+.btn-soft {
+    background-color: var(--surface-2);
+    color: var(--body_color);
+    border: 1px solid var(--border_color);
+    border-radius: 999px;
+    padding: 0.55rem 1.25rem;
+    font-weight: 600;
+}
+
+.btn-soft:hover {
+    background-color: var(--brand-soft);
+    color: var(--body_color);
+    border-color: rgba(29, 185, 84, 0.5);
+}
+
+/* Period selector */
+.time-btn-on,
+.time-btn-off {
+    border: 0 !important;
+    padding: 0.5rem 1rem;
+    font-weight: 600;
+}
+
+.time-btn-on {
+    background-color: var(--brand) !important;
+    color: var(--on-brand) !important;
+}
+
+.time-btn-off {
+    background-color: transparent !important;
+    color: var(--muted) !important;
+}
+
+.time-btn-off:hover {
+    color: var(--body_color) !important;
+}
+
+/* ===== Forms ===== */
+.form-control.theme {
+    background-color: var(--surface) !important;
+    border-radius: 999px 0 0 999px;
+    padding: 0.65rem 1.1rem;
+}
+
+.form-control:focus {
+    border-color: var(--brand) !important;
+    box-shadow: 0 0 0 0.2rem var(--brand-soft);
+}
+
+.dropdown-menu {
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border_color);
+    box-shadow: var(--shadow);
+    padding: 0.4rem;
+}
+
+.dropdown-item {
+    border-radius: 8px;
+    padding: 0.45rem 0.75rem;
+}
+
+/* ===== Header ===== */
+.app-header {
+    background-color: var(--header-bg);
+    backdrop-filter: saturate(180%) blur(12px);
+    -webkit-backdrop-filter: saturate(180%) blur(12px);
+    border-bottom: 1px solid var(--border_color);
+}
+
+.app-header .navbar {
+    padding: 0.6rem 0;
+}
+
+.app-header .navbar-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-weight: 900;
+    letter-spacing: -0.02em;
+    color: var(--body_color);
+}
+
+.app-header .nav-link {
+    color: var(--muted);
+    font-weight: 500;
+    border-radius: 999px;
+    padding: 0.4rem 0.9rem !important;
+    transition: color 0.2s, background-color 0.2s;
+}
+
+.app-header .nav-link:hover {
+    color: var(--body_color);
+}
+
+.app-header .nav-link.active {
+    color: var(--body_color);
+    background-color: var(--surface-2);
+}
+
+.app-header .navbar-toggler {
+    border: 1px solid var(--border_color);
+    border-radius: var(--radius-sm);
+    padding: 0.4rem 0.6rem;
+}
+
+.app-header .navbar-toggler:focus {
+    box-shadow: 0 0 0 0.2rem var(--brand-soft);
+}
+
+.icon-button {
+    width: 40px;
+    height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: 1px solid var(--border_color);
+    background-color: var(--surface-2);
+    color: var(--body_color);
+    transition: background-color 0.2s, border-color 0.2s;
+}
+
+.icon-button:hover {
+    background-color: var(--brand-soft);
+    border-color: rgba(29, 185, 84, 0.5);
+}
+
+.user-menu {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.25rem 0.75rem 0.25rem 0.25rem;
+    border-radius: 999px;
+    border: 1px solid var(--border_color);
+    background-color: var(--surface-2);
+    color: var(--body_color);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.user-menu img {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+/* Now playing strip (below the navbar, inside the header) */
+.now-playing-bar {
+    border-top: 1px solid var(--border_color);
+    font-size: 0.9rem;
+}
+
+.now-playing-bar a {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.45rem 0;
+    text-decoration: none;
+    min-width: 0;
+}
+
+.equalizer {
+    display: inline-flex;
+    align-items: flex-end;
+    gap: 2px;
+    height: 14px;
+    flex-shrink: 0;
+}
+
+.equalizer span {
+    width: 3px;
+    height: 100%;
+    border-radius: 2px;
+    background-color: var(--brand);
+    transform-origin: bottom;
+    animation: equalize 1s ease-in-out infinite;
+}
+
+.equalizer span:nth-child(2) { animation-delay: -0.4s; }
+.equalizer span:nth-child(3) { animation-delay: -0.7s; }
+
+.equalizer.paused span {
+    animation-play-state: paused;
+    transform: scaleY(0.35);
+}
+
+@keyframes equalize {
+    0%, 100% { transform: scaleY(0.35); }
+    50% { transform: scaleY(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .equalizer span { animation: none; transform: scaleY(0.6); }
+}
+
+/* ===== Footer ===== */
+.app-footer {
+    background-color: var(--surface);
+    border-top: 1px solid var(--border_color);
+    color: var(--muted);
+}
+
+.app-footer h5 {
+    color: var(--body_color);
+    font-weight: 900;
+}
+
+.app-footer a {
+    color: var(--muted);
+    text-decoration: none;
+}
+
+.app-footer a:hover {
+    color: var(--brand);
+}
+
+/* Lists inside cards stay flush */
+.list-group-flush {
+    border-radius: 0;
 }

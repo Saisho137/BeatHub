@@ -5,7 +5,7 @@ export default async function handler(req, res) {
     const genre = req.query.genre
 
     try {
-        const { data } = await axios.get(`https://api.spotify.com/v1/search?q=genre:${genre}&type=artist`, {
+        const { data } = await axios.get(`https://api.spotify.com/v1/search?q=genre:${genre}&type=artist&limit=10`, {
             method: 'GET',
             headers: {
                 Authorization: `${headers}`,
@@ -14,7 +14,7 @@ export default async function handler(req, res) {
         const artist = data.artists.items.map(artists => ({
             name: artists.name,
             id: artists.id,
-            images: artists.images[0].url
+            images: artists.images[0] ? artists.images[0].url : null
         }))
         res.status(200).send({ getTopArtistGenre: artist })
     } catch (error) {

@@ -1,15 +1,255 @@
-.paddingDiv {
-    padding-top: 6em;
+/* Chart color: validated for contrast on both surfaces */
+.page {
+    --chart-bar: #15883e;
+    --chart-muted: var(--muted);
+    --chart-track: var(--surface-2);
 }
-  
-@media (max-width: 767px) {
-    .paddingDiv {
-      padding-top: 4em;
-    }
+
+:global([data-theme="dark"]) .page {
+    --chart-bar: #1db054;
+    --chart-muted: var(--muted);
+    --chart-track: var(--surface-2);
 }
-  
-@media (min-width: 768px) {
-    .paddingDiv {
-      padding-top: 6empx;
-    }
+
+.muted {
+    color: var(--chart-muted);
+}
+
+.tile {
+    justify-content: center;
+}
+
+.tileValue {
+    font-weight: 900;
+    font-size: 1.8rem;
+    line-height: 1.1;
+}
+
+.sectionTitle {
+    margin-top: 3rem;
+    margin-bottom: 1.5rem;
+}
+
+/* Decade column chart */
+.chart {
+    display: flex;
+    align-items: flex-end;
+    gap: 2px;
+    height: 220px;
+    padding-top: 1.75rem;
+    border-bottom: 1px solid var(--chart-muted);
+}
+
+.column {
+    position: relative;
+    flex: 1;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+    outline: none;
+}
+
+.bar {
+    position: relative;
+    width: 60%;
+    max-width: 48px;
+    min-height: 2px;
+    background: var(--chart-bar);
+    border-radius: 4px 4px 0 0;
+}
+
+.peakLabel {
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-bottom: 4px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.tooltip {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    background: #1a1a1a;
+    color: white;
+    z-index: 2;
+}
+
+.column:hover .tooltip,
+.column:focus .tooltip {
+    display: block;
+}
+
+/* Keep edge tooltips inside the chart */
+.column:first-child .tooltip {
+    left: 0;
+    transform: none;
+}
+
+.column:last-child .tooltip {
+    left: auto;
+    right: 0;
+    transform: none;
+}
+
+.column:hover .bar,
+.column:focus .bar {
+    opacity: 0.8;
+}
+
+.axis {
+    display: flex;
+    gap: 2px;
+    font-size: 0.8rem;
+    color: var(--chart-muted);
+}
+
+.axis span {
+    flex: 1;
+    text-align: center;
+}
+
+/* Horizontal list of small items (artists / tracks) */
+.chipList {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    justify-content: center;
+}
+
+.chip {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.35rem 0.75rem 0.35rem 0.35rem;
+    border: 1px solid;
+    border-radius: 999px;
+    text-decoration: none;
+    max-width: 100%;
+}
+
+.chip img {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.chip span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Ranked horizontal bar list */
+.barList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.barRow {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+}
+
+.barRank {
+    width: 1.5rem;
+    text-align: right;
+    color: var(--chart-muted);
+    font-weight: 600;
+}
+
+.barBody {
+    flex: 1;
+    min-width: 0;
+}
+
+.barName {
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.barTrack {
+    height: 8px;
+    border-radius: 4px;
+    background: var(--chart-track);
+    margin-top: 4px;
+}
+
+.barFill {
+    height: 100%;
+    min-width: 4px;
+    border-radius: 4px;
+    background: var(--chart-bar);
+}
+
+/* Small "now playing"/recent rows */
+.trackRow {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 0;
+    text-decoration: none;
+}
+
+.trackRow img {
+    width: 48px;
+    height: 48px;
+    border-radius: 6px;
+    object-fit: cover;
+}
+
+.progressTrack {
+    height: 8px;
+    border-radius: 4px;
+    background: var(--chart-track);
+    overflow: hidden;
+}
+
+.progressFill {
+    height: 100%;
+    background: var(--chart-bar);
+    transition: width 0.3s;
+}
+
+/* Period selector: sticky segmented control right under the header */
+.periodBar {
+    position: sticky;
+    top: calc(var(--header-height, 64px) + 0.75rem);
+    z-index: 10;
+    display: flex;
+    justify-content: center;
+    margin-top: 1.5rem;
+}
+
+.segmented {
+    display: inline-flex;
+    gap: 0.25rem;
+    padding: 0.3rem;
+    border-radius: 999px;
+    background-color: var(--surface);
+    border: 1px solid var(--border_color);
+    box-shadow: var(--shadow);
+}
+
+.chip:global(.theme) {
+    background-color: var(--surface) !important;
+}
+
+.chip:hover {
+    border-color: rgba(29, 185, 84, 0.5) !important;
 }

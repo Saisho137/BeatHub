@@ -2,8 +2,10 @@ import axios from 'axios'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
-import PreviewSong from '../../components/previewSong'
 import Layout from '../../components/layout'
+import BackLink from '../../components/backLink'
+import PageLoader from '../../components/pageLoader'
+import statisticsStyles from '../../styles/statistics.module.css'
 
 export async function getServerSideProps(context) {
     const { id } = context.params
@@ -18,24 +20,8 @@ export async function getServerSideProps(context) {
 export default function GenrePage({ id }) {
 
     const router = useRouter()
-    const [genres, setGenres] = useState([])
     const [tracks, setTracks] = useState('')
     const [artists, setArtists] = useState('')
-    const [isPlaying, setIsPlaying] = useState(false)
-
-    async function getGenres(headers) {
-        try {
-            const { data: { getGenre: { genres } } } = await axios.get('/api/recommenderItems/getGenre', headers)
-            setGenres(genres)
-        }
-        catch (error) {
-            if (error.response && error.response.status == 401) {
-                sessionStorage.setItem('callback', `genre/${id}`)
-                router.push('/callback')
-                return
-            }
-        }
-    }
 
     async function getGenresTopTracks(headers) {
         try {
@@ -48,6 +34,7 @@ export default function GenrePage({ id }) {
                 router.push('/callback')
                 return
             }
+            setTracks([])
         }
     }
 
@@ -62,13 +49,11 @@ export default function GenrePage({ id }) {
                 router.push('/callback')
                 return
             }
+            setArtists([])
         }
     }
 
     useEffect(() => {
-
-        router.events.on('routeChangeStart', () => setIsPlaying(false))
-
         const token = sessionStorage.getItem('token')
 
         const headers = {
@@ -77,35 +62,24 @@ export default function GenrePage({ id }) {
             }
         }
 
-        getGenres(headers)
         getGenresTopTracks(headers)
         getGenresTopArtists(headers)
 
-    }, [id, router])
+    }, [id])
 
     /* While the page gets a response from API */
     if (typeof tracks != 'object' || typeof artists != 'object') {
-        return (
-            <Layout>
-                <div className='d-flex justify-content-center align-items-center' style={{ height: '30em' }}>
-                    <div className="spinner-border text-dark d-flex justify-content-center" role="status" style={{ width: '5em', height: '5em' }}>
-                    </div>
-                </div>
-            </Layout>
-        )
+        return <PageLoader />
     }
 
     /* If API made a response but there were no artists or tracks */
-    if (!tracks[0] && !artists[0] && genres[0]) {
+    if (!tracks[0] && !artists[0]) {
         return (
             <Layout>
-                <div className='row justify-content-center text-center mt-5 p-5 theme theme-border'>
+                <div className='container py-5 text-center'>
                     <h1>:(</h1>
-                    <h1>Sorry! Could not find the genre</h1>
-                    <Link href='/recommender' className='m-3 col-2 p-1 btn btn-success main-color main-border'>
-                        <img src='/images/arrow-up-circle-fill-white.svg' className='float-start ms-2 mt-1' style={{ transform: 'rotate(270deg)' }} />
-                        Search More
-                    </Link>
+                    <h2 className='mb-4'>Sorry! Could not find the genre</h2>
+                    <BackLink />
                 </div>
             </Layout>
         )
@@ -113,85 +87,53 @@ export default function GenrePage({ id }) {
 
     return (
         <Layout>
-            <div className='row text-center offset-1 col-10 mt-5 border'>
+            <div className={`container py-4 py-lg-5 ${statisticsStyles.page}`}>
+                <BackLink />
+                <div className='text-center mt-3 mb-4'>
+                    <p className='text-muted small text-uppercase fw-semibold mb-1'>Genre</p>
+                    <h1 className='text-capitalize mb-0'>{id}</h1>
+                </div>
 
-                <Link href='/recommender' className='m-3 col-2 p-1 btn btn-success main-color main-border'>
-                    <img src='/images/arrow-up-circle-fill-white.svg' className='float-start ms-2 mt-1' style={{ transform: 'rotate(270deg)' }} />
-                    Search More
-                </Link>
-
-                <h1 className='text-capitalize'>{id}</h1>
-
-                {/* Top tracks list */}
-                <div className='offset-xl-1 col-xl-5 mt-5 mb-5 border-end'>
-                    <h3 className='mb-5'>Top Tracks</h3>
-                    {tracks[0]
-                        ? tracks.map(track =>
-                            <div key={track.id} className='card col-10 mb-3 theme theme-border'>
-                                <div className='row g-0 d-flex align-items-center'>
-                                    <Link href={`/song/${track.id}`} className='col-2 text-decoration-none'>
-                                        <img src={track.images} className='img-fluid rounded-start' alt='Album picture' />
+                <div className='row g-4'>
+                    {/* Top tracks list */}
+                    <div className='col-12 col-xl-6'>
+                        <h3 className='mb-3'>Top Tracks</h3>
+                        {tracks[0]
+                            ? <div className='card theme theme-border px-3'>
+                                {tracks.map((track, index) =>
+                                    <Link key={track.id} href={`/song/${track.id}`} className={`theme ${index > 0 ? 'border-top theme-border' : ''} ${statisticsStyles.trackRow}`}>
+                                        <img src={track.images} alt='' />
+                                        <div style={{ minWidth: 0 }}>
+                                            <div className='fw-semibold text-truncate'>{track.name}</div>
+                                            <div className='small text-muted text-truncate'>{track.artist}</div>
+                                        </div>
                                     </Link>
-                                    <Link href={`/song/${track.id}`} className='col-8 card-body text-decoration-none'>
-                                        <h6 className='text-start card-title'>{track.name}</h6>
-                                        <p className='text-start card-text text-muted theme'>{track.artist}</p>
-                                    </Link>
-                                    <div className='col-2 h-100'>
-                                        <PreviewSong preview={track.preview} isPlaying={isPlaying} setIsPlaying={setIsPlaying} />
-                                    </div>
-                                </div>
+                                )}
                             </div>
-                        )
-                        : <div className='card row justify-content-center text-center p-3 theme theme-border'>
-                            <h4>:(</h4>
-                            <p className='fs-5'>Sorry! Could not find related tracks</p>
-                        </div>}
-                </div>
-
-                {/* Top artists list */}
-                <div className='col-xl-6 mt-5 mb-5 border-start'>
-                    <h3 className='mb-5'>Top Artists</h3>
-                    <div className='offset-1 col-10 row justify-content-center'>
-                        {artists[0]
-                            ? artists.map(artist =>
-                                <Link
-                                    key={artist.id}
-                                    href={`/artist/${artist.id}`}
-                                    className='text-decoration-none text-dark card col-5 col-md-4 col-xl-3 m-2 p-0'>
-                                    <img
-                                        src={artist.images ? artist.images : '/images/person-circle.svg'}
-                                        className='card-img-top h-100'
-                                        alt='Artist image' />
-                                    <div className='card-body theme'>
-                                        <h6 className='card-title'>{artist.name}</h6>
-                                    </div>
-                                </Link>
-                            )
-                            : <div className='card row justify-content-center text-center p-3 theme theme-border'>
-                                <h4>:(</h4>
-                                <p className='fs-5'>Sorry! Could not find related artists</p>
-                            </div>}
+                            : <p className='text-muted'>Sorry! Could not find related tracks</p>}
                     </div>
-                </div>
 
-                {/* More genres map */}
-                <h3 className='mb-5'>More Genres</h3>
-                <div className='row text-center pb-5'>
-                    <div className='offset-2 col-8'>
-                        {genres.map((genre) =>
-                            <Link
-                                key={genre}
-                                href={`/genre/${genre}`}
-                                className='text-decoration-none text-dark'
-                                replace>
-                                <p className='bg-light border border-dark d-inline-block p-2 m-1 rounded theme theme-border' >
-                                    {genre}
-                                </p>
-                            </Link>
-                        )}
+                    {/* Top artists list */}
+                    <div className='col-12 col-xl-6'>
+                        <h3 className='mb-3'>Top Artists</h3>
+                        {artists[0]
+                            ? <div className='row g-3'>
+                                {artists.map(artist =>
+                                    <div key={artist.id} className='col-6 col-md-4'>
+                                        <Link href={`/artist/${artist.id}`} className='card h-100 text-decoration-none theme theme-border'>
+                                            <img src={artist.images ? artist.images : '/images/person-circle.svg'}
+                                                className='card-img-top' style={{ aspectRatio: '1', objectFit: 'cover' }} alt='' />
+                                            <div className='card-body p-3'>
+                                                <h6 className='card-title mb-0 text-truncate'>{artist.name}</h6>
+                                            </div>
+                                        </Link>
+                                    </div>
+                                )}
+                            </div>
+                            : <p className='text-muted'>Sorry! Could not find related artists</p>}
                     </div>
                 </div>
             </div>
         </Layout>
     )
-} 
+}

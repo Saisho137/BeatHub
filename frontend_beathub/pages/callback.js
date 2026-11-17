@@ -1,31 +1,46 @@
 import { useRouter } from 'next/router'
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
+import { redirectToSpotifyLogin, exchangeCodeForToken } from '../lib/spotifyAuth'
 
 export default function Callback() {
     const router = useRouter()
-
-    const CLIENT_ID = '39dd8906e8044b7eb1715c1a4a1867e7'
-    const REDIRECT_URI = "beat-hub-two.vercel.app/callback"
-    const AUTH_ENDPOINT = 'https://accounts.spotify.com/authorize'
-    const RESPONSE_TYPE = 'token'
-    const SCOPE = 'user-read-private playlist-read-private user-read-currently-playing user-follow-read user-top-read playlist-modify-public playlist-modify-private user-library-modify'
-
-    const url = `${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=${RESPONSE_TYPE}&scope=${encodeURIComponent(SCOPE)}`
+    const handled = useRef(false)
 
     useEffect(() => {
-        const getToken = async () => {
-            const hash = window.location.hash
-            if (!hash) {
-                router.replace(url)
-            } else {
-                const urlParams = new URLSearchParams(hash.replace('#', '?'))
-                const token = urlParams.get('access_token')
-                sessionStorage.setItem('token', token)
-                const callbackUrl = sessionStorage.getItem('callback')
-                await router.push(`/${callbackUrl}`)
+        // The authorization code can only be used once; avoid double execution
+        if (handled.current) return
+        handled.current = true
+
+        const handleCallback = async () => {
+            const params = new URLSearchParams(window.location.search)
+            const code = params.get('code')
+            const error = params.get('error')
+
+            if (error) {
+                console.error('Spotify authorization error:', error)
+                await router.replace('/')
+                return
+            }
+
+            if (!code) {
+                // Pages redirect here when the token is missing/expired: start login
+                await redirectToSpotifyLogin()
+                return
+            }
+
+            try {
+                await exchangeCodeForToken(code)
+                const callbackUrl = sessionStorage.getItem('callback') || 'statistics'
+                sessionStorage.removeItem('callback')
+                await router.replace(`/${callbackUrl}`)
+            } catch (err) {
+                console.error(err)
+                await router.replace('/')
             }
         }
 
-        getToken()
+        handleCallback()
     }, [])
+
+    return null
 }
