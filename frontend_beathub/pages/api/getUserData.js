@@ -1,25 +1,15 @@
-import axios from "axios"
+import { spotifyGet, sendSpotifyError } from '../../lib/spotifyApi'
 
 export default async function handler(req, res) {
-    const token = req.headers.authorization
-    const headers = {
-        headers: {
-            'Authorization': token
-        }
-    }
-
     try {
-        const { data: { display_name, images, id } } = await axios.get('https://api.spotify.com/v1/me', headers)
-
-        const image = images.length > 0 ? images[0].url : null
-
+        const { display_name, images, id } = await spotifyGet('/me', req.headers.authorization)
         res.status(200).send({
             username: display_name,
-            image: image,
-            id: id
+            image: images.length > 0 ? images[0].url : null,
+            id
         })
-
     } catch (error) {
-        res.status(401).send({ message: 'token expired' })
+        // Real status: 401 (session expired), 429 (rate limited) or 500
+        sendSpotifyError(res, error)
     }
 }

@@ -1,5 +1,6 @@
 import statisticsStyles from '../styles/statistics.module.css'
 import Layout from '../components/layout'
+import { errorMessage } from '../lib/errorMessage'
 import PageLoader from '../components/pageLoader'
 import StatTile from '../components/statTile'
 import ColumnChart from '../components/columnChart'
@@ -42,7 +43,7 @@ export default function Statistics() {
     const router = useRouter()
     const [time, setTime] = useState('long_term')
     const [stats, setStats] = useState(null)
-    const [error, setError] = useState(false)
+    const [error, setError] = useState(null)
 
     useEffect(() => {
         const storedTime = sessionStorage.getItem('statisticsTime')
@@ -65,7 +66,7 @@ export default function Statistics() {
                     router.push('/callback')
                     return
                 }
-                setError(true)
+                setError(errorMessage(error, 'Sorry! Could not load your statistics'))
             }
         }
 
@@ -82,7 +83,7 @@ export default function Statistics() {
             <Layout>
                 <div className='text-center mt-5 p-5'>
                     <h1>:(</h1>
-                    <h3>Sorry! Could not load your statistics</h3>
+                    <h3>{error}</h3>
                 </div>
             </Layout>
         )

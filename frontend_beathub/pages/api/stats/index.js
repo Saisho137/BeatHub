@@ -1,8 +1,7 @@
-import axios from "axios"
+import { spotifyGet, sendSpotifyError } from "../../../lib/spotifyApi"
 import { yearOf } from "../../../lib/format"
 
 const PERIODS = ['short_term', 'medium_term', 'long_term']
-const SPOTIFY = 'https://api.spotify.com/v1'
 
 const simplifyTrack = ({ id, name, album, artists }) => ({
     id,
@@ -70,17 +69,18 @@ const presentInAll = (lists) => {
 }
 
 export default async function handler(req, res) {
-    const headers = { headers: { 'Authorization': req.headers.authorization } }
+    // Same shape as axios responses ({ data }) so the destructuring below stays simple
+    const get = (path) => spotifyGet(path, req.headers.authorization).then(data => ({ data }))
 
     try {
         const [{ data: me }, { data: following }, { data: playlists }, { data: library }, ...tops] = await Promise.all([
-            axios.get(`${SPOTIFY}/me`, headers),
-            axios.get(`${SPOTIFY}/me/following?type=artist&limit=1`, headers),
-            axios.get(`${SPOTIFY}/me/playlists?limit=1`, headers),
-            axios.get(`${SPOTIFY}/me/tracks?limit=1`, headers),
+            get(`/me`),
+            get(`/me/following?type=artist&limit=1`),
+            get(`/me/playlists?limit=1`),
+            get(`/me/tracks?limit=1`),
             ...PERIODS.flatMap(period => [
-                axios.get(`${SPOTIFY}/me/top/tracks?time_range=${period}&limit=50`, headers),
-                axios.get(`${SPOTIFY}/me/top/artists?time_range=${period}&limit=50`, headers)
+                get(`/me/top/tracks?time_range=${period}&limit=50`),
+                get(`/me/top/artists?time_range=${period}&limit=50`)
             ])
         ])
 
@@ -124,7 +124,6 @@ export default async function handler(req, res) {
         })
     }
     catch (error) {
-        const status = error.response?.status === 401 ? 401 : 500
-        res.status(status).send({ message: status === 401 ? 'Token expired' : 'Could not load statistics' })
+        sendSpotifyError(res, error)
     }
 }

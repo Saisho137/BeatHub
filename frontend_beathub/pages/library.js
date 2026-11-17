@@ -1,5 +1,6 @@
 import statisticsStyles from '../styles/statistics.module.css'
 import Layout from '../components/layout'
+import { errorMessage } from '../lib/errorMessage'
 import StatTile from '../components/statTile'
 import ColumnChart from '../components/columnChart'
 import BarList from '../components/barList'
@@ -35,7 +36,7 @@ export default function Library() {
     const router = useRouter()
     const [progress, setProgress] = useState({ loaded: 0, total: null })
     const [insights, setInsights] = useState(null)
-    const [error, setError] = useState(false)
+    const [error, setError] = useState(null)
 
     useEffect(() => {
         let cancelled = false
@@ -60,7 +61,7 @@ export default function Library() {
                     router.push('/callback')
                     return
                 }
-                setError(true)
+                setError(errorMessage(error, 'Sorry! Could not load your library'))
             }
         }
 
@@ -73,7 +74,7 @@ export default function Library() {
         content = (
             <div className='text-center p-5'>
                 <h1>:(</h1>
-                <h3>Sorry! Could not load your library</h3>
+                <h3>{error}</h3>
             </div>
         )
     } else if (!insights) {
