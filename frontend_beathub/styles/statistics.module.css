@@ -1,24 +1,14 @@
-.paddingDiv {
-    padding-top: 6em;
-}
-
-@media (max-width: 767px) {
-    .paddingDiv {
-      padding-top: 4em;
-    }
-}
-
 /* Chart color: validated for contrast on both surfaces */
 .page {
     --chart-bar: #15883e;
-    --chart-muted: #5f5f5f;
-    --chart-track: #ececec;
+    --chart-muted: var(--muted);
+    --chart-track: var(--surface-2);
 }
 
 :global([data-theme="dark"]) .page {
     --chart-bar: #1db054;
-    --chart-muted: #b5b5b5;
-    --chart-track: #2a2a2a;
+    --chart-muted: var(--muted);
+    --chart-track: var(--surface-2);
 }
 
 .muted {
@@ -228,4 +218,32 @@
     height: 100%;
     background: var(--chart-bar);
     transition: width 0.3s;
+}
+
+/* Period selector: sticky segmented control right under the header */
+.periodBar {
+    position: sticky;
+    top: calc(var(--header-height, 64px) + 0.75rem);
+    z-index: 10;
+    display: flex;
+    justify-content: center;
+    margin-top: 1.5rem;
+}
+
+.segmented {
+    display: inline-flex;
+    gap: 0.25rem;
+    padding: 0.3rem;
+    border-radius: 999px;
+    background-color: var(--surface);
+    border: 1px solid var(--border_color);
+    box-shadow: var(--shadow);
+}
+
+.chip:global(.theme) {
+    background-color: var(--surface) !important;
+}
+
+.chip:hover {
+    border-color: rgba(29, 185, 84, 0.5) !important;
 }

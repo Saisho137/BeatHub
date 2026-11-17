@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 
 const REFRESH_MS = 30000
 
-// Navbar item with the song currently playing on the user's Spotify
+// Slim strip under the navbar with the song playing on the user's Spotify
 export default function NowPlaying() {
     const [nowPlaying, setNowPlaying] = useState(null)
 
@@ -34,12 +34,19 @@ export default function NowPlaying() {
 
     const { track, isPlaying } = nowPlaying
     return (
-        <li className='nav-item'>
-            <Link href={`/song/${track.id}`} className='nav-link text-truncate' style={{ maxWidth: '22rem' }}
-                title={`${isPlaying ? 'Now playing' : 'Paused'}: ${track.name} · ${track.artists.join(', ')}`}>
-                <span className='badge main-color me-2'>{isPlaying ? '▶ Now playing' : '❚❚ Paused'}</span>
-                {track.name} <span className='text-white-50'>· {track.artists.join(', ')}</span>
-            </Link>
-        </li>
+        <div className='now-playing-bar'>
+            <div className='container-fluid px-3 px-lg-4'>
+                <Link href={`/song/${track.id}`} title={`${track.name} · ${track.artists.join(', ')}`}>
+                    <span className={`equalizer ${isPlaying ? '' : 'paused'}`} aria-hidden='true'>
+                        <span /><span /><span />
+                    </span>
+                    <span className='text-muted flex-shrink-0'>{isPlaying ? 'Now playing' : 'Paused'}</span>
+                    <span className='text-truncate'>
+                        <span className='fw-semibold'>{track.name}</span>
+                        <span className='text-muted'> · {track.artists.join(', ')}</span>
+                    </span>
+                </Link>
+            </div>
+        </div>
     )
 }

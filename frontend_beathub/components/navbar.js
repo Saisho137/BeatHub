@@ -1,10 +1,16 @@
-'use client'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import axios from 'axios'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { redirectToSpotifyLogin } from '../lib/spotifyAuth'
 import NowPlaying from './nowPlaying'
+import ThemeToggle from './themeToggle'
+
+const LINKS = [
+  { href: '/statistics', label: 'Statistics' },
+  { href: '/library', label: 'Library' },
+  { href: '/recommender', label: 'Explore' },
+]
 
 const Navbar = () => {
   const [userData, setUserData] = useState(null)
@@ -17,15 +23,10 @@ const Navbar = () => {
         'Authorization': `Bearer ${token}`
       }
       const response = await axios.get('/api/getUserData', { headers })
-      let { username, image } = response.data
-      if (image == null) {
-        image = "/images/person-circle.svg"
-      }
-      const user = { username, image }
-      setUserData(user)
+      const { username, image } = response.data
+      setUserData({ username, image: image ?? '/images/person-circle.svg' })
       setIsLoggedIn(true)
     } catch (error) {
-      console.log(error)
       setIsLoggedIn(false)
     }
   }
@@ -37,12 +38,25 @@ const Navbar = () => {
     }
   }, [])
 
+  // Expose the header height (it grows with the now playing strip) for sticky elements below it
+  const headerRef = useRef(null)
+  useEffect(() => {
+    const header = headerRef.current
+    if (!header || typeof ResizeObserver === 'undefined') return
+    const observer = new ResizeObserver(() => {
+      document.documentElement.style.setProperty('--header-height', `${header.offsetHeight}px`)
+    })
+    observer.observe(header)
+    return () => observer.disconnect()
+  }, [])
+
   const handleLogin = () => {
     sessionStorage.removeItem('callback')
     redirectToSpotifyLogin()
   }
 
-  const handleLogout = () => {
+  const handleLogout = (event) => {
+    event.preventDefault()
     sessionStorage.removeItem('token')
     sessionStorage.removeItem('tokenTimestamp')
     setIsLoggedIn(false)
@@ -50,59 +64,45 @@ const Navbar = () => {
   }
 
   return (
-    <div className='container-fluid p-0 sticky-top font'>
-      <nav className='navbar navbar-expand-md navbar-dark bg-dark border-3 border-bottom main-border'>
-        <div className='container-fluid'>
-          <Link href="/" className='navbar-brand fs-4'>
-            <img src='/favicon.svg' className='me-2' width='32' height='32' alt='' />
+    <header ref={headerRef} className='app-header sticky-top font'>
+      <nav className='navbar navbar-expand-md'>
+        <div className='container-fluid px-3 px-lg-4'>
+          <Link href="/" className='navbar-brand fs-4 me-4'>
+            <img src='/favicon.svg' width='32' height='32' alt='' />
             BeatHub
           </Link>
-          <button type='button' className='navbar-toggler' data-bs-toggle="collapse" data-bs-target="#navMenu">
+          <button type='button' className='navbar-toggler' data-bs-toggle="collapse" data-bs-target="#navMenu" aria-controls='navMenu' aria-label='Toggle navigation'>
             <span className='navbar-toggler-icon'></span>
           </button>
           <div id='navMenu' className='collapse navbar-collapse'>
-          <ul className='navbar-nav ms-3'>
-            {isLoggedIn && (
-              <>
-                <li className='nav-item'><Link className='nav-link' href="/statistics">Statistics</Link></li>
-                <li className='nav-item'><Link className='nav-link' href="/library">Library</Link></li>
-                <li className='nav-item'><Link className='nav-link' href="/recommender">Explore</Link></li>
-                <NowPlaying />
-              </>
-            )}
-            <li className='nav-item dropdown'>
-              {userData?.image && isLoggedIn && userData?.username && (<img src={userData.image} alt="User Image" className="rounded-circle user-avatar mt-3 d-md-none ms-2" style={{ width: '60px', height: '60px' }} />)}
-              {userData?.image && isLoggedIn && userData?.username && (<a className="pt-3 p-2 px-0 nav-item nav-link text-light fs-5 fw-bold d-md-none nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">{userData.username}</a>)}
-              {isLoggedIn && (
-                <ul className="dropdown-menu bg-dark border-0">
-                  <li><a className="dropdown-item bg-dark text-danger fw-semibold" href="#" onClick={handleLogout}>Logout</a></li>
-                </ul>
+            <ul className='navbar-nav gap-1 my-2 my-md-0'>
+              {isLoggedIn && LINKS.map(({ href, label }) =>
+                <li key={href} className='nav-item'>
+                  <Link className={`nav-link ${router.pathname === href ? 'active' : ''}`} href={href}>{label}</Link>
+                </li>
               )}
-            </li>
-          </ul>
-            {isLoggedIn ? (
-              <div className='p-3 d-flex ms-auto container justify-content-end'>
-                <div className='row justify-content-endt' style={{ marginTop: '-2rem', marginBottom: '-0.2rem' }}>
-                  <div className='col-6'>
-                    {userData?.image && <img src={userData.image} alt="User Image" className="rounded-circle user-avatar mt-3 d-none d-md-block" style={{ width: '60px', height: '60px' }} />}
-                  </div>
-                  <div className='col-6 pt-1 px-0 nav-item dropdown'>
-                    {userData?.username && <a className="pt-4 px-0 nav-item nav-link text-light fs-5 fw-bold d-none d-md-block dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">{userData.username}</a>}
-                    <ul className="dropdown-menu bg-dark">
-                      <li><a className="dropdown-item bg-dark text-danger fw-semibold" href="#" onClick={handleLogout}>Logout</a></li>
-                    </ul>
-                  </div>
+            </ul>
+            <div className='d-flex align-items-center gap-2 ms-md-auto pb-2 pb-md-0'>
+              <ThemeToggle />
+              {isLoggedIn ? (
+                <div className='dropdown'>
+                  <a className='user-menu dropdown-toggle' href='#' role='button' data-bs-toggle='dropdown' aria-expanded='false'>
+                    <img src={userData.image} alt='' />
+                    <span className='text-truncate' style={{ maxWidth: '10rem' }}>{userData.username}</span>
+                  </a>
+                  <ul className='dropdown-menu dropdown-menu-end'>
+                    <li><a className='dropdown-item text-danger fw-semibold' href='#' onClick={handleLogout}>Logout</a></li>
+                  </ul>
                 </div>
-              </div>
-            ) : (
-              <div className='main-color p-3 rounded-5 ms-auto btn btn-sm' style={{margin: '0.6rem'}} onClick={handleLogin}>
-                <button className="nav-item nav-link text-light fw-semibold">Login with Spotify</button>
-              </div>
-            )}
+              ) : (
+                <button type='button' className='btn main-color' onClick={handleLogin}>Login with Spotify</button>
+              )}
+            </div>
           </div>
         </div>
       </nav>
-    </div>
+      {isLoggedIn && <NowPlaying />}
+    </header>
   )
 }
 export default Navbar

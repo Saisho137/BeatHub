@@ -2,7 +2,7 @@ import Layout from "../components/layout"
 import { useEffect, useState } from "react"
 import axios from 'axios'
 import Link from "next/link"
-import recoStyles from "../styles/recommender.module.css"
+import statisticsStyles from "../styles/statistics.module.css"
 import { useRouter } from 'next/router'
 import { toast, ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
@@ -99,105 +99,78 @@ const recommender = () => {
     }
   }
 
+  const CATEGORIES = ["Song", "Artist", "Album", "Genre"]
+
   const renderTracksAndArtists = () => {
-    if (value === "") {
-      return <div></div>
-    } else {
-      return (
-        <ul className="list-group">
-          {Array.isArray(data) && data.map((item) => (
-            <Link className="theme" href={`/${{ Song: 'song', Artist: 'artist', Album: 'album' }[category]}/${item.id}`} key={item.id} style={{ textDecoration: "none" }}>
-              <li className="row list-group-item align-items-center theme theme-border" key={item.id}>
-                <div className="col-auto d-flex align-items-center">
-                  <div className={`m-0 ${recoStyles.searchPicContainer}`}>
-                    <img
-                      className={`img-thumbnail ${recoStyles.searchPic} ${category === "Artist" ? "rounded-circle" : ""}`}
-                      src={item.images ? item.images : "/images/person-circle.svg"}
-                    />
-                  </div>
-                  <div className="ms-3">
-                    <span className="fs-5 fw-semibold">{item.name}</span>
-                  </div>
-                </div>
-              </li>
-            </Link>
-          ))}
-        </ul>
-      )
-    }
+    if (value === "" || !Array.isArray(data) || data.length === 0) return null
+    return (
+      <div className="card theme theme-border px-3 text-start">
+        {data.map((item, index) => (
+          <Link
+            key={item.id}
+            href={`/${{ Song: 'song', Artist: 'artist', Album: 'album' }[category]}/${item.id}`}
+            className={`theme ${index > 0 ? 'border-top theme-border' : ''} ${statisticsStyles.trackRow}`}
+          >
+            <img
+              src={item.images ? item.images : "/images/person-circle.svg"}
+              style={category === "Artist" ? { borderRadius: '50%' } : undefined}
+              alt=""
+            />
+            <span className="fw-semibold text-truncate">{item.name}</span>
+          </Link>
+        ))}
+      </div>
+    )
   }
 
   return (
     <Layout>
-      <div className="container mt-3 pt-5">
-      <ToastContainer />
-        <div className="row text-center">
-          <h2>How to search?</h2>
-          <h5 className="">Search by song, artist, album or genre by changing the category.</h5>
-          <h5 className="mt-2"><span className="fw-bold">Looking for a genre?</span> Write down the genre and click on search.</h5>
+      <div className={`container py-4 py-lg-5 ${statisticsStyles.page}`} style={{ maxWidth: '760px' }}>
+        <ToastContainer />
+        <div className="text-center mb-4">
+          <h1>Explore</h1>
+          <p className="text-muted mb-1">Search by song, artist, album or genre by changing the category.</p>
+          <p className="text-muted"><span className="fw-semibold">Looking for a genre?</span> Write down the genre and click on search.</p>
         </div>
-        <div className="row text-center mt-2">
-          <div className="col-12">
-            <div className="input-group mb-3 theme theme-border">
-              <input
-                type="text"
-                value={value}
-                onChange={onChange}
-                className="form-control theme theme-border"
-                aria-label="search"
-                id="searchInput"
-              />
-              <button
-                className="btn btn-outline-secondary dropdown-toggle theme"
-                type="button"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
-              >
-                {category}
-              </button>
-              <ul className="dropdown-menu theme theme-border">
-                <li>
-                  <a className="dropdown-item theme" href="#" onClick={() => onSelected("Song")}>
-                    Song
-                  </a>
-                </li>
-                <li>
-                  <a className="dropdown-item theme" href="#" onClick={() => onSelected("Artist")}>
-                    Artist
-                  </a>
-                </li>
-                <li>
-                  <a className="dropdown-item theme" href="#" onClick={() => onSelected("Album")}>
-                    Album
-                  </a>
-                </li>
-                <li>
-                  <a className="dropdown-item theme" href="#" onClick={() => onSelected("Genre")}>
-                    Genre
-                  </a>
-                </li>
-              </ul>
-            </div>
+        <div className="input-group mb-3">
+          <input
+            type="text"
+            value={value}
+            onChange={onChange}
+            onKeyDown={(event) => { if (category === "Genre" && event.key === "Enter") searchGenre() }}
+            className="form-control theme theme-border"
+            placeholder={`Search ${category.toLowerCase()}s…`}
+            aria-label="search"
+            id="searchInput"
+          />
+          <button
+            className="btn btn-soft dropdown-toggle"
+            style={{ borderRadius: '0 999px 999px 0' }}
+            type="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            {category}
+          </button>
+          <ul className="dropdown-menu dropdown-menu-end">
+            {CATEGORIES.map(option =>
+              <li key={option}>
+                <a className={`dropdown-item ${option === category ? 'active' : ''}`} href="#" onClick={(event) => { event.preventDefault(); onSelected(option) }}>
+                  {option}
+                </a>
+              </li>
+            )}
+          </ul>
+        </div>
+        {category === "Genre" && (
+          <div className="text-center">
+            <button className="btn main-color mb-3 mt-2" onClick={() => searchGenre()}>
+              Search
+            </button>
           </div>
-        </div>
-        {category === "Genre"?
-          (
-            <div className="row text-center">
-              <div className="col-12">
-                <button className="btn mb-3 mt-2 btn-primary main-color main-border" onClick={() => searchGenre()}>
-                Search
-                </button>
-              </div>
-            </div>
-          ):
-          ""
-        }
+        )}
 
-        <div className="row text-center">
-          <div className="col-12 border-top">
-            {category !== "Genre" && renderTracksAndArtists()}
-          </div>
-        </div>
+        {category !== "Genre" && renderTracksAndArtists()}
       </div>
     </Layout>
   )

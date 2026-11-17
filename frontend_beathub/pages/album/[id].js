@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import Layout from '../../components/layout'
 import SpotifyEmbed from '../../components/spotifyEmbed'
+import BackLink from '../../components/backLink'
+import PageLoader from '../../components/pageLoader'
 import statisticsStyles from '../../styles/statistics.module.css'
 import { formatDuration, formatHours, formatReleaseDate } from '../../lib/format'
 
@@ -49,7 +51,7 @@ export default function Album() {
     }
 
     if (!album) {
-        return <h1>Loading...</h1>
+        return <PageLoader />
     }
 
     const multiDisc = album.tracks.some(track => track.discNumber > 1)
@@ -62,11 +64,13 @@ export default function Album() {
 
     return (
         <Layout>
-            <div className={`container pb-5 ${statisticsStyles.page}`}>
-                <div className='row justify-content-center mt-5'>
+            <div className={`container py-4 py-lg-5 ${statisticsStyles.page}`}>
+                <BackLink />
+                <div className='row justify-content-center mt-4'>
                     <div className='col-12 col-lg-10'>
                         <div className='card theme theme-border'>
                             <div className='card-header text-center theme-border'>
+                                <p className='text-muted small text-uppercase fw-semibold mb-1'>{capitalize(album.type)}</p>
                                 <h2 className='mb-1'>{album.name}</h2>
                                 <div>
                                     {album.artists.map((artist, index) =>

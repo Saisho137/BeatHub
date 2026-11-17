@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import Layout from "../../components/layout"
 import SpotifyEmbed from '../../components/spotifyEmbed'
+import BackLink from '../../components/backLink'
+import PageLoader from '../../components/pageLoader'
 import StatTile from '../../components/statTile'
 import statisticsStyles from '../../styles/statistics.module.css'
 import Link from 'next/link'
@@ -19,7 +21,7 @@ function ReleaseGrid({ title, releases }) {
                     <div key={release.id} className='col-6 col-md-4 col-lg-3 col-xl-2 mb-3'>
                         <Link href={`/album/${release.id}`} className='card h-100 text-decoration-none theme theme-border'>
                             {release.image && <img src={release.image} className='card-img-top' alt='' />}
-                            <div className='card-body p-2'>
+                            <div className='card-body p-3 text-start'>
                                 <h6 className='card-title mb-1'>{release.name}</h6>
                                 <p className={`small mb-0 ${statisticsStyles.muted}`}>
                                     {yearOf(release.releaseDate)} · {release.totalTracks} {release.totalTracks === 1 ? 'track' : 'tracks'}
@@ -66,7 +68,7 @@ const Artist = () => {
     }, [param])
 
     if (!artist) {
-        return <h1>Loading...</h1>
+        return <PageLoader />
     }
 
     const releases = discography?.releases ?? []
@@ -76,18 +78,18 @@ const Artist = () => {
 
     return (
         <Layout>
-            <div className={`container pb-5 text-center ${statisticsStyles.page}`}>
-                <Link href='/recommender' className='m-3 p-1 px-3 btn btn-success main-color main-border'>
-                    <img src='/images/arrow-up-circle-fill.svg' className='me-2' style={{ transform: 'rotate(270deg)' }} alt='' />
-                    Search More
-                </Link>
+            <div className={`container py-4 py-lg-5 text-center ${statisticsStyles.page}`}>
+                <div className='text-start'><BackLink /></div>
 
-                <div className='d-flex align-items-center justify-content-center gap-3 mt-3'>
+                <div className='d-flex flex-column flex-sm-row align-items-center justify-content-center gap-3 mt-3'>
                     <img src={artist.images || '/images/person-circle.svg'}
-                        className='rounded-circle border border-dark'
-                        style={{ width: '120px', height: '120px', objectFit: 'cover' }}
+                        className='rounded-circle'
+                        style={{ width: '120px', height: '120px', objectFit: 'cover', boxShadow: 'var(--shadow)' }}
                         alt='' />
-                    <h1 className='mb-0'>{artist.name}</h1>
+                    <div className='text-center text-sm-start'>
+                        <p className='text-muted small text-uppercase fw-semibold mb-1'>Artist</p>
+                        <h1 className='mb-0'>{artist.name}</h1>
+                    </div>
                 </div>
 
                 <div className='row justify-content-center mt-4'>
@@ -98,7 +100,7 @@ const Artist = () => {
 
                 {discography === null ? (
                     <div className='d-flex justify-content-center p-5'>
-                        <div className='spinner-border' role='status'><span className='visually-hidden'>Loading discography</span></div>
+                        <div className='spinner-border' role='status' style={{ color: 'var(--brand)' }}><span className='visually-hidden'>Loading discography</span></div>
                     </div>
                 ) : discography.failed ? (
                     <p className={`mt-4 ${statisticsStyles.muted}`}>Sorry! Could not load the discography of this artist.</p>

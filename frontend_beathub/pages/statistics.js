@@ -1,5 +1,6 @@
 import statisticsStyles from '../styles/statistics.module.css'
 import Layout from '../components/layout'
+import PageLoader from '../components/pageLoader'
 import StatTile from '../components/statTile'
 import ColumnChart from '../components/columnChart'
 import ListeningClock from '../components/listeningClock'
@@ -88,14 +89,7 @@ export default function Statistics() {
     }
 
     if (!stats) {
-        return (
-            <Layout>
-                <div className='d-flex justify-content-center align-items-center' style={{ height: '30em' }}>
-                    <div className="spinner-border text-dark d-flex justify-content-center" role="status" style={{ width: '5em', height: '5em' }}>
-                    </div>
-                </div>
-            </Layout>
-        )
+        return <PageLoader label='Loading statistics' />
     }
 
     const { tracks, artists, insights } = stats.periods[time]
@@ -104,13 +98,13 @@ export default function Statistics() {
 
     return (
         <Layout>
-            <div className={`container pb-5 ${statisticsStyles.page}`}>
+            <div className={`container py-4 py-lg-5 ${statisticsStyles.page}`}>
 
                 {/* User's Profile */}
-                <div className='d-flex align-items-center justify-content-center gap-3 mt-5'>
+                <div className='d-flex flex-column flex-sm-row align-items-center justify-content-center gap-3 text-center text-sm-start'>
                     <img src={stats.user.images?.[0] ? stats.user.images[0].url : 'images/person-circle.svg'}
-                        className='rounded-circle border border-dark'
-                        style={{ width: '80px', height: '80px', objectFit: 'cover' }}
+                        className='rounded-circle'
+                        style={{ width: '88px', height: '88px', objectFit: 'cover', boxShadow: 'var(--shadow)' }}
                         alt='User Profile Picture'
                     />
                     <div>
@@ -124,13 +118,17 @@ export default function Statistics() {
                 </div>
 
                 {/* Period selector */}
-                <div className={`row justify-content-center mt-4 sticky-top rounded ${statisticsStyles.paddingDiv}`}>
-                    {PERIODS.map(({ key, label }) =>
-                        <button
-                            key={key}
-                            className={`col-4 col-lg-3 rounded rounded-pill border-dark theme ${time == key ? 'time-btn-on' : 'time-btn-off'}`}
-                            onClick={() => selectPeriod(key)}>{label}</button>
-                    )}
+                <div className={statisticsStyles.periodBar}>
+                    <div className={statisticsStyles.segmented} role='group' aria-label='Period'>
+                        {PERIODS.map(({ key, label }) =>
+                            <button
+                                key={key}
+                                type='button'
+                                aria-pressed={time == key}
+                                className={`rounded-pill ${time == key ? 'time-btn-on' : 'time-btn-off'}`}
+                                onClick={() => selectPeriod(key)}>{label}</button>
+                        )}
+                    </div>
                 </div>
 
                 {!insights ? (
@@ -285,12 +283,13 @@ export default function Statistics() {
                 )}
 
                 <button
+                    type='button'
                     onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-                    className='m-5 bg-transparent border-0'
-                    style={{ position: 'fixed', bottom: '1%', right: '1%', zIndex: 1000 }}
+                    className='icon-button'
+                    style={{ position: 'fixed', bottom: '1.5rem', right: '1.5rem', zIndex: 1000, width: '48px', height: '48px', boxShadow: 'var(--shadow)' }}
                     aria-label='Back to top'
                 >
-                    <img src='/images/arrow-up-circle-fill-green.svg' width='45' alt='' />
+                    <svg width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2.2' strokeLinecap='round' strokeLinejoin='round' aria-hidden='true'><path d='M18 15l-6-6-6 6' /></svg>
                 </button>
             </div>
         </Layout>
