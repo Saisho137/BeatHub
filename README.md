@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="frontend_beathub/public/favicon.svg" width="72" height="72" alt="BeatHub logo">
+  <img src="public/favicon.svg" width="72" height="72" alt="BeatHub logo">
 </p>
 
 <h1 align="center">BeatHub</h1>
@@ -21,7 +21,7 @@ BeatHub connects to your Spotify account and turns your listening history into s
 
 ## Requirements
 
-- **Node.js 26** and **npm 11**. The exact versions are pinned with [Volta](https://volta.sh/) in `frontend_beathub/package.json`; with Volta installed they are selected automatically.
+- **Node.js 26** and **npm 11**. The exact versions are pinned with [Volta](https://volta.sh/) in `package.json`; with Volta installed they are selected automatically.
 - A **Spotify Premium** account. Spotify requires it for the owner of a Development Mode app.
 
 ## Getting started
@@ -39,7 +39,7 @@ BeatHub connects to your Spotify account and turns your listening history into s
 
 ```bash
 git clone https://github.com/Saisho137/BeatHub.git
-cd BeatHub/frontend_beathub
+cd BeatHub
 cp .env.example .env.local
 ```
 
@@ -53,7 +53,7 @@ Install and start the app:
 
 ```bash
 npm install
-npm run dev -- -H 127.0.0.1
+npm run dev
 ```
 
 Open **http://127.0.0.1:3000** (not `localhost`) and click **Login with Spotify**.
@@ -66,7 +66,7 @@ Up to 5 people can use your app. Add each one in the Spotify dashboard under **S
 
 The app is a standard Next.js project, ready for [Vercel](https://vercel.com/):
 
-1. Import the repository in Vercel and set **Root Directory** to `frontend_beathub`.
+1. Import the repository in Vercel.
 2. In **Settings → Build and Deployment**, set **Node.js Version** to **26.x**.
 3. In **Settings → Environment Variables**, add `NEXT_PUBLIC_SPOTIFY_CLIENT_ID` for **Production** and **Preview**. The value is read at build time, so redeploy after adding or changing it.
 4. Add `https://<your-domain>/callback` to the Redirect URIs of your Spotify app.
@@ -76,7 +76,7 @@ The app is a standard Next.js project, ready for [Vercel](https://vercel.com/):
 - **5 users** per app, and the owner needs Premium.
 - Some Spotify features are no longer available to these apps (recommendations, related artists, audio features, artist top tracks, 30-second previews, among others). See the [February 2026 migration guide](https://developer.spotify.com/documentation/web-api/tutorials/february-2026-migration-guide).
 - Searches return up to 10 results.
-- Requests are rate limited. If Spotify answers `429 Too Many Requests` (for example after analyzing a large library), BeatHub shows a message to try again in a few minutes.
+- Requests are limited by a **quota shared by your whole Spotify developer account** (all your apps and users). BeatHub caches what it already loaded (your library for a day, statistics for 10 minutes) to save requests. If the quota runs out, Spotify answers `429 Too Many Requests` with a waiting time that can reach several hours; BeatHub stops calling Spotify until then and shows when your data will be back.
 - Sessions last 1 hour; after that you are asked to log in again.
 
 ## Troubleshooting
@@ -84,19 +84,19 @@ The app is a standard Next.js project, ready for [Vercel](https://vercel.com/):
 | Problem | Solution |
 |---|---|
 | `INVALID_CLIENT: Invalid redirect URI` or `redirect_uri: Not matching configuration` | The Redirect URI in your Spotify app must be exactly `http://127.0.0.1:3000/callback` (or your production URL + `/callback`). Open the app on `127.0.0.1`, not `localhost`. |
-| "NEXT_PUBLIC_SPOTIFY_CLIENT_ID is not set" | Create `frontend_beathub/.env.local` with your Client ID and restart `npm run dev`. On Vercel, add the variable and redeploy. |
+| "NEXT_PUBLIC_SPOTIFY_CLIENT_ID is not set" | Create `.env.local` with your Client ID and restart `npm run dev`. On Vercel, add the variable and redeploy. |
 | Login works but a friend cannot log in | Add their Spotify account under **User Management** (max. 5 users). |
 | "Spotify is limiting requests right now" | Spotify's rate limit; wait the indicated time. |
-| Strange errors after updating the code | Stop the dev server, delete `frontend_beathub/.next` and start it again. |
+| Strange errors after updating the code | Stop the dev server, delete the `.next` folder and start it again. |
 
 ## Project structure
 
 ```
-frontend_beathub/
+BeatHub/
 ├── pages/         Pages: statistics, library, recommender (Explore), song, artist, album, genre
 │   └── api/       API routes that call the Spotify Web API with the user's token
 ├── components/    Layout, header, theme toggle, charts and shared UI
-├── lib/           Spotify login (PKCE), API helper (retries and errors), formatting and insights
+├── lib/           Spotify login (PKCE), API helper, rate-limit guard, browser cache, formatting and insights
 ├── styles/        Global design tokens and page styles
 └── public/        Icons and images
 ```

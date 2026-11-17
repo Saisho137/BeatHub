@@ -10,6 +10,8 @@ import StatTile from '../../components/statTile'
 import statisticsStyles from '../../styles/statistics.module.css'
 import Link from 'next/link'
 import { yearOf } from '../../lib/format'
+import { readCache, writeCache, HOUR } from '../../lib/clientCache'
+import { errorMessage } from '../../lib/errorMessage'
 
 function ReleaseGrid({ title, releases }) {
     if (releases.length === 0) return null
@@ -38,6 +40,7 @@ function ReleaseGrid({ title, releases }) {
 const Artist = () => {
     const [artist, setArtist] = useState('')
     const [discography, setDiscography] = useState(null)
+    const [loadError, setLoadError] = useState(null)
 
     const router = useRouter()
     const param = router.query.artist
@@ -52,20 +55,42 @@ const Artist = () => {
         const headers = { headers: { 'Authorization': `Bearer ${sessionStorage.getItem('token')}` } }
         setArtist('')
         setDiscography(null)
+        setLoadError(null)
 
         axios.get(`/api/artist/getSpecificArtist/${param}`, headers)
             .then(({ data }) => setArtist(data.getSpecificArtist))
             .catch(error => {
-                if (error.response && error.response.status == 401) redirectToLogin()
+                if (error.response && error.response.status == 401) return redirectToLogin()
+                setLoadError(errorMessage(error, 'Sorry! Could not load this artist'))
             })
 
+        // A discography can take up to 20 Spotify requests: keep it for an hour this session
+        const cached = readCache(`discography:${param}`, HOUR, 'session')
+        if (cached) {
+            setDiscography(cached.value)
+            return
+        }
         axios.get(`/api/artist/getArtistAlbums/${param}`, headers)
-            .then(({ data }) => setDiscography(data))
+            .then(({ data }) => {
+                writeCache(`discography:${param}`, data, 'session')
+                setDiscography(data)
+            })
             .catch(error => {
                 if (error.response && error.response.status == 401) return redirectToLogin()
                 setDiscography({ releases: [], failed: true })
             })
     }, [param])
+
+    if (loadError) {
+        return (
+            <Layout>
+                <div className='container py-5 text-center'>
+                    <h3 className='mb-4'>{loadError}</h3>
+                    <BackLink />
+                </div>
+            </Layout>
+        )
+    }
 
     if (!artist) {
         return <PageLoader />

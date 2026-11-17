@@ -6,6 +6,7 @@ import Layout from "../../components/layout"
 import SpotifyEmbed from '../../components/spotifyEmbed'
 import BackLink from '../../components/backLink'
 import PageLoader from '../../components/pageLoader'
+import { errorMessage } from '../../lib/errorMessage'
 import Link from 'next/link'
 import { formatDuration, formatReleaseDate } from '../../lib/format'
 
@@ -16,6 +17,7 @@ const Songs = () => {
     const param = router.query.songs
 
     const [song, setSong] = useState('')
+    const [loadError, setLoadError] = useState(null)
 
     const getSpecificTrack = async (token) => {
         const headers = {
@@ -25,6 +27,7 @@ const Songs = () => {
         }
 
         try {
+            setLoadError(null)
             const { data } = await axios.get(`/api/song/getSpecificTrack/${param}`, headers)
             setSong(data.getTrack)
         }
@@ -34,6 +37,7 @@ const Songs = () => {
                 router.push('/callback')
                 return
             }
+            setLoadError(errorMessage(error, 'Sorry! Could not load this song'))
         }
 
     }
@@ -44,6 +48,17 @@ const Songs = () => {
             getSpecificTrack(token)
         }
     }, [param])
+
+    if (loadError) {
+        return (
+            <Layout>
+                <div className='container py-5 text-center'>
+                    <h3 className='mb-4'>{loadError}</h3>
+                    <BackLink />
+                </div>
+            </Layout>
+        )
+    }
 
     if (!song) {
         return <PageLoader />

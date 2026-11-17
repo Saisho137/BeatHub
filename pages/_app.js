@@ -3,6 +3,10 @@ import Head from 'next/head'
 import { Roboto } from 'next/font/google'
 import { useEffect } from 'react'
 import "../styles/globals.css"
+import { installQuotaGuard } from '../lib/spotifyQuota'
+
+// Before any page runs: stop calling Spotify while a rate limit is active
+installQuotaGuard()
 
 // Self-hosted by Next.js at build time (no request to Google Fonts at runtime)
 const roboto = Roboto({ weight: ['400', '500', '700', '900'], subsets: ['latin'], display: 'swap' })
